@@ -1,0 +1,779 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.zkmigration.cli.MigrationCliSystemTest" time="2.064" tests="1" errors="0" skipped="0" failures="0">
+  <properties>
+    <property name="jdk.tls.rejectClientInitiatedRenegotiation" value="true"/>
+    <property name="java.specification.version" value="21"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/app/target/test-classes:/app/target/classes:/home/jules/.m2/repository/org/apache/curator/curator-framework/5.5.0/curator-framework-5.5.0.jar:/home/jules/.m2/repository/org/apache/curator/curator-client/5.5.0/curator-client-5.5.0.jar:/home/jules/.m2/repository/org/apache/curator/curator-recipes/5.5.0/curator-recipes-5.5.0.jar:/home/jules/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.15.2/jackson-databind-2.15.2.jar:/home/jules/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.15.2/jackson-annotations-2.15.2.jar:/home/jules/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.15.2/jackson-core-2.15.2.jar:/home/jules/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.15.2/jackson-dataformat-yaml-2.15.2.jar:/home/jules/.m2/repository/org/yaml/snakeyaml/2.0/snakeyaml-2.0.jar:/home/jules/.m2/repository/info/picocli/picocli/4.7.4/picocli-4.7.4.jar:/home/jules/.m2/repository/org/slf4j/slf4j-api/2.0.7/slf4j-api-2.0.7.jar:/home/jules/.m2/repository/ch/qos/logback/logback-classic/1.4.11/logback-classic-1.4.11.jar:/home/jules/.m2/repository/ch/qos/logback/logback-core/1.4.11/logback-core-1.4.11.jar:/home/jules/.m2/repository/org/apache/curator/curator-test/5.5.0/curator-test-5.5.0.jar:/home/jules/.m2/repository/org/apache/zookeeper/zookeeper/3.7.1/zookeeper-3.7.1.jar:/home/jules/.m2/repository/org/apache/zookeeper/zookeeper-jute/3.7.1/zookeeper-jute-3.7.1.jar:/home/jules/.m2/repository/org/apache/yetus/audience-annotations/0.12.0/audience-annotations-0.12.0.jar:/home/jules/.m2/repository/io/netty/netty-handler/4.1.76.Final/netty-handler-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-common/4.1.76.Final/netty-common-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-resolver/4.1.76.Final/netty-resolver-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-buffer/4.1.76.Final/netty-buffer-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-transport/4.1.76.Final/netty-transport-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-codec/4.1.76.Final/netty-codec-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-transport-native-epoll/4.1.76.Final/netty-transport-native-epoll-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-transport-native-unix-common/4.1.76.Final/netty-transport-native-unix-common-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-transport-classes-epoll/4.1.76.Final/netty-transport-classes-epoll-4.1.76.Final.jar:/home/jules/.m2/repository/io/dropwizard/metrics/metrics-core/3.2.5/metrics-core-3.2.5.jar:/home/jules/.m2/repository/org/xerial/snappy/snappy-java/1.1.7/snappy-java-1.1.7.jar:/home/jules/.m2/repository/com/google/guava/guava/31.1-jre/guava-31.1-jre.jar:/home/jules/.m2/repository/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar:/home/jules/.m2/repository/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/jules/.m2/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:/home/jules/.m2/repository/org/checkerframework/checker-qual/3.12.0/checker-qual-3.12.0.jar:/home/jules/.m2/repository/com/google/errorprone/error_prone_annotations/2.11.0/error_prone_annotations-2.11.0.jar:/home/jules/.m2/repository/com/google/j2objc/j2objc-annotations/1.3/j2objc-annotations-1.3.jar:/home/jules/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.9.3/junit-jupiter-api-5.9.3.jar:/home/jules/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/jules/.m2/repository/org/junit/platform/junit-platform-commons/1.9.3/junit-platform-commons-1.9.3.jar:/home/jules/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/jules/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.9.3/junit-jupiter-engine-5.9.3.jar:/home/jules/.m2/repository/org/junit/platform/junit-platform-engine/1.9.3/junit-platform-engine-1.9.3.jar:/home/jules/.m2/repository/org/assertj/assertj-core/3.24.2/assertj-core-3.24.2.jar:/home/jules/.m2/repository/net/bytebuddy/byte-buddy/1.12.21/byte-buddy-1.12.21.jar:"/>
+    <property name="java.vm.vendor" value="Ubuntu"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://ubuntu.com/"/>
+    <property name="user.timezone" value="Etc/UTC"/>
+    <property name="os.name" value="Linux"/>
+    <property name="java.vm.specification.version" value="21"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="sun.boot.library.path" value="/usr/lib/jvm/java-21-openjdk-amd64/lib"/>
+    <property name="sun.java.command" value="/app/target/surefire/surefirebooter-20260110124134407_3.jar /app/target/surefire 2026-01-10T12-41-34_313-jvmRun1 surefire-20260110124134407_1tmp surefire_0-20260110124134407_2tmp"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/app/target/test-classes:/app/target/classes:/home/jules/.m2/repository/org/apache/curator/curator-framework/5.5.0/curator-framework-5.5.0.jar:/home/jules/.m2/repository/org/apache/curator/curator-client/5.5.0/curator-client-5.5.0.jar:/home/jules/.m2/repository/org/apache/curator/curator-recipes/5.5.0/curator-recipes-5.5.0.jar:/home/jules/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.15.2/jackson-databind-2.15.2.jar:/home/jules/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.15.2/jackson-annotations-2.15.2.jar:/home/jules/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.15.2/jackson-core-2.15.2.jar:/home/jules/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.15.2/jackson-dataformat-yaml-2.15.2.jar:/home/jules/.m2/repository/org/yaml/snakeyaml/2.0/snakeyaml-2.0.jar:/home/jules/.m2/repository/info/picocli/picocli/4.7.4/picocli-4.7.4.jar:/home/jules/.m2/repository/org/slf4j/slf4j-api/2.0.7/slf4j-api-2.0.7.jar:/home/jules/.m2/repository/ch/qos/logback/logback-classic/1.4.11/logback-classic-1.4.11.jar:/home/jules/.m2/repository/ch/qos/logback/logback-core/1.4.11/logback-core-1.4.11.jar:/home/jules/.m2/repository/org/apache/curator/curator-test/5.5.0/curator-test-5.5.0.jar:/home/jules/.m2/repository/org/apache/zookeeper/zookeeper/3.7.1/zookeeper-3.7.1.jar:/home/jules/.m2/repository/org/apache/zookeeper/zookeeper-jute/3.7.1/zookeeper-jute-3.7.1.jar:/home/jules/.m2/repository/org/apache/yetus/audience-annotations/0.12.0/audience-annotations-0.12.0.jar:/home/jules/.m2/repository/io/netty/netty-handler/4.1.76.Final/netty-handler-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-common/4.1.76.Final/netty-common-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-resolver/4.1.76.Final/netty-resolver-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-buffer/4.1.76.Final/netty-buffer-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-transport/4.1.76.Final/netty-transport-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-codec/4.1.76.Final/netty-codec-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-transport-native-epoll/4.1.76.Final/netty-transport-native-epoll-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-transport-native-unix-common/4.1.76.Final/netty-transport-native-unix-common-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-transport-classes-epoll/4.1.76.Final/netty-transport-classes-epoll-4.1.76.Final.jar:/home/jules/.m2/repository/io/dropwizard/metrics/metrics-core/3.2.5/metrics-core-3.2.5.jar:/home/jules/.m2/repository/org/xerial/snappy/snappy-java/1.1.7/snappy-java-1.1.7.jar:/home/jules/.m2/repository/com/google/guava/guava/31.1-jre/guava-31.1-jre.jar:/home/jules/.m2/repository/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar:/home/jules/.m2/repository/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/jules/.m2/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:/home/jules/.m2/repository/org/checkerframework/checker-qual/3.12.0/checker-qual-3.12.0.jar:/home/jules/.m2/repository/com/google/errorprone/error_prone_annotations/2.11.0/error_prone_annotations-2.11.0.jar:/home/jules/.m2/repository/com/google/j2objc/j2objc-annotations/1.3/j2objc-annotations-1.3.jar:/home/jules/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.9.3/junit-jupiter-api-5.9.3.jar:/home/jules/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/jules/.m2/repository/org/junit/platform/junit-platform-commons/1.9.3/junit-platform-commons-1.9.3.jar:/home/jules/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/jules/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.9.3/junit-jupiter-engine-5.9.3.jar:/home/jules/.m2/repository/org/junit/platform/junit-platform-engine/1.9.3/junit-platform-engine-1.9.3.jar:/home/jules/.m2/repository/org/assertj/assertj-core/3.24.2/assertj-core-3.24.2.jar:/home/jules/.m2/repository/net/bytebuddy/byte-buddy/1.12.21/byte-buddy-1.12.21.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/home/jules"/>
+    <property name="user.language" value="en"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2025-07-15"/>
+    <property name="java.home" value="/usr/lib/jvm/java-21-openjdk-amd64"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/app"/>
+    <property name="java.vm.compressedOopsMode" value="32-bit"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="surefire.real.class.path" value="/app/target/surefire/surefirebooter-20260110124134407_3.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="java.runtime.version" value="21.0.8+9-Ubuntu-0ubuntu124.04.1"/>
+    <property name="user.name" value="jules"/>
+    <property name="zookeeper.jmx.log4j.disable" value="true"/>
+    <property name="stdout.encoding" value="UTF-8"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="6.8.0"/>
+    <property name="zookeeper.admin.enableServer" value="false"/>
+    <property name="java.runtime.name" value="OpenJDK Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="OpenJDK 64-Bit Server VM"/>
+    <property name="localRepository" value="/home/jules/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://bugs.launchpad.net/ubuntu/+source/openjdk-21"/>
+    <property name="java.io.tmpdir" value="/tmp"/>
+    <property name="java.version" value="21.0.8"/>
+    <property name="user.dir" value="/app"/>
+    <property name="os.arch" value="amd64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/usr/java/packages/lib:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib"/>
+    <property name="stderr.encoding" value="UTF-8"/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="java.vendor" value="Ubuntu"/>
+    <property name="java.vm.version" value="21.0.8+9-Ubuntu-0ubuntu124.04.1"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeLittle"/>
+    <property name="java.class.version" value="65.0"/>
+  </properties>
+  <testcase name="testCliUpdateAndRollback" classname="com.zkmigration.cli.MigrationCliSystemTest" time="2.035">
+    <system-out><![CDATA[12:41:35.399 [main] INFO org.apache.zookeeper.server.embedded.ZooKeeperServerEmbeddedImpl -- Current configuration is at /tmp/zookeeper.configuration15049261210829557515.properties
+12:41:35.406 [main] INFO org.apache.zookeeper.server.quorum.QuorumPeerConfig -- Reading configuration from: /tmp/zookeeper.configuration15049261210829557515.properties
+12:41:35.407 [main] INFO org.apache.zookeeper.server.quorum.QuorumPeerConfig -- clientPort is not set
+12:41:35.407 [main] INFO org.apache.zookeeper.server.quorum.QuorumPeerConfig -- secureClientPort is not set
+12:41:35.408 [main] INFO org.apache.zookeeper.server.quorum.QuorumPeerConfig -- observerMasterPort is not set
+12:41:35.408 [main] INFO org.apache.zookeeper.server.quorum.QuorumPeerConfig -- metricsProvider.className is org.apache.zookeeper.metrics.impl.DefaultMetricsProvider
+12:41:35.409 [main] INFO org.apache.zookeeper.server.embedded.ZooKeeperServerEmbeddedImpl -- ServerID:-1
+12:41:35.409 [main] INFO org.apache.zookeeper.server.embedded.ZooKeeperServerEmbeddedImpl -- DataDir:/tmp/DirectoryUtils9253940561560676790
+12:41:35.409 [main] INFO org.apache.zookeeper.server.embedded.ZooKeeperServerEmbeddedImpl -- Servers:{}
+12:41:35.409 [main] INFO org.apache.zookeeper.server.embedded.ZooKeeperServerEmbeddedImpl -- ElectionPort:2182
+12:41:35.409 [main] INFO org.apache.zookeeper.server.embedded.ZooKeeperServerEmbeddedImpl -- SyncLimit:5
+12:41:35.409 [main] INFO org.apache.zookeeper.server.embedded.ZooKeeperServerEmbeddedImpl -- PeerType:PARTICIPANT
+12:41:35.409 [main] INFO org.apache.zookeeper.server.embedded.ZooKeeperServerEmbeddedImpl -- Distributed:false
+12:41:35.409 [main] INFO org.apache.zookeeper.server.embedded.ZooKeeperServerEmbeddedImpl -- SyncEnabled:true
+12:41:35.409 [main] INFO org.apache.zookeeper.server.embedded.ZooKeeperServerEmbeddedImpl -- MetricsProviderClassName:org.apache.zookeeper.metrics.impl.DefaultMetricsProvider
+12:41:35.410 [main] INFO org.apache.curator.test.ZooKeeperServerEmbeddedAdapter -- Configure ZooKeeperServerEmbeddedAdapter with properties: {localSessionsUpgradingEnabled=false, admin.enableServer=false, dataDir=/tmp/DirectoryUtils9253940561560676790, localSessionsEnabled=false, initLimit=10, clientPort=0, tickTime=1000, syncLimit=5, minSessionTimeout=1000}
+12:41:35.418 [main] INFO org.apache.zookeeper.server.embedded.ZooKeeperServerEmbeddedImpl -- Running ZK Server in single STANDALONE MODE
+12:41:35.420 [main] INFO org.apache.zookeeper.server.DatadirCleanupManager -- autopurge.snapRetainCount set to 3
+12:41:35.420 [main] INFO org.apache.zookeeper.server.DatadirCleanupManager -- autopurge.purgeInterval set to 0
+12:41:35.420 [main] INFO org.apache.zookeeper.server.DatadirCleanupManager -- Purge task is not scheduled.
+12:41:35.422 [zkservermainrunner] INFO org.apache.zookeeper.server.embedded.ZooKeeperServerEmbeddedImpl -- ZK server starting
+12:41:35.422 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServerMain -- Starting server
+12:41:35.434 [zkservermainrunner] INFO org.apache.zookeeper.server.ServerMetrics -- ServerMetrics initialized with provider org.apache.zookeeper.metrics.impl.DefaultMetricsProvider@29b16f95
+12:41:35.437 [zkservermainrunner] INFO org.apache.zookeeper.server.auth.DigestAuthenticationProvider -- ACL digest algorithm is: SHA1
+12:41:35.437 [zkservermainrunner] INFO org.apache.zookeeper.server.auth.DigestAuthenticationProvider -- zookeeper.DigestAuthenticationProvider.enabled = true
+12:41:35.442 [zkservermainrunner] DEBUG org.apache.zookeeper.server.persistence.FileTxnSnapLog -- Opening datadir:/tmp/DirectoryUtils9253940561560676790 snapDir:/tmp/DirectoryUtils9253940561560676790
+12:41:35.442 [zkservermainrunner] INFO org.apache.zookeeper.server.persistence.FileTxnSnapLog -- zookeeper.snapshot.trust.empty : false
+12:41:35.458 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer --
+12:41:35.458 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer --   ______                  _
+12:41:35.458 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer --  |___  /                 | |
+12:41:35.458 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer --     / /    ___     ___   | | __   ___    ___   _ __     ___   _ __
+12:41:35.458 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer --    / /    / _ \   / _ \  | |/ /  / _ \  / _ \ | '_ \   / _ \ | '__|
+12:41:35.458 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer --   / /__  | (_) | | (_) | |   <  |  __/ |  __/ | |_) | |  __/ | |
+12:41:35.458 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer --  /_____|  \___/   \___/  |_|\_\  \___|  \___| | .__/   \___| |_|
+12:41:35.459 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer --                                               | |
+12:41:35.459 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer --                                               |_|
+12:41:35.459 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer --
+12:41:35.461 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:zookeeper.version=3.7.1-a2fb57c55f8e59cdd76c34b357ad5181df1258d5, built on 2022-05-07 06:45 UTC
+12:41:35.461 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:host.name=devbox
+12:41:35.461 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:java.version=21.0.8
+12:41:35.461 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:java.vendor=Ubuntu
+12:41:35.462 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:java.home=/usr/lib/jvm/java-21-openjdk-amd64
+12:41:35.462 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:java.class.path=/app/target/test-classes:/app/target/classes:/home/jules/.m2/repository/org/apache/curator/curator-framework/5.5.0/curator-framework-5.5.0.jar:/home/jules/.m2/repository/org/apache/curator/curator-client/5.5.0/curator-client-5.5.0.jar:/home/jules/.m2/repository/org/apache/curator/curator-recipes/5.5.0/curator-recipes-5.5.0.jar:/home/jules/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.15.2/jackson-databind-2.15.2.jar:/home/jules/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.15.2/jackson-annotations-2.15.2.jar:/home/jules/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.15.2/jackson-core-2.15.2.jar:/home/jules/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.15.2/jackson-dataformat-yaml-2.15.2.jar:/home/jules/.m2/repository/org/yaml/snakeyaml/2.0/snakeyaml-2.0.jar:/home/jules/.m2/repository/info/picocli/picocli/4.7.4/picocli-4.7.4.jar:/home/jules/.m2/repository/org/slf4j/slf4j-api/2.0.7/slf4j-api-2.0.7.jar:/home/jules/.m2/repository/ch/qos/logback/logback-classic/1.4.11/logback-classic-1.4.11.jar:/home/jules/.m2/repository/ch/qos/logback/logback-core/1.4.11/logback-core-1.4.11.jar:/home/jules/.m2/repository/org/apache/curator/curator-test/5.5.0/curator-test-5.5.0.jar:/home/jules/.m2/repository/org/apache/zookeeper/zookeeper/3.7.1/zookeeper-3.7.1.jar:/home/jules/.m2/repository/org/apache/zookeeper/zookeeper-jute/3.7.1/zookeeper-jute-3.7.1.jar:/home/jules/.m2/repository/org/apache/yetus/audience-annotations/0.12.0/audience-annotations-0.12.0.jar:/home/jules/.m2/repository/io/netty/netty-handler/4.1.76.Final/netty-handler-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-common/4.1.76.Final/netty-common-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-resolver/4.1.76.Final/netty-resolver-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-buffer/4.1.76.Final/netty-buffer-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-transport/4.1.76.Final/netty-transport-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-codec/4.1.76.Final/netty-codec-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-transport-native-epoll/4.1.76.Final/netty-transport-native-epoll-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-transport-native-unix-common/4.1.76.Final/netty-transport-native-unix-common-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-transport-classes-epoll/4.1.76.Final/netty-transport-classes-epoll-4.1.76.Final.jar:/home/jules/.m2/repository/io/dropwizard/metrics/metrics-core/3.2.5/metrics-core-3.2.5.jar:/home/jules/.m2/repository/org/xerial/snappy/snappy-java/1.1.7/snappy-java-1.1.7.jar:/home/jules/.m2/repository/com/google/guava/guava/31.1-jre/guava-31.1-jre.jar:/home/jules/.m2/repository/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar:/home/jules/.m2/repository/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/jules/.m2/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:/home/jules/.m2/repository/org/checkerframework/checker-qual/3.12.0/checker-qual-3.12.0.jar:/home/jules/.m2/repository/com/google/errorprone/error_prone_annotations/2.11.0/error_prone_annotations-2.11.0.jar:/home/jules/.m2/repository/com/google/j2objc/j2objc-annotations/1.3/j2objc-annotations-1.3.jar:/home/jules/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.9.3/junit-jupiter-api-5.9.3.jar:/home/jules/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/jules/.m2/repository/org/junit/platform/junit-platform-commons/1.9.3/junit-platform-commons-1.9.3.jar:/home/jules/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/jules/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.9.3/junit-jupiter-engine-5.9.3.jar:/home/jules/.m2/repository/org/junit/platform/junit-platform-engine/1.9.3/junit-platform-engine-1.9.3.jar:/home/jules/.m2/repository/org/assertj/assertj-core/3.24.2/assertj-core-3.24.2.jar:/home/jules/.m2/repository/net/bytebuddy/byte-buddy/1.12.21/byte-buddy-1.12.21.jar:
+12:41:35.463 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:java.library.path=/usr/java/packages/lib:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+12:41:35.463 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:java.io.tmpdir=/tmp
+12:41:35.463 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:java.compiler=<NA>
+12:41:35.463 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:os.name=Linux
+12:41:35.463 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:os.arch=amd64
+12:41:35.464 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:os.version=6.8.0
+12:41:35.464 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:user.name=jules
+12:41:35.464 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:user.home=/home/jules
+12:41:35.464 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:user.dir=/app
+12:41:35.464 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:os.memory.free=109MB
+12:41:35.464 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:os.memory.max=1990MB
+12:41:35.464 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Server environment:os.memory.total=128MB
+12:41:35.464 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- zookeeper.enableEagerACLCheck = false
+12:41:35.464 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- zookeeper.digest.enabled = true
+12:41:35.465 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- zookeeper.closeSessionTxn.enabled = true
+12:41:35.465 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- zookeeper.flushDelay=0
+12:41:35.465 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- zookeeper.maxWriteQueuePollTime=0
+12:41:35.465 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- zookeeper.maxBatchSize=1000
+12:41:35.465 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- zookeeper.intBufferStartingSizeBytes = 1024
+12:41:35.466 [zkservermainrunner] INFO org.apache.zookeeper.server.BlueThrottle -- Weighed connection throttling is disabled
+12:41:35.468 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- minSessionTimeout set to 1000
+12:41:35.468 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- maxSessionTimeout set to 20000
+12:41:35.470 [zkservermainrunner] INFO org.apache.zookeeper.server.ResponseCache -- getData response cache size is initialized with value 400.
+12:41:35.470 [zkservermainrunner] INFO org.apache.zookeeper.server.ResponseCache -- getChildren response cache size is initialized with value 400.
+12:41:35.472 [zkservermainrunner] INFO org.apache.zookeeper.server.util.RequestPathMetricsCollector -- zookeeper.pathStats.slotCapacity = 60
+12:41:35.472 [zkservermainrunner] INFO org.apache.zookeeper.server.util.RequestPathMetricsCollector -- zookeeper.pathStats.slotDuration = 15
+12:41:35.472 [zkservermainrunner] INFO org.apache.zookeeper.server.util.RequestPathMetricsCollector -- zookeeper.pathStats.maxDepth = 6
+12:41:35.472 [zkservermainrunner] INFO org.apache.zookeeper.server.util.RequestPathMetricsCollector -- zookeeper.pathStats.initialDelay = 5
+12:41:35.472 [zkservermainrunner] INFO org.apache.zookeeper.server.util.RequestPathMetricsCollector -- zookeeper.pathStats.delay = 5
+12:41:35.472 [zkservermainrunner] INFO org.apache.zookeeper.server.util.RequestPathMetricsCollector -- zookeeper.pathStats.enabled = false
+12:41:35.475 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- The max bytes for all large requests are set to 104857600
+12:41:35.475 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- The large request threshold is set to -1
+12:41:35.476 [zkservermainrunner] INFO org.apache.zookeeper.server.AuthenticationHelper -- zookeeper.enforce.auth.enabled = false
+12:41:35.476 [zkservermainrunner] INFO org.apache.zookeeper.server.AuthenticationHelper -- zookeeper.enforce.auth.schemes = []
+12:41:35.476 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Created server with tickTime 1000 minSessionTimeout 1000 maxSessionTimeout 20000 clientPortListenBacklog -1 datadir /tmp/DirectoryUtils9253940561560676790/version-2 snapdir /tmp/DirectoryUtils9253940561560676790/version-2
+12:41:35.486 [zkservermainrunner] INFO org.apache.zookeeper.server.ServerCnxnFactory -- Using org.apache.zookeeper.server.NIOServerCnxnFactory as server connection factory
+12:41:35.487 [zkservermainrunner] WARN org.apache.zookeeper.server.ServerCnxnFactory -- maxCnxns is not configured, using default value 0.
+12:41:35.489 [zkservermainrunner] INFO org.apache.zookeeper.server.NIOServerCnxnFactory -- Configuring NIO connection handler with 10s sessionless connection timeout, 1 selector thread(s), 8 worker threads, and 64 kB direct buffers.
+12:41:35.496 [zkservermainrunner] INFO org.apache.zookeeper.server.NIOServerCnxnFactory -- binding to port 0.0.0.0/0.0.0.0:0
+12:41:35.521 [zkservermainrunner] INFO org.apache.zookeeper.server.watch.WatchManagerFactory -- Using org.apache.zookeeper.server.watch.WatchManager as watch manager
+12:41:35.521 [zkservermainrunner] INFO org.apache.zookeeper.server.watch.WatchManagerFactory -- Using org.apache.zookeeper.server.watch.WatchManager as watch manager
+12:41:35.521 [zkservermainrunner] INFO org.apache.zookeeper.server.ZKDatabase -- zookeeper.snapshotSizeFactor = 0.33
+12:41:35.522 [zkservermainrunner] INFO org.apache.zookeeper.server.ZKDatabase -- zookeeper.commitLogCount=500
+12:41:35.529 [zkservermainrunner] INFO org.apache.zookeeper.server.persistence.SnapStream -- zookeeper.snapshot.compression.method = CHECKED
+12:41:35.530 [zkservermainrunner] INFO org.apache.zookeeper.server.persistence.FileTxnSnapLog -- Snapshotting: 0x0 to /tmp/DirectoryUtils9253940561560676790/version-2/snapshot.0
+12:41:35.535 [zkservermainrunner] INFO org.apache.zookeeper.server.ZKDatabase -- Snapshot loaded in 13 ms, highest zxid is 0x0, digest is 1371985504
+12:41:35.537 [zkservermainrunner] INFO org.apache.zookeeper.server.persistence.FileTxnSnapLog -- Snapshotting: 0x0 to /tmp/DirectoryUtils9253940561560676790/version-2/snapshot.0
+12:41:35.538 [zkservermainrunner] INFO org.apache.zookeeper.server.ZooKeeperServer -- Snapshot taken in 1 ms
+12:41:35.555 [zkservermainrunner] INFO org.apache.zookeeper.server.RequestThrottler -- zookeeper.request_throttler.shutdownTimeout = 10000
+12:41:35.561 [ProcessThread(sid:0 cport:45201):] INFO org.apache.zookeeper.server.PrepRequestProcessor -- PrepRequestProcessor (sid:0) started, reconfigEnabled=false
+12:41:35.806 [zkservermainrunner] INFO org.apache.zookeeper.server.ContainerManager -- Using checkIntervalMs=60000 maxPerMinute=10000 maxNeverUsedIntervalMs=0
+12:41:35.807 [zkservermainrunner] INFO org.apache.zookeeper.audit.ZKAuditProvider -- ZooKeeper audit is disabled.
+12:41:35.807 [zkservermainrunner] INFO org.apache.zookeeper.server.embedded.ZooKeeperServerEmbeddedImpl -- ZK Server started
+12:41:35.884 [main] INFO org.apache.curator.framework.imps.CuratorFrameworkImpl -- Starting
+12:41:35.886 [main] DEBUG org.apache.curator.CuratorZookeeperClient -- Starting
+12:41:35.886 [main] DEBUG org.apache.curator.ConnectionState -- Starting
+12:41:35.886 [main] DEBUG org.apache.curator.ConnectionState -- reset
+12:41:35.889 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:zookeeper.version=3.7.1-a2fb57c55f8e59cdd76c34b357ad5181df1258d5, built on 2022-05-07 06:45 UTC
+12:41:35.889 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:host.name=devbox
+12:41:35.889 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:java.version=21.0.8
+12:41:35.889 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:java.vendor=Ubuntu
+12:41:35.889 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:java.home=/usr/lib/jvm/java-21-openjdk-amd64
+12:41:35.889 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:java.class.path=/app/target/test-classes:/app/target/classes:/home/jules/.m2/repository/org/apache/curator/curator-framework/5.5.0/curator-framework-5.5.0.jar:/home/jules/.m2/repository/org/apache/curator/curator-client/5.5.0/curator-client-5.5.0.jar:/home/jules/.m2/repository/org/apache/curator/curator-recipes/5.5.0/curator-recipes-5.5.0.jar:/home/jules/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.15.2/jackson-databind-2.15.2.jar:/home/jules/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.15.2/jackson-annotations-2.15.2.jar:/home/jules/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.15.2/jackson-core-2.15.2.jar:/home/jules/.m2/repository/com/fasterxml/jackson/dataformat/jackson-dataformat-yaml/2.15.2/jackson-dataformat-yaml-2.15.2.jar:/home/jules/.m2/repository/org/yaml/snakeyaml/2.0/snakeyaml-2.0.jar:/home/jules/.m2/repository/info/picocli/picocli/4.7.4/picocli-4.7.4.jar:/home/jules/.m2/repository/org/slf4j/slf4j-api/2.0.7/slf4j-api-2.0.7.jar:/home/jules/.m2/repository/ch/qos/logback/logback-classic/1.4.11/logback-classic-1.4.11.jar:/home/jules/.m2/repository/ch/qos/logback/logback-core/1.4.11/logback-core-1.4.11.jar:/home/jules/.m2/repository/org/apache/curator/curator-test/5.5.0/curator-test-5.5.0.jar:/home/jules/.m2/repository/org/apache/zookeeper/zookeeper/3.7.1/zookeeper-3.7.1.jar:/home/jules/.m2/repository/org/apache/zookeeper/zookeeper-jute/3.7.1/zookeeper-jute-3.7.1.jar:/home/jules/.m2/repository/org/apache/yetus/audience-annotations/0.12.0/audience-annotations-0.12.0.jar:/home/jules/.m2/repository/io/netty/netty-handler/4.1.76.Final/netty-handler-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-common/4.1.76.Final/netty-common-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-resolver/4.1.76.Final/netty-resolver-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-buffer/4.1.76.Final/netty-buffer-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-transport/4.1.76.Final/netty-transport-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-codec/4.1.76.Final/netty-codec-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-transport-native-epoll/4.1.76.Final/netty-transport-native-epoll-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-transport-native-unix-common/4.1.76.Final/netty-transport-native-unix-common-4.1.76.Final.jar:/home/jules/.m2/repository/io/netty/netty-transport-classes-epoll/4.1.76.Final/netty-transport-classes-epoll-4.1.76.Final.jar:/home/jules/.m2/repository/io/dropwizard/metrics/metrics-core/3.2.5/metrics-core-3.2.5.jar:/home/jules/.m2/repository/org/xerial/snappy/snappy-java/1.1.7/snappy-java-1.1.7.jar:/home/jules/.m2/repository/com/google/guava/guava/31.1-jre/guava-31.1-jre.jar:/home/jules/.m2/repository/com/google/guava/failureaccess/1.0.1/failureaccess-1.0.1.jar:/home/jules/.m2/repository/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar:/home/jules/.m2/repository/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar:/home/jules/.m2/repository/org/checkerframework/checker-qual/3.12.0/checker-qual-3.12.0.jar:/home/jules/.m2/repository/com/google/errorprone/error_prone_annotations/2.11.0/error_prone_annotations-2.11.0.jar:/home/jules/.m2/repository/com/google/j2objc/j2objc-annotations/1.3/j2objc-annotations-1.3.jar:/home/jules/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.9.3/junit-jupiter-api-5.9.3.jar:/home/jules/.m2/repository/org/opentest4j/opentest4j/1.2.0/opentest4j-1.2.0.jar:/home/jules/.m2/repository/org/junit/platform/junit-platform-commons/1.9.3/junit-platform-commons-1.9.3.jar:/home/jules/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/home/jules/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.9.3/junit-jupiter-engine-5.9.3.jar:/home/jules/.m2/repository/org/junit/platform/junit-platform-engine/1.9.3/junit-platform-engine-1.9.3.jar:/home/jules/.m2/repository/org/assertj/assertj-core/3.24.2/assertj-core-3.24.2.jar:/home/jules/.m2/repository/net/bytebuddy/byte-buddy/1.12.21/byte-buddy-1.12.21.jar:
+12:41:35.889 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:java.library.path=/usr/java/packages/lib:/usr/lib/x86_64-linux-gnu/jni:/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu:/usr/lib/jni:/lib:/usr/lib
+12:41:35.890 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:java.io.tmpdir=/tmp
+12:41:35.890 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:java.compiler=<NA>
+12:41:35.890 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:os.name=Linux
+12:41:35.890 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:os.arch=amd64
+12:41:35.890 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:os.version=6.8.0
+12:41:35.890 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:user.name=jules
+12:41:35.891 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:user.home=/home/jules
+12:41:35.891 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:user.dir=/app
+12:41:35.891 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:os.memory.free=112MB
+12:41:35.891 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:os.memory.max=1990MB
+12:41:35.891 [main] INFO org.apache.zookeeper.ZooKeeper -- Client environment:os.memory.total=128MB
+12:41:35.893 [main] INFO org.apache.zookeeper.ZooKeeper -- Initiating client connection, connectString=127.0.0.1:45201 sessionTimeout=60000 watcher=org.apache.curator.ConnectionState@78fa769e
+12:41:35.897 [main] INFO org.apache.zookeeper.common.X509Util -- Setting -D jdk.tls.rejectClientInitiatedRenegotiation=true to disable client-initiated TLS renegotiation
+12:41:35.899 [main] INFO org.apache.zookeeper.ClientCnxnSocket -- jute.maxbuffer value is 1048575 Bytes
+12:41:35.907 [main] INFO org.apache.zookeeper.ClientCnxn -- zookeeper.request.timeout value is 0. feature enabled=false
+12:41:35.911 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.SaslServerPrincipal -- Canonicalized address to localhost
+12:41:35.912 [main-SendThread(127.0.0.1:45201)] INFO org.apache.zookeeper.ClientCnxn -- Opening socket connection to server localhost/127.0.0.1:45201.
+12:41:35.912 [main-SendThread(127.0.0.1:45201)] INFO org.apache.zookeeper.ClientCnxn -- SASL config status: Will not attempt to authenticate using SASL (unknown error)
+12:41:35.924 [NIOServerCxnFactory.AcceptThread:0.0.0.0/0.0.0.0:0] DEBUG org.apache.zookeeper.server.NIOServerCnxnFactory -- Accepted socket connection from /127.0.0.1:43662
+12:41:35.924 [main-SendThread(127.0.0.1:45201)] INFO org.apache.zookeeper.ClientCnxn -- Socket connection established, initiating session, client: /127.0.0.1:43662, server: localhost/127.0.0.1:45201
+12:41:35.925 [main] INFO org.apache.curator.framework.imps.CuratorFrameworkImpl -- Default schema
+12:41:35.926 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Session establishment request sent on localhost/127.0.0.1:45201
+12:41:35.930 [NIOWorkerThread-1] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Session establishment request from client /127.0.0.1:43662 client's lastZxid is 0x0
+12:41:35.931 [NIOWorkerThread-1] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Adding session 0x100001ad7810000
+12:41:35.931 [NIOWorkerThread-1] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client attempting to establish new session: session = 0x100001ad7810000, zxid = 0x0, timeout = 60000, address = /127.0.0.1:43662
+12:41:35.934 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 1371985504
+12:41:35.934 [SyncThread:0] INFO org.apache.zookeeper.server.persistence.FileTxnLog -- Creating new log file: log.1
+12:41:35.937 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810000 type:createSession cxid:0x0 zxid:0x1 txntype:-10 reqpath:n/a
+12:41:35.939 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: 1, Digest in log and actual tree: 1371985504
+12:41:35.940 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810000 type:createSession cxid:0x0 zxid:0x1 txntype:-10 reqpath:n/a
+12:41:35.944 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Established session 0x100001ad7810000 with negotiated timeout 20000 for client /127.0.0.1:43662
+12:41:35.946 [main-SendThread(127.0.0.1:45201)] INFO org.apache.zookeeper.ClientCnxn -- Session establishment complete on server localhost/127.0.0.1:45201, session id = 0x100001ad7810000, negotiated timeout = 20000
+12:41:35.949 [main-EventThread] DEBUG org.apache.curator.ConnectionState -- Negotiated session timeout: 20000
+12:41:35.952 [main-EventThread] INFO org.apache.curator.framework.state.ConnectionStateManager -- State change: CONNECTED
+12:41:35.952 [main-EventThread] DEBUG org.apache.curator.framework.imps.CuratorFrameworkImpl -- Clearing sleep for 1 operations
+12:41:35.958 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810000
+12:41:35.964 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810000
+12:41:35.958 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810000 type:getData cxid:0x1 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:35.964 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810000 type:getData cxid:0x1 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:35.965 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 1
+12:41:35.965 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [1,s{'world,'anyone}
+]
+12:41:35.966 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:35.969 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810000, packet:: clientPath:/zookeeper/config serverPath:/zookeeper/config finished:false header:: 1,4  replyHeader:: 1,1,0  request:: '/zookeeper/config,T  response:: ,s{0,0,0,0,0,0,-1,0,0,0,0}
+12:41:35.971 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810000 type:getData cxid:0x2 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:35.971 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810000 type:getData cxid:0x2 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:35.971 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 1
+12:41:35.971 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [1,s{'world,'anyone}
+]
+12:41:35.971 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:35.976 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810000, packet:: clientPath:/zookeeper/config serverPath:/zookeeper/config finished:false header:: 2,4  replyHeader:: 2,1,0  request:: '/zookeeper/config,T  response:: ,s{0,0,0,0,0,0,-1,0,0,0,0}
+12:41:35.978 [main-EventThread] INFO org.apache.curator.framework.imps.EnsembleTracker -- New config event received: {}
+12:41:35.978 [main-EventThread] DEBUG org.apache.curator.framework.imps.EnsembleTracker -- Ignoring new config as it is empty
+12:41:35.978 [main-EventThread] INFO org.apache.curator.framework.imps.EnsembleTracker -- New config event received: {}
+12:41:35.979 [main-EventThread] DEBUG org.apache.curator.framework.imps.EnsembleTracker -- Ignoring new config as it is empty
+Starting update...
+12:41:36.057 [main] INFO org.apache.curator.framework.imps.CuratorFrameworkImpl -- Starting
+12:41:36.057 [main] DEBUG org.apache.curator.CuratorZookeeperClient -- Starting
+12:41:36.057 [main] DEBUG org.apache.curator.ConnectionState -- Starting
+12:41:36.057 [main] DEBUG org.apache.curator.ConnectionState -- reset
+12:41:36.058 [main] INFO org.apache.zookeeper.ZooKeeper -- Initiating client connection, connectString=127.0.0.1:45201 sessionTimeout=60000 watcher=org.apache.curator.ConnectionState@27eedb64
+12:41:36.058 [main] INFO org.apache.zookeeper.ClientCnxnSocket -- jute.maxbuffer value is 1048575 Bytes
+12:41:36.058 [main] INFO org.apache.zookeeper.ClientCnxn -- zookeeper.request.timeout value is 0. feature enabled=false
+12:41:36.060 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.SaslServerPrincipal -- Canonicalized address to localhost
+12:41:36.060 [main-SendThread(127.0.0.1:45201)] INFO org.apache.zookeeper.ClientCnxn -- Opening socket connection to server localhost/127.0.0.1:45201.
+12:41:36.060 [main-SendThread(127.0.0.1:45201)] INFO org.apache.zookeeper.ClientCnxn -- SASL config status: Will not attempt to authenticate using SASL (unknown error)
+12:41:36.064 [NIOServerCxnFactory.AcceptThread:0.0.0.0/0.0.0.0:0] DEBUG org.apache.zookeeper.server.NIOServerCnxnFactory -- Accepted socket connection from /127.0.0.1:43674
+12:41:36.064 [main-SendThread(127.0.0.1:45201)] INFO org.apache.zookeeper.ClientCnxn -- Socket connection established, initiating session, client: /127.0.0.1:43674, server: localhost/127.0.0.1:45201
+12:41:36.065 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Session establishment request sent on localhost/127.0.0.1:45201
+12:41:36.065 [main] INFO org.apache.curator.framework.imps.CuratorFrameworkImpl -- Default schema
+12:41:36.066 [NIOWorkerThread-7] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Session establishment request from client /127.0.0.1:43674 client's lastZxid is 0x0
+12:41:36.066 [NIOWorkerThread-7] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Adding session 0x100001ad7810001
+12:41:36.066 [NIOWorkerThread-7] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client attempting to establish new session: session = 0x100001ad7810001, zxid = 0x0, timeout = 60000, address = /127.0.0.1:43674
+12:41:36.066 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 1371985504
+12:41:36.067 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:createSession cxid:0x0 zxid:0x2 txntype:-10 reqpath:n/a
+12:41:36.067 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: 2, Digest in log and actual tree: 1371985504
+12:41:36.067 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:createSession cxid:0x0 zxid:0x2 txntype:-10 reqpath:n/a
+12:41:36.068 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Established session 0x100001ad7810001 with negotiated timeout 20000 for client /127.0.0.1:43674
+12:41:36.071 [main-SendThread(127.0.0.1:45201)] INFO org.apache.zookeeper.ClientCnxn -- Session establishment complete on server localhost/127.0.0.1:45201, session id = 0x100001ad7810001, negotiated timeout = 20000
+12:41:36.071 [main-EventThread] DEBUG org.apache.curator.ConnectionState -- Negotiated session timeout: 20000
+12:41:36.072 [main-EventThread] INFO org.apache.curator.framework.state.ConnectionStateManager -- State change: CONNECTED
+12:41:36.072 [main-EventThread] DEBUG org.apache.curator.framework.imps.CuratorFrameworkImpl -- Clearing sleep for 1 operations
+12:41:36.073 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.073 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:getData cxid:0x1 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:36.073 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:getData cxid:0x1 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:36.073 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 1
+12:41:36.073 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [1,s{'world,'anyone}
+]
+12:41:36.074 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.076 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.077 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:getData cxid:0x2 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:36.077 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:getData cxid:0x2 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:36.077 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 1
+12:41:36.077 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [1,s{'world,'anyone}
+]
+12:41:36.077 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:/zookeeper/config serverPath:/zookeeper/config finished:false header:: 1,4  replyHeader:: 1,2,0  request:: '/zookeeper/config,T  response:: ,s{0,0,0,0,0,0,-1,0,0,0,0}
+12:41:36.078 [main-EventThread] INFO org.apache.curator.framework.imps.EnsembleTracker -- New config event received: {}
+12:41:36.078 [main-EventThread] DEBUG org.apache.curator.framework.imps.EnsembleTracker -- Ignoring new config as it is empty
+12:41:36.077 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.082 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:/zookeeper/config serverPath:/zookeeper/config finished:false header:: 2,4  replyHeader:: 2,2,0  request:: '/zookeeper/config,T  response:: ,s{0,0,0,0,0,0,-1,0,0,0,0}
+12:41:36.084 [main-EventThread] INFO org.apache.curator.framework.imps.EnsembleTracker -- New config event received: {}
+12:41:36.084 [main-EventThread] DEBUG org.apache.curator.framework.imps.EnsembleTracker -- Ignoring new config as it is empty
+12:41:36.511 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.512 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Processing ACL: 31,s{'world,'anyone}
+
+12:41:36.515 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:create2 cxid:0x3 zxid:0x3 txntype:-1 reqpath:n/a
+12:41:36.515 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Ignoring processTxn failure hdr: -1 : error: -101
+12:41:36.516 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:null serverPath:null finished:false header:: 3,15  replyHeader:: 3,3,-101  request:: '/zookeeper-migrations/lock/_c_88a71a46-b4cf-429e-b68a-8266330a2245-lock-,#3139322e3136382e302e32,v{s{31,s{'world,'anyone}}},3  response::
+12:41:36.523 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.523 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:exists cxid:0x4 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations
+12:41:36.523 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:exists cxid:0x4 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations
+12:41:36.525 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:null serverPath:null finished:false header:: 4,3  replyHeader:: 4,3,-101  request:: '/zookeeper-migrations,F  response::
+12:41:36.527 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.528 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Processing ACL: 31,s{'world,'anyone}
+
+12:41:36.529 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 4
+12:41:36.529 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.529 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.530 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 1371985504
+12:41:36.530 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from outstandingChanges is: 4387984266
+12:41:36.531 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:createContainer cxid:0x5 zxid:0x4 txntype:19 reqpath:n/a
+12:41:36.532 [SyncThread:0] DEBUG org.apache.zookeeper.common.PathTrie -- zookeeper-migrations
+12:41:36.534 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: 4, Digest in log and actual tree: 6656109536
+12:41:36.534 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:createContainer cxid:0x5 zxid:0x4 txntype:19 reqpath:n/a
+12:41:36.535 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:null serverPath:null finished:false header:: 5,19  replyHeader:: 5,4,0  request:: '/zookeeper-migrations,,v{s{31,s{'world,'anyone}}},4  response:: '/zookeeper-migrations
+12:41:36.537 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.537 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:exists cxid:0x6 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/lock
+12:41:36.538 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:exists cxid:0x6 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/lock
+12:41:36.538 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:null serverPath:null finished:false header:: 6,3  replyHeader:: 6,4,-101  request:: '/zookeeper-migrations/lock,F  response::
+12:41:36.540 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.540 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Processing ACL: 31,s{'world,'anyone}
+
+12:41:36.541 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 4
+12:41:36.541 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.541 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.541 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 6656109536
+12:41:36.542 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from outstandingChanges is: 8051059286
+12:41:36.542 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:createContainer cxid:0x7 zxid:0x5 txntype:19 reqpath:n/a
+12:41:36.543 [SyncThread:0] DEBUG org.apache.zookeeper.common.PathTrie -- zookeeper-migrations
+12:41:36.543 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: 5, Digest in log and actual tree: 11775276039
+12:41:36.543 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:createContainer cxid:0x7 zxid:0x5 txntype:19 reqpath:n/a
+12:41:36.544 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:null serverPath:null finished:false header:: 7,19  replyHeader:: 7,5,0  request:: '/zookeeper-migrations/lock,,v{s{31,s{'world,'anyone}}},4  response:: '/zookeeper-migrations/lock
+12:41:36.546 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.546 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Processing ACL: 31,s{'world,'anyone}
+
+12:41:36.547 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 4
+12:41:36.547 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.547 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.549 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 11775276039
+12:41:36.549 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from outstandingChanges is: 9561856426
+12:41:36.550 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:create2 cxid:0x8 zxid:0x6 txntype:15 reqpath:n/a
+12:41:36.550 [SyncThread:0] DEBUG org.apache.zookeeper.common.PathTrie -- zookeeper-migrations
+12:41:36.550 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: 6, Digest in log and actual tree: 10584556512
+12:41:36.551 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:create2 cxid:0x8 zxid:0x6 txntype:15 reqpath:n/a
+12:41:36.552 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:null serverPath:null finished:false header:: 8,15  replyHeader:: 8,6,0  request:: '/zookeeper-migrations/lock/_c_88a71a46-b4cf-429e-b68a-8266330a2245-lock-,#3139322e3136382e302e32,v{s{31,s{'world,'anyone}}},3  response:: '/zookeeper-migrations/lock/_c_88a71a46-b4cf-429e-b68a-8266330a2245-lock-0000000000,s{6,6,1768048896546,1768048896546,0,0,0,72057709322633217,11,0,6}
+12:41:36.558 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.558 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:getChildren2 cxid:0x9 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/lock
+12:41:36.558 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:getChildren2 cxid:0x9 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/lock
+12:41:36.559 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 1
+12:41:36.559 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.559 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.560 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:null serverPath:null finished:false header:: 9,12  replyHeader:: 9,6,0  request:: '/zookeeper-migrations/lock,F  response:: v{'_c_88a71a46-b4cf-429e-b68a-8266330a2245-lock-0000000000},s{5,5,1768048896540,1768048896540,0,1,0,0,0,1,6}
+12:41:36.564 [main] INFO com.zkmigration.core.MigrationService -- Lock acquired. Checking for migrations...
+12:41:36.567 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.568 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:exists cxid:0xa zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/changelog
+12:41:36.568 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:exists cxid:0xa zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/changelog
+12:41:36.569 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:null serverPath:null finished:false header:: 10,3  replyHeader:: 10,6,-101  request:: '/zookeeper-migrations/changelog,F  response::
+12:41:36.571 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.572 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Processing ACL: 31,s{'world,'anyone}
+
+12:41:36.572 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 4
+12:41:36.572 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.573 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.573 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 10584556512
+12:41:36.573 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from outstandingChanges is: 10093248401
+12:41:36.574 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:create2 cxid:0xb zxid:0x7 txntype:15 reqpath:n/a
+12:41:36.574 [SyncThread:0] DEBUG org.apache.zookeeper.common.PathTrie -- zookeeper-migrations
+12:41:36.574 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: 7, Digest in log and actual tree: 12962153316
+12:41:36.574 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:create2 cxid:0xb zxid:0x7 txntype:15 reqpath:n/a
+12:41:36.575 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:null serverPath:null finished:false header:: 11,15  replyHeader:: 11,7,0  request:: '/zookeeper-migrations/changelog,#3139322e3136382e302e32,v{s{31,s{'world,'anyone}}},0  response:: '/zookeeper-migrations/changelog,s{7,7,1768048896571,1768048896571,0,0,0,0,11,0,7}
+12:41:36.577 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.578 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:getChildren2 cxid:0xc zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/changelog
+12:41:36.578 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:getChildren2 cxid:0xc zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/changelog
+12:41:36.578 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 1
+12:41:36.578 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.578 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.579 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:null serverPath:null finished:false header:: 12,12  replyHeader:: 12,7,0  request:: '/zookeeper-migrations/changelog,F  response:: v{},s{7,7,1768048896571,1768048896571,0,0,0,0,11,0,7}
+12:41:36.580 [main] INFO com.zkmigration.core.MigrationService -- Applying ChangeSet: cli-1
+12:41:36.580 [main] INFO com.zkmigration.core.MigrationExecutor -- Executing ChangeSet: cli-1
+12:41:36.580 [main] INFO com.zkmigration.core.MigrationExecutor -- Creating node: /cli-test
+12:41:36.581 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.582 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Processing ACL: 31,s{'world,'anyone}
+
+12:41:36.582 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 4
+12:41:36.582 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.582 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.583 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 12962153316
+12:41:36.583 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from outstandingChanges is: 12980080239
+12:41:36.584 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:create2 cxid:0xd zxid:0x8 txntype:15 reqpath:n/a
+12:41:36.584 [SyncThread:0] DEBUG org.apache.zookeeper.common.PathTrie -- cli-test
+12:41:36.584 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: 8, Digest in log and actual tree: 14101323799
+12:41:36.584 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:create2 cxid:0xd zxid:0x8 txntype:15 reqpath:n/a
+12:41:36.585 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:null serverPath:null finished:false header:: 13,15  replyHeader:: 13,8,0  request:: '/cli-test,#636c692d64617461,v{s{31,s{'world,'anyone}}},0  response:: '/cli-test,s{8,8,1768048896581,1768048896581,0,0,0,0,8,0,8}
+12:41:36.587 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.587 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:exists cxid:0xe zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/changelog
+12:41:36.588 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:exists cxid:0xe zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/changelog
+12:41:36.589 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:null serverPath:null finished:false header:: 14,3  replyHeader:: 14,8,0  request:: '/zookeeper-migrations/changelog,F  response:: s{7,7,1768048896571,1768048896571,0,0,0,0,11,0,7}
+12:41:36.619 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.619 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Processing ACL: 31,s{'world,'anyone}
+
+12:41:36.620 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 4
+12:41:36.620 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.620 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.621 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 14101323799
+12:41:36.621 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from outstandingChanges is: 11751597612
+12:41:36.621 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:create2 cxid:0xf zxid:0x9 txntype:15 reqpath:n/a
+12:41:36.622 [SyncThread:0] DEBUG org.apache.zookeeper.common.PathTrie -- zookeeper-migrations
+12:41:36.622 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: 9, Digest in log and actual tree: 15639751633
+12:41:36.622 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:create2 cxid:0xf zxid:0x9 txntype:15 reqpath:n/a
+12:41:36.623 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:null serverPath:null finished:false header:: 15,15  replyHeader:: 15,9,0  request:: '/zookeeper-migrations/changelog/Y2xpLTE,#7b226964223a22636c692d31222c22617574686f72223a2273797374656d2d74657374222c2265786563757465644174223a313736383034383839363539317d,v{s{31,s{'world,'anyone}}},0  response:: '/zookeeper-migrations/changelog/Y2xpLTE,s{9,9,1768048896619,1768048896619,0,0,0,0,64,0,9}
+12:41:36.624 [main] INFO com.zkmigration.core.MigrationService -- ChangeSet cli-1 applied successfully.
+12:41:36.628 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.628 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 8
+12:41:36.628 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.629 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.630 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 15639751633
+12:41:36.630 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from outstandingChanges is: 18037592338
+12:41:36.631 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:delete cxid:0x10 zxid:0xa txntype:2 reqpath:n/a
+12:41:36.631 [SyncThread:0] DEBUG org.apache.zookeeper.common.PathTrie -- zookeeper-migrations
+12:41:36.631 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: a, Digest in log and actual tree: 17014892252
+12:41:36.631 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:delete cxid:0x10 zxid:0xa txntype:2 reqpath:n/a
+12:41:36.632 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:null serverPath:null finished:false header:: 16,2  replyHeader:: 16,10,0  request:: '/zookeeper-migrations/lock/_c_88a71a46-b4cf-429e-b68a-8266330a2245-lock-0000000000,-1  response:: null
+Update complete.
+12:41:36.633 [main] DEBUG org.apache.curator.framework.imps.CuratorFrameworkImpl -- Closing
+12:41:36.634 [Curator-Framework-0] INFO org.apache.curator.framework.imps.CuratorFrameworkImpl -- backgroundOperationsLoop exiting
+12:41:36.635 [main] DEBUG org.apache.curator.framework.imps.WatcherRemovalManager -- Removing watcher for path: /zookeeper/config
+12:41:36.648 [main] DEBUG org.apache.curator.CuratorZookeeperClient -- Closing, waitForShutdownTimeoutMs 0
+12:41:36.648 [main] DEBUG org.apache.curator.ConnectionState -- Closing
+12:41:36.648 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810001
+12:41:36.648 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:checkWatches cxid:0x11 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:36.649 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:checkWatches cxid:0x11 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:36.649 [main] DEBUG org.apache.zookeeper.ZooKeeper -- Closing session: 0x100001ad7810001
+12:41:36.649 [main] DEBUG org.apache.zookeeper.ClientCnxn -- Closing client for session: 0x100001ad7810001
+12:41:36.650 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:/zookeeper/config serverPath:/zookeeper/config finished:false header:: 17,17  replyHeader:: 17,10,0  request:: '/zookeeper/config,3  response:: null
+12:41:36.652 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 17014892252
+12:41:36.653 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810001 type:closeSession cxid:0x12 zxid:0xb txntype:-11 reqpath:n/a
+12:41:36.653 [SyncThread:0] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Removing session 0x100001ad7810001
+12:41:36.653 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: b, Digest in log and actual tree: 17014892252
+12:41:36.653 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810001 type:closeSession cxid:0x12 zxid:0xb txntype:-11 reqpath:n/a
+12:41:36.654 [NIOWorkerThread-3] DEBUG org.apache.zookeeper.jmx.MBeanRegistry -- Unregister MBean [org.apache.ZooKeeperService:name0=StandaloneServer_port45201,name1=Connections,name2=127.0.0.1,name3=0x100001ad7810001]
+12:41:36.654 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810001, packet:: clientPath:null serverPath:null finished:false header:: 18,-11  replyHeader:: 18,11,0  request:: null response:: null
+12:41:36.654 [NIOWorkerThread-3] DEBUG org.apache.zookeeper.server.NIOServerCnxn -- Closed socket connection for client /127.0.0.1:43674 which had sessionid 0x100001ad7810001
+12:41:36.654 [main] DEBUG org.apache.zookeeper.ClientCnxn -- Disconnecting client for session: 0x100001ad7810001
+12:41:36.655 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- An exception was thrown while closing send thread for session 0x100001ad7810001.
+org.apache.zookeeper.ClientCnxn$EndOfStreamException: Unable to read additional data from server sessionid 0x100001ad7810001, likely server has closed socket
+	at org.apache.zookeeper.ClientCnxnSocketNIO.doIO(ClientCnxnSocketNIO.java:77)
+	at org.apache.zookeeper.ClientCnxnSocketNIO.doTransport(ClientCnxnSocketNIO.java:350)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1283)
+12:41:36.760 [main-EventThread] INFO org.apache.zookeeper.ClientCnxn -- EventThread shut down for session: 0x100001ad7810001
+12:41:36.760 [main] INFO org.apache.zookeeper.ZooKeeper -- Session: 0x100001ad7810001 closed
+12:41:36.883 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810000
+12:41:36.886 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810000 type:exists cxid:0x3 zxid:0xfffffffffffffffe txntype:unknown reqpath:/cli-test
+12:41:36.886 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810000 type:exists cxid:0x3 zxid:0xfffffffffffffffe txntype:unknown reqpath:/cli-test
+12:41:36.887 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810000, packet:: clientPath:null serverPath:null finished:false header:: 3,3  replyHeader:: 3,11,0  request:: '/cli-test,F  response:: s{8,8,1768048896581,1768048896581,0,0,0,0,8,0,8}
+12:41:36.892 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810000
+12:41:36.893 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810000 type:getData cxid:0x4 zxid:0xfffffffffffffffe txntype:unknown reqpath:/cli-test
+12:41:36.893 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810000 type:getData cxid:0x4 zxid:0xfffffffffffffffe txntype:unknown reqpath:/cli-test
+12:41:36.893 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 1
+12:41:36.893 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.893 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.895 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810000, packet:: clientPath:null serverPath:null finished:false header:: 4,4  replyHeader:: 4,11,0  request:: '/cli-test,F  response:: #636c692d64617461,s{8,8,1768048896581,1768048896581,0,0,0,0,8,0,8}
+12:41:36.901 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810000
+12:41:36.901 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810000 type:getChildren2 cxid:0x5 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/changelog
+12:41:36.901 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810000 type:getChildren2 cxid:0x5 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/changelog
+12:41:36.903 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 1
+12:41:36.904 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.904 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.904 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810000, packet:: clientPath:null serverPath:null finished:false header:: 5,12  replyHeader:: 5,11,0  request:: '/zookeeper-migrations/changelog,F  response:: v{'Y2xpLTE},s{7,7,1768048896571,1768048896571,0,1,0,0,11,1,9}
+Starting rollback...
+12:41:36.932 [main] INFO org.apache.curator.framework.imps.CuratorFrameworkImpl -- Starting
+12:41:36.932 [main] DEBUG org.apache.curator.CuratorZookeeperClient -- Starting
+12:41:36.933 [main] DEBUG org.apache.curator.ConnectionState -- Starting
+12:41:36.933 [main] DEBUG org.apache.curator.ConnectionState -- reset
+12:41:36.933 [main] INFO org.apache.zookeeper.ZooKeeper -- Initiating client connection, connectString=127.0.0.1:45201 sessionTimeout=60000 watcher=org.apache.curator.ConnectionState@79c4715d
+12:41:36.933 [main] INFO org.apache.zookeeper.ClientCnxnSocket -- jute.maxbuffer value is 1048575 Bytes
+12:41:36.934 [main] INFO org.apache.zookeeper.ClientCnxn -- zookeeper.request.timeout value is 0. feature enabled=false
+12:41:36.935 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.SaslServerPrincipal -- Canonicalized address to localhost
+12:41:36.935 [main-SendThread(127.0.0.1:45201)] INFO org.apache.zookeeper.ClientCnxn -- Opening socket connection to server localhost/127.0.0.1:45201.
+12:41:36.935 [main-SendThread(127.0.0.1:45201)] INFO org.apache.zookeeper.ClientCnxn -- SASL config status: Will not attempt to authenticate using SASL (unknown error)
+12:41:36.943 [main] INFO org.apache.curator.framework.imps.CuratorFrameworkImpl -- Default schema
+12:41:36.947 [NIOServerCxnFactory.AcceptThread:0.0.0.0/0.0.0.0:0] DEBUG org.apache.zookeeper.server.NIOServerCnxnFactory -- Accepted socket connection from /127.0.0.1:43688
+12:41:36.950 [main-SendThread(127.0.0.1:45201)] INFO org.apache.zookeeper.ClientCnxn -- Socket connection established, initiating session, client: /127.0.0.1:43688, server: localhost/127.0.0.1:45201
+12:41:36.954 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Session establishment request sent on localhost/127.0.0.1:45201
+12:41:36.955 [NIOWorkerThread-2] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Session establishment request from client /127.0.0.1:43688 client's lastZxid is 0x0
+12:41:36.955 [NIOWorkerThread-2] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Adding session 0x100001ad7810002
+12:41:36.955 [NIOWorkerThread-2] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client attempting to establish new session: session = 0x100001ad7810002, zxid = 0x0, timeout = 60000, address = /127.0.0.1:43688
+12:41:36.955 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 17014892252
+12:41:36.956 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810002 type:createSession cxid:0x0 zxid:0xc txntype:-10 reqpath:n/a
+12:41:36.956 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: c, Digest in log and actual tree: 17014892252
+12:41:36.956 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810002 type:createSession cxid:0x0 zxid:0xc txntype:-10 reqpath:n/a
+12:41:36.957 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Established session 0x100001ad7810002 with negotiated timeout 20000 for client /127.0.0.1:43688
+12:41:36.958 [main-SendThread(127.0.0.1:45201)] INFO org.apache.zookeeper.ClientCnxn -- Session establishment complete on server localhost/127.0.0.1:45201, session id = 0x100001ad7810002, negotiated timeout = 20000
+12:41:36.958 [main-EventThread] DEBUG org.apache.curator.ConnectionState -- Negotiated session timeout: 20000
+12:41:36.958 [main-EventThread] INFO org.apache.curator.framework.state.ConnectionStateManager -- State change: CONNECTED
+12:41:36.958 [main-EventThread] DEBUG org.apache.curator.framework.imps.CuratorFrameworkImpl -- Clearing sleep for 1 operations
+12:41:36.959 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810002
+12:41:36.959 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810002 type:getData cxid:0x1 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:36.959 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810002 type:getData cxid:0x1 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:36.959 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 1
+12:41:36.959 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810002
+12:41:36.959 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [1,s{'world,'anyone}
+]
+12:41:36.959 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.960 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810002 type:getData cxid:0x2 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:36.960 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810002 type:getData cxid:0x2 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:36.960 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 1
+12:41:36.960 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810002
+12:41:36.960 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [1,s{'world,'anyone}
+]
+12:41:36.960 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.960 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Processing ACL: 31,s{'world,'anyone}
+
+12:41:36.960 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 4
+12:41:36.961 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.961 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.960 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810002, packet:: clientPath:/zookeeper/config serverPath:/zookeeper/config finished:false header:: 1,4  replyHeader:: 1,12,0  request:: '/zookeeper/config,T  response:: ,s{0,0,0,0,0,0,-1,0,0,0,0}
+12:41:36.961 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 17014892252
+12:41:36.962 [main-EventThread] INFO org.apache.curator.framework.imps.EnsembleTracker -- New config event received: {}
+12:41:36.962 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from outstandingChanges is: 14733714379
+12:41:36.962 [main-EventThread] DEBUG org.apache.curator.framework.imps.EnsembleTracker -- Ignoring new config as it is empty
+12:41:36.962 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810002, packet:: clientPath:/zookeeper/config serverPath:/zookeeper/config finished:false header:: 2,4  replyHeader:: 2,12,0  request:: '/zookeeper/config,T  response:: ,s{0,0,0,0,0,0,-1,0,0,0,0}
+12:41:36.963 [main-EventThread] INFO org.apache.curator.framework.imps.EnsembleTracker -- New config event received: {}
+12:41:36.963 [main-EventThread] DEBUG org.apache.curator.framework.imps.EnsembleTracker -- Ignoring new config as it is empty
+12:41:36.963 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810002 type:create2 cxid:0x3 zxid:0xd txntype:15 reqpath:n/a
+12:41:36.963 [SyncThread:0] DEBUG org.apache.zookeeper.common.PathTrie -- zookeeper-migrations
+12:41:36.963 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: d, Digest in log and actual tree: 18217126589
+12:41:36.964 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810002 type:create2 cxid:0x3 zxid:0xd txntype:15 reqpath:n/a
+12:41:36.964 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810002, packet:: clientPath:null serverPath:null finished:false header:: 3,15  replyHeader:: 3,13,0  request:: '/zookeeper-migrations/lock/_c_d33b5280-f873-4b27-b4f8-ac4a5d3b9505-lock-,#3139322e3136382e302e32,v{s{31,s{'world,'anyone}}},3  response:: '/zookeeper-migrations/lock/_c_d33b5280-f873-4b27-b4f8-ac4a5d3b9505-lock-0000000001,s{13,13,1768048896960,1768048896960,0,0,0,72057709322633218,11,0,13}
+12:41:36.966 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810002
+12:41:36.967 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810002 type:getChildren2 cxid:0x4 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/lock
+12:41:36.967 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810002 type:getChildren2 cxid:0x4 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/lock
+12:41:36.967 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 1
+12:41:36.967 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.967 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.968 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810002, packet:: clientPath:null serverPath:null finished:false header:: 4,12  replyHeader:: 4,13,0  request:: '/zookeeper-migrations/lock,F  response:: v{'_c_d33b5280-f873-4b27-b4f8-ac4a5d3b9505-lock-0000000001},s{5,5,1768048896540,1768048896540,0,3,0,0,0,1,13}
+12:41:36.969 [main] INFO com.zkmigration.core.MigrationService -- Lock acquired. Processing rollback...
+12:41:36.970 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810002
+12:41:36.970 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810002 type:exists cxid:0x5 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/changelog
+12:41:36.971 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810002 type:exists cxid:0x5 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/changelog
+12:41:36.971 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810002, packet:: clientPath:null serverPath:null finished:false header:: 5,3  replyHeader:: 5,13,0  request:: '/zookeeper-migrations/changelog,F  response:: s{7,7,1768048896571,1768048896571,0,1,0,0,11,1,9}
+12:41:36.973 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810002
+12:41:36.973 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810002 type:getChildren2 cxid:0x6 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/changelog
+12:41:36.973 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810002 type:getChildren2 cxid:0x6 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/changelog
+12:41:36.974 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 1
+12:41:36.974 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.974 [SyncThread:0] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.975 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810002, packet:: clientPath:null serverPath:null finished:false header:: 6,12  replyHeader:: 6,13,0  request:: '/zookeeper-migrations/changelog,F  response:: v{'Y2xpLTE},s{7,7,1768048896571,1768048896571,0,1,0,0,11,1,9}
+12:41:36.976 [main] INFO com.zkmigration.core.MigrationService -- Rolling back ChangeSet: cli-1
+12:41:36.976 [main] INFO com.zkmigration.core.MigrationExecutor -- Rolling back ChangeSet: cli-1
+12:41:36.976 [main] INFO com.zkmigration.core.MigrationExecutor -- Deleting node: /cli-test
+12:41:36.977 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810002
+12:41:36.977 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 8
+12:41:36.977 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.977 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.977 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 18217126589
+12:41:36.977 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from outstandingChanges is: 15319017853
+12:41:36.978 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810002 type:delete cxid:0x7 zxid:0xe txntype:2 reqpath:n/a
+12:41:36.978 [SyncThread:0] DEBUG org.apache.zookeeper.common.PathTrie -- cli-test
+12:41:36.978 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: e, Digest in log and actual tree: 14197774293
+12:41:36.978 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810002 type:delete cxid:0x7 zxid:0xe txntype:2 reqpath:n/a
+12:41:36.979 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810002, packet:: clientPath:null serverPath:null finished:false header:: 7,2  replyHeader:: 7,14,0  request:: '/cli-test,-1  response:: null
+12:41:36.981 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810002
+12:41:36.981 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 8
+12:41:36.981 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.981 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.982 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 14197774293
+12:41:36.982 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from outstandingChanges is: 16533898517
+12:41:36.982 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810002 type:delete cxid:0x8 zxid:0xf txntype:2 reqpath:n/a
+12:41:36.983 [SyncThread:0] DEBUG org.apache.zookeeper.common.PathTrie -- zookeeper-migrations
+12:41:36.983 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: f, Digest in log and actual tree: 12645744496
+12:41:36.983 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810002 type:delete cxid:0x8 zxid:0xf txntype:2 reqpath:n/a
+12:41:36.983 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810002, packet:: clientPath:null serverPath:null finished:false header:: 8,2  replyHeader:: 8,15,0  request:: '/zookeeper-migrations/changelog/Y2xpLTE,-1  response:: null
+12:41:36.984 [main] INFO com.zkmigration.core.MigrationService -- ChangeSet cli-1 rolled back successfully.
+12:41:36.985 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810002
+12:41:36.985 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Permission requested: 8
+12:41:36.985 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ACLs for node: [31,s{'world,'anyone}
+]
+12:41:36.985 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- Client credentials: ['ip,'127.0.0.1
+]
+12:41:36.985 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 12645744496
+12:41:36.985 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from outstandingChanges is: 11844079571
+12:41:36.986 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810002 type:delete cxid:0x9 zxid:0x10 txntype:2 reqpath:n/a
+12:41:36.986 [SyncThread:0] DEBUG org.apache.zookeeper.common.PathTrie -- zookeeper-migrations
+12:41:36.986 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: 10, Digest in log and actual tree: 8360667361
+12:41:36.986 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810002 type:delete cxid:0x9 zxid:0x10 txntype:2 reqpath:n/a
+12:41:36.987 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810002, packet:: clientPath:null serverPath:null finished:false header:: 9,2  replyHeader:: 9,16,0  request:: '/zookeeper-migrations/lock/_c_d33b5280-f873-4b27-b4f8-ac4a5d3b9505-lock-0000000001,-1  response:: null
+Rollback complete.
+12:41:36.988 [main] DEBUG org.apache.curator.framework.imps.CuratorFrameworkImpl -- Closing
+12:41:36.988 [Curator-Framework-0] INFO org.apache.curator.framework.imps.CuratorFrameworkImpl -- backgroundOperationsLoop exiting
+12:41:36.988 [main] DEBUG org.apache.curator.framework.imps.WatcherRemovalManager -- Removing watcher for path: /zookeeper/config
+12:41:36.988 [main] DEBUG org.apache.curator.CuratorZookeeperClient -- Closing, waitForShutdownTimeoutMs 0
+12:41:36.988 [main] DEBUG org.apache.curator.ConnectionState -- Closing
+12:41:36.988 [main] DEBUG org.apache.zookeeper.ZooKeeper -- Closing session: 0x100001ad7810002
+12:41:36.988 [main] DEBUG org.apache.zookeeper.ClientCnxn -- Closing client for session: 0x100001ad7810002
+12:41:36.989 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810002
+12:41:36.989 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810002 type:checkWatches cxid:0xa zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:36.989 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 8360667361
+12:41:36.989 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810002 type:checkWatches cxid:0xa zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:36.991 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810002, packet:: clientPath:/zookeeper/config serverPath:/zookeeper/config finished:false header:: 10,17  replyHeader:: 10,16,0  request:: '/zookeeper/config,3  response:: null
+12:41:36.991 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810002 type:closeSession cxid:0xb zxid:0x11 txntype:-11 reqpath:n/a
+12:41:36.992 [SyncThread:0] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Removing session 0x100001ad7810002
+12:41:36.992 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: 11, Digest in log and actual tree: 8360667361
+12:41:36.992 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810002 type:closeSession cxid:0xb zxid:0x11 txntype:-11 reqpath:n/a
+12:41:36.992 [NIOWorkerThread-1] DEBUG org.apache.zookeeper.jmx.MBeanRegistry -- Unregister MBean [org.apache.ZooKeeperService:name0=StandaloneServer_port45201,name1=Connections,name2=127.0.0.1,name3=0x100001ad7810002]
+12:41:36.992 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810002, packet:: clientPath:null serverPath:null finished:false header:: 11,-11  replyHeader:: 11,17,0  request:: null response:: null
+12:41:36.993 [main] DEBUG org.apache.zookeeper.ClientCnxn -- Disconnecting client for session: 0x100001ad7810002
+12:41:36.993 [NIOWorkerThread-1] DEBUG org.apache.zookeeper.server.NIOServerCnxn -- Closed socket connection for client /127.0.0.1:43688 which had sessionid 0x100001ad7810002
+12:41:36.993 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- An exception was thrown while closing send thread for session 0x100001ad7810002.
+org.apache.zookeeper.ClientCnxn$EndOfStreamException: Unable to read additional data from server sessionid 0x100001ad7810002, likely server has closed socket
+	at org.apache.zookeeper.ClientCnxnSocketNIO.doIO(ClientCnxnSocketNIO.java:77)
+	at org.apache.zookeeper.ClientCnxnSocketNIO.doTransport(ClientCnxnSocketNIO.java:350)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1283)
+12:41:37.094 [main-EventThread] INFO org.apache.zookeeper.ClientCnxn -- EventThread shut down for session: 0x100001ad7810002
+12:41:37.094 [main] INFO org.apache.zookeeper.ZooKeeper -- Session: 0x100001ad7810002 closed
+12:41:37.095 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810000
+12:41:37.095 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810000 type:exists cxid:0x6 zxid:0xfffffffffffffffe txntype:unknown reqpath:/cli-test
+12:41:37.095 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810000 type:exists cxid:0x6 zxid:0xfffffffffffffffe txntype:unknown reqpath:/cli-test
+12:41:37.096 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810000, packet:: clientPath:null serverPath:null finished:false header:: 6,3  replyHeader:: 6,17,-101  request:: '/cli-test,F  response::
+12:41:37.098 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810000
+12:41:37.098 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810000 type:exists cxid:0x7 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/changelog/Y2xpLTE
+12:41:37.098 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810000 type:exists cxid:0x7 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper-migrations/changelog/Y2xpLTE
+12:41:37.099 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810000, packet:: clientPath:null serverPath:null finished:false header:: 7,3  replyHeader:: 7,17,-101  request:: '/zookeeper-migrations/changelog/Y2xpLTE,F  response::
+12:41:37.105 [main] DEBUG org.apache.curator.framework.imps.CuratorFrameworkImpl -- Closing
+12:41:37.105 [Curator-Framework-0] INFO org.apache.curator.framework.imps.CuratorFrameworkImpl -- backgroundOperationsLoop exiting
+12:41:37.106 [main] DEBUG org.apache.curator.framework.imps.WatcherRemovalManager -- Removing watcher for path: /zookeeper/config
+12:41:37.107 [main] DEBUG org.apache.curator.CuratorZookeeperClient -- Closing, waitForShutdownTimeoutMs 0
+12:41:37.107 [main] DEBUG org.apache.curator.ConnectionState -- Closing
+12:41:37.107 [main] DEBUG org.apache.zookeeper.ZooKeeper -- Closing session: 0x100001ad7810000
+12:41:37.107 [main] DEBUG org.apache.zookeeper.ClientCnxn -- Closing client for session: 0x100001ad7810000
+12:41:37.107 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Checking session 0x100001ad7810000
+12:41:37.107 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810000 type:checkWatches cxid:0x8 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:37.107 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810000 type:checkWatches cxid:0x8 zxid:0xfffffffffffffffe txntype:unknown reqpath:/zookeeper/config
+12:41:37.108 [ProcessThread(sid:0 cport:45201):] DEBUG org.apache.zookeeper.server.PrepRequestProcessor -- Digest got from data tree is: 8360667361
+12:41:37.108 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810000, packet:: clientPath:/zookeeper/config serverPath:/zookeeper/config finished:false header:: 8,17  replyHeader:: 8,17,0  request:: '/zookeeper/config,3  response:: null
+12:41:37.108 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- Processing request:: sessionid:0x100001ad7810000 type:closeSession cxid:0x9 zxid:0x12 txntype:-11 reqpath:n/a
+12:41:37.108 [SyncThread:0] DEBUG org.apache.zookeeper.server.SessionTrackerImpl -- Removing session 0x100001ad7810000
+12:41:37.108 [SyncThread:0] DEBUG org.apache.zookeeper.server.DataTree -- Digests are matching for Zxid: 12, Digest in log and actual tree: 8360667361
+12:41:37.109 [SyncThread:0] DEBUG org.apache.zookeeper.server.FinalRequestProcessor -- sessionid:0x100001ad7810000 type:closeSession cxid:0x9 zxid:0x12 txntype:-11 reqpath:n/a
+12:41:37.109 [NIOWorkerThread-1] DEBUG org.apache.zookeeper.jmx.MBeanRegistry -- Unregister MBean [org.apache.ZooKeeperService:name0=StandaloneServer_port45201,name1=Connections,name2=127.0.0.1,name3=0x100001ad7810000]
+12:41:37.109 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- Reading reply session id: 0x100001ad7810000, packet:: clientPath:null serverPath:null finished:false header:: 9,-11  replyHeader:: 9,18,0  request:: null response:: null
+12:41:37.109 [NIOWorkerThread-1] DEBUG org.apache.zookeeper.server.NIOServerCnxn -- Closed socket connection for client /127.0.0.1:43662 which had sessionid 0x100001ad7810000
+12:41:37.109 [main] DEBUG org.apache.zookeeper.ClientCnxn -- Disconnecting client for session: 0x100001ad7810000
+12:41:37.109 [main-SendThread(127.0.0.1:45201)] DEBUG org.apache.zookeeper.ClientCnxn -- An exception was thrown while closing send thread for session 0x100001ad7810000.
+org.apache.zookeeper.ClientCnxn$EndOfStreamException: Unable to read additional data from server sessionid 0x100001ad7810000, likely server has closed socket
+	at org.apache.zookeeper.ClientCnxnSocketNIO.doIO(ClientCnxnSocketNIO.java:77)
+	at org.apache.zookeeper.ClientCnxnSocketNIO.doTransport(ClientCnxnSocketNIO.java:350)
+	at org.apache.zookeeper.ClientCnxn$SendThread.run(ClientCnxn.java:1283)
+12:41:37.210 [main] INFO org.apache.zookeeper.ZooKeeper -- Session: 0x100001ad7810000 closed
+12:41:37.210 [main-EventThread] INFO org.apache.zookeeper.ClientCnxn -- EventThread shut down for session: 0x100001ad7810000
+12:41:37.210 [main] INFO org.apache.zookeeper.server.embedded.ZooKeeperServerEmbeddedImpl -- Stopping ZK Server
+12:41:37.211 [ConnnectionExpirer] INFO org.apache.zookeeper.server.NIOServerCnxnFactory -- ConnnectionExpirerThread interrupted
+12:41:37.211 [NIOServerCxnFactory.AcceptThread:0.0.0.0/0.0.0.0:0] INFO org.apache.zookeeper.server.NIOServerCnxnFactory -- accept thread exitted run method
+12:41:37.212 [NIOServerCxnFactory.SelectorThread-0] INFO org.apache.zookeeper.server.NIOServerCnxnFactory -- selector thread exitted run method
+12:41:37.212 [main] INFO org.apache.zookeeper.server.ZooKeeperServer -- shutting down
+12:41:37.212 [main] INFO org.apache.zookeeper.server.RequestThrottler -- Shutting down
+12:41:37.212 [RequestThrottler] INFO org.apache.zookeeper.server.RequestThrottler -- Draining request throttler queue
+12:41:37.212 [RequestThrottler] INFO org.apache.zookeeper.server.RequestThrottler -- RequestThrottler shutdown. Dropped 0 requests
+12:41:37.212 [main] INFO org.apache.zookeeper.server.SessionTrackerImpl -- Shutting down
+12:41:37.213 [main] INFO org.apache.zookeeper.server.PrepRequestProcessor -- Shutting down
+12:41:37.213 [main] INFO org.apache.zookeeper.server.SyncRequestProcessor -- Shutting down
+12:41:37.213 [ProcessThread(sid:0 cport:45201):] INFO org.apache.zookeeper.server.PrepRequestProcessor -- PrepRequestProcessor exited loop!
+12:41:37.213 [SyncThread:0] INFO org.apache.zookeeper.server.SyncRequestProcessor -- SyncRequestProcessor exited!
+12:41:37.213 [main] INFO org.apache.zookeeper.server.FinalRequestProcessor -- shutdown of request processor complete
+12:41:37.213 [main] DEBUG org.apache.zookeeper.server.persistence.FileTxnLog -- Created new input stream: /tmp/DirectoryUtils9253940561560676790/version-2/log.1
+12:41:37.214 [main] DEBUG org.apache.zookeeper.server.persistence.FileTxnLog -- Created new input archive: /tmp/DirectoryUtils9253940561560676790/version-2/log.1
+12:41:37.215 [main] DEBUG org.apache.zookeeper.server.persistence.FileTxnLog -- EOF exception
+java.io.EOFException: Failed to read /tmp/DirectoryUtils9253940561560676790/version-2/log.1
+	at org.apache.zookeeper.server.persistence.FileTxnLog$FileTxnIterator.next(FileTxnLog.java:752)
+	at org.apache.zookeeper.server.persistence.FileTxnLog$FileTxnIterator.<init>(FileTxnLog.java:631)
+	at org.apache.zookeeper.server.persistence.FileTxnLog.read(FileTxnLog.java:447)
+	at org.apache.zookeeper.server.persistence.FileTxnLog.read(FileTxnLog.java:434)
+	at org.apache.zookeeper.server.persistence.FileTxnSnapLog.fastForwardFromEdits(FileTxnSnapLog.java:330)
+	at org.apache.zookeeper.server.ZKDatabase.fastForwardDataBase(ZKDatabase.java:301)
+	at org.apache.zookeeper.server.ZooKeeperServer.shutdown(ZooKeeperServer.java:872)
+	at org.apache.zookeeper.server.ZooKeeperServer.shutdown(ZooKeeperServer.java:820)
+	at org.apache.zookeeper.server.NIOServerCnxnFactory.shutdown(NIOServerCnxnFactory.java:908)
+	at org.apache.zookeeper.server.ZooKeeperServerMain.close(ZooKeeperServerMain.java:273)
+	at org.apache.zookeeper.server.embedded.ZooKeeperServerEmbeddedImpl.close(ZooKeeperServerEmbeddedImpl.java:210)
+	at org.apache.curator.test.ZooKeeperServerEmbeddedAdapter.close(ZooKeeperServerEmbeddedAdapter.java:143)
+	at org.apache.curator.test.TestingZooKeeperServer.stop(TestingZooKeeperServer.java:137)
+	at org.apache.curator.test.TestingZooKeeperServer.close(TestingZooKeeperServer.java:149)
+	at org.apache.curator.test.TestingServer.close(TestingServer.java:187)
+	at com.zkmigration.cli.MigrationCliSystemTest.tearDown(MigrationCliSystemTest.java:34)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:727)
+	at org.junit.jupiter.engine.execution.MethodInvocation.proceed(MethodInvocation.java:60)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$ValidatingInvocation.proceed(InvocationInterceptorChain.java:131)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.intercept(TimeoutExtension.java:156)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptLifecycleMethod(TimeoutExtension.java:128)
+	at org.junit.jupiter.engine.extension.TimeoutExtension.interceptAfterEachMethod(TimeoutExtension.java:110)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker$ReflectiveInterceptorCall.lambda$ofVoidMethod$0(InterceptingExecutableInvoker.java:103)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.lambda$invoke$0(InterceptingExecutableInvoker.java:93)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain$InterceptedInvocation.proceed(InvocationInterceptorChain.java:106)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.proceed(InvocationInterceptorChain.java:64)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.chainAndInvoke(InvocationInterceptorChain.java:45)
+	at org.junit.jupiter.engine.execution.InvocationInterceptorChain.invoke(InvocationInterceptorChain.java:37)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:92)
+	at org.junit.jupiter.engine.execution.InterceptingExecutableInvoker.invoke(InterceptingExecutableInvoker.java:86)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.invokeMethodInExtensionContext(ClassBasedTestDescriptor.java:520)
+	at org.junit.jupiter.engine.descriptor.ClassBasedTestDescriptor.lambda$synthesizeAfterEachMethodAdapter$24(ClassBasedTestDescriptor.java:510)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeAfterEachMethods$10(TestMethodTestDescriptor.java:243)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeAllAfterMethodsOrCallbacks$13(TestMethodTestDescriptor.java:276)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$invokeAllAfterMethodsOrCallbacks$14(TestMethodTestDescriptor.java:276)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeAllAfterMethodsOrCallbacks(TestMethodTestDescriptor.java:275)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeAfterEachMethods(TestMethodTestDescriptor.java:241)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:142)
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:68)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:151)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.invokeAll(SameThreadHierarchicalTestExecutorService.java:41)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$6(NodeTestTask.java:155)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$8(NodeTestTask.java:141)
+	at org.junit.platform.engine.support.hierarchical.Node.around(Node.java:137)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.lambda$executeRecursively$9(NodeTestTask.java:139)
+	at org.junit.platform.engine.support.hierarchical.ThrowableCollector.execute(ThrowableCollector.java:73)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.executeRecursively(NodeTestTask.java:138)
+	at org.junit.platform.engine.support.hierarchical.NodeTestTask.execute(NodeTestTask.java:95)
+	at org.junit.platform.engine.support.hierarchical.SameThreadHierarchicalTestExecutorService.submit(SameThreadHierarchicalTestExecutorService.java:35)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:57)
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:54)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:147)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:127)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:90)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.lambda$execute$0(EngineExecutionOrchestrator.java:55)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.withInterceptedStreams(EngineExecutionOrchestrator.java:102)
+	at org.junit.platform.launcher.core.EngineExecutionOrchestrator.execute(EngineExecutionOrchestrator.java:54)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:114)
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:86)
+	at org.junit.platform.launcher.core.DefaultLauncherSession$DelegatingLauncher.execute(DefaultLauncherSession.java:86)
+	at org.apache.maven.surefire.junitplatform.LazyLauncher.execute(LazyLauncher.java:56)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.execute(JUnitPlatformProvider.java:184)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invokeAllTests(JUnitPlatformProvider.java:148)
+	at org.apache.maven.surefire.junitplatform.JUnitPlatformProvider.invoke(JUnitPlatformProvider.java:122)
+	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:385)
+	at org.apache.maven.surefire.booter.ForkedBooter.execute(ForkedBooter.java:162)
+	at org.apache.maven.surefire.booter.ForkedBooter.run(ForkedBooter.java:507)
+	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:495)
+12:41:37.217 [main] DEBUG org.apache.zookeeper.jmx.MBeanRegistry -- Unregister MBean [org.apache.ZooKeeperService:name0=StandaloneServer_port45201,name1=InMemoryDataTree]
+12:41:37.218 [main] DEBUG org.apache.zookeeper.jmx.MBeanRegistry -- Unregister MBean [org.apache.ZooKeeperService:name0=StandaloneServer_port45201]
+12:41:37.218 [zkservermainrunner] DEBUG org.apache.zookeeper.server.ZooKeeperServer -- ZooKeeper server is not running, so not proceeding to shutdown!
+12:41:37.218 [zkservermainrunner] INFO org.apache.zookeeper.server.embedded.ZooKeeperServerEmbeddedImpl -- ZK server died. Requesting stop on JVM
+]]></system-out>
+  </testcase>
+</testsuite>

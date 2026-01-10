@@ -1,0 +1,17 @@
+com/zkmigration/core/MigrationStateService.class
+com/zkmigration/cli/MigrationCli.class
+com/zkmigration/model/ChangeSet.class
+com/zkmigration/cli/BaseCommand.class
+com/zkmigration/model/ChangeLog.class
+com/zkmigration/model/Include.class
+com/zkmigration/core/MigrationStateService$ExecutedChangeSet.class
+com/zkmigration/core/MigrationService.class
+com/zkmigration/parser/ChangeLogParser.class
+com/zkmigration/model/Change.class
+com/zkmigration/model/Create.class
+com/zkmigration/model/Delete.class
+com/zkmigration/cli/RollbackCommand.class
+com/zkmigration/core/MigrationExecutor.class
+com/zkmigration/model/Update.class
+com/zkmigration/cli/UpdateCommand.class
+com/zkmigration/model/ChangeLogEntry.class
