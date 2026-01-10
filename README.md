@@ -14,6 +14,7 @@ A Liquibase-inspired tool for managing Zookeeper state migrations. It supports c
 *   **Operations**: Create, Update, Delete ZNodes.
 *   **Checksum Validation**: Ensures historical changesets have not been modified.
 *   **Contexts & Labels**: Control execution scope with environments (e.g., `dev`, `prod`) and labels.
+*   **External Files**: Load node data from external files.
 
 ## Installation
 
@@ -112,6 +113,27 @@ databaseChangeLog:
         - update:
             path: "/config/app"
             data: "new-config"
+  - changeSet:
+      id: "3"
+      author: "jules"
+      changes:
+        - rename:
+            path: "/config/app"
+            destination: "/config/application"
+  - changeSet:
+      id: "4"
+      author: "jules"
+      changes:
+        - upsert:
+            path: "/config/feature-flags"
+            data: "enabled"
+  - changeSet:
+      id: "5"
+      author: "jules"
+      changes:
+        - create:
+            path: "/config/large-config"
+            file: "configs/large-config.json"
 ```
 
 ### Checksum Validation

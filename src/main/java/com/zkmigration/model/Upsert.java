@@ -1,6 +1,6 @@
 package com.zkmigration.model;
 
-public class Create extends Change {
+public class Upsert extends Change {
     private String data;
     private String file;
 

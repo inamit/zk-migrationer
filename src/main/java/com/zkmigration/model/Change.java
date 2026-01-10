@@ -7,7 +7,9 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 @JsonSubTypes({
     @JsonSubTypes.Type(value = Create.class, name = "create"),
     @JsonSubTypes.Type(value = Update.class, name = "update"),
-    @JsonSubTypes.Type(value = Delete.class, name = "delete")
+    @JsonSubTypes.Type(value = Delete.class, name = "delete"),
+    @JsonSubTypes.Type(value = Rename.class, name = "rename"),
+    @JsonSubTypes.Type(value = Upsert.class, name = "upsert")
 })
 public abstract class Change {
     private String path;
