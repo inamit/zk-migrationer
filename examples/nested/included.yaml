@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: "included-1"
+      author: "jules"
+      context: "dev"
+      labels: "init"
+      changes:
+        - create:
+            path: "/included/config"
+            data: "included-data"

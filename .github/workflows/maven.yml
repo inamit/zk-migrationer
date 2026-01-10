@@ -22,4 +22,23 @@ jobs:
     - name: Build with Maven
       run: mvn -B package --file pom.xml
     - name: Run Tests
-      run: mvn -B test --file pom.xml
+      run: mvn -B verify --file pom.xml
+
+    - name: Generate JaCoCo Badge
+      uses: cicirello/jacoco-badge-generator@v2
+      with:
+        generate-branches-badge: true
+        jacoco-csv-file: target/site/jacoco/jacoco.csv
+
+    - name: Log Coverage
+      run: |
+        echo "Coverage percentage: $(cat .github/badges/jacoco.svg | grep -oE '[0-9]+%')"
+
+    - name: Commit Badge
+      if: github.event_name != 'pull_request'
+      run: |
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git add .github/badges/jacoco.svg
+        git commit -m "Update coverage badge" || echo "No changes to commit"
+        git push
