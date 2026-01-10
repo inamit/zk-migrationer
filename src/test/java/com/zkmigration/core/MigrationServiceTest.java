@@ -36,14 +36,26 @@ class MigrationServiceTest {
         server.close();
     }
 
+    // Helper to create valid changeset with mandatory fields
+    private ChangeSet createChangeSet(String id) {
+        ChangeSet cs = new ChangeSet();
+        cs.setId(id);
+        cs.setAuthor("author");
+        cs.setContext(List.of("test"));
+        cs.setLabels(List.of("test"));
+        return cs;
+    }
+
     @Test
     void testUpdateDoesNotReapplyExecutedChangeSets() throws Exception {
         // Manually mark a changeset as executed
+        // Note: Legacy markChangeSetExecuted didn't have checksum.
+        // We use the new one or rely on null/empty handling?
+        // The service logic now verifies checksum. If we manually mark it without checksum,
+        // the verification logic logs a warning but proceeds (doesn't fail) and considers it executed.
         stateService.markChangeSetExecuted("1", "author", "desc");
 
-        ChangeSet changeSet = new ChangeSet();
-        changeSet.setId("1");
-        changeSet.setAuthor("author");
+        ChangeSet changeSet = createChangeSet("1");
         changeSet.setChanges(List.of(create("/test/1", "data")));
 
         // Execute update
@@ -55,9 +67,7 @@ class MigrationServiceTest {
 
     @Test
     void testUpdateAppliesNewChangeSets() throws Exception {
-        ChangeSet changeSet = new ChangeSet();
-        changeSet.setId("2");
-        changeSet.setAuthor("author");
+        ChangeSet changeSet = createChangeSet("2");
         changeSet.setChanges(List.of(create("/test/2", "data")));
 
         migrationService.update(List.of(changeSet));
@@ -69,13 +79,8 @@ class MigrationServiceTest {
     @Test
     void testRollback() throws Exception {
         // Setup: Apply a changeset
-        ChangeSet changeSet = new ChangeSet();
-        changeSet.setId("3");
-        changeSet.setAuthor("author");
+        ChangeSet changeSet = createChangeSet("3");
         changeSet.setChanges(List.of(create("/test/3", "data")));
-        // Define rollback to delete it (MigrationExecutor default rollback logic handles this if we provide the Delete op,
-        // but here we are integration testing the service.
-        // Wait, MigrationExecutor.rollback() takes the changeset and looks at its 'rollback' property.
 
         com.zkmigration.model.Delete delete = new com.zkmigration.model.Delete();
         delete.setPath("/test/3");
@@ -93,8 +98,7 @@ class MigrationServiceTest {
 
     @Test
     void testRollbackSkipsUnexecutedChangeSets() throws Exception {
-        ChangeSet cs1 = new ChangeSet();
-        cs1.setId("4");
+        ChangeSet cs1 = createChangeSet("4");
         cs1.setChanges(List.of(create("/test/4", "data")));
         // cs1 is not executed
 
@@ -106,13 +110,7 @@ class MigrationServiceTest {
 
     @Test
     void testLocking() throws Exception {
-        // It's hard to test concurrent locking with a single thread,
-        // but we can at least verify the lock node is created/cleaned up implicitly by successful runs.
-        // Or we can try to manually acquire lock and assert service throws/waits.
-        // For unit test simplicity, we just ensure normal execution works, which implies lock acquisition worked.
-
-        ChangeSet changeSet = new ChangeSet();
-        changeSet.setId("lock-test");
+        ChangeSet changeSet = createChangeSet("lock-test");
         changeSet.setChanges(List.of(create("/test/lock", "data")));
 
         migrationService.update(List.of(changeSet));

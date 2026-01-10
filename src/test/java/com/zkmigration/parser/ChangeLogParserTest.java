@@ -1,5 +1,7 @@
 package com.zkmigration.parser;
 
+import com.zkmigration.model.ChangeLog;
+import com.zkmigration.model.ChangeLogEntry;
 import com.zkmigration.model.ChangeSet;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -8,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,6 +20,19 @@ class ChangeLogParserTest {
     @TempDir
     Path tempDir;
 
+    // Helper to extract changeSets from log
+    private List<ChangeSet> getChangeSets(ChangeLog log) {
+        List<ChangeSet> list = new ArrayList<>();
+        if (log.getDatabaseChangeLog() != null) {
+            for (ChangeLogEntry entry : log.getDatabaseChangeLog()) {
+                if (entry instanceof ChangeSet) {
+                    list.add((ChangeSet) entry);
+                }
+            }
+        }
+        return list;
+    }
+
     @Test
     void testParseYaml() throws IOException {
         String yaml = """
@@ -24,6 +40,8 @@ class ChangeLogParserTest {
                   - changeSet:
                       id: "1"
                       author: "test"
+                      context: "dev"
+                      labels: "label"
                       changes:
                         - create:
                             path: "/test"
@@ -33,7 +51,8 @@ class ChangeLogParserTest {
         Files.writeString(file, yaml);
 
         ChangeLogParser parser = new ChangeLogParser();
-        List<ChangeSet> changeSets = parser.parse(file.toFile());
+        ChangeLog log = parser.parse(file.toFile());
+        List<ChangeSet> changeSets = getChangeSets(log);
 
         assertThat(changeSets).hasSize(1);
         assertThat(changeSets.get(0).getId()).isEqualTo("1");
@@ -50,6 +69,8 @@ class ChangeLogParserTest {
                       "changeSet": {
                         "id": "2",
                         "author": "test-json",
+                        "context": ["dev"],
+                        "labels": ["l1"],
                         "changes": [
                           {
                             "create": {
@@ -67,7 +88,8 @@ class ChangeLogParserTest {
         Files.writeString(file, json);
 
         ChangeLogParser parser = new ChangeLogParser();
-        List<ChangeSet> changeSets = parser.parse(file.toFile());
+        ChangeLog log = parser.parse(file.toFile());
+        List<ChangeSet> changeSets = getChangeSets(log);
 
         assertThat(changeSets).hasSize(1);
         assertThat(changeSets.get(0).getId()).isEqualTo("2");
@@ -80,6 +102,8 @@ class ChangeLogParserTest {
                   - changeSet:
                       id: "included-1"
                       author: "included"
+                      context: "dev"
+                      labels: "l1"
                       changes:
                         - create:
                             path: "/included"
@@ -96,7 +120,8 @@ class ChangeLogParserTest {
         Files.writeString(mainFile, mainYaml);
 
         ChangeLogParser parser = new ChangeLogParser();
-        List<ChangeSet> changeSets = parser.parse(mainFile.toFile());
+        ChangeLog log = parser.parse(mainFile.toFile());
+        List<ChangeSet> changeSets = getChangeSets(log);
 
         assertThat(changeSets).hasSize(1);
         assertThat(changeSets.get(0).getId()).isEqualTo("included-1");
