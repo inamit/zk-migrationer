@@ -1,5 +1,6 @@
 package com.zkmigration.core;
 
+import com.zkmigration.model.ChangeLog;
 import com.zkmigration.model.ChangeSet;
 import com.zkmigration.model.Create;
 import org.apache.curator.framework.CuratorFramework;
@@ -58,8 +59,10 @@ class MigrationServiceTest {
         ChangeSet changeSet = createChangeSet("1");
         changeSet.setChanges(List.of(create("/test/1", "data")));
 
+        ChangeLog changeLog = new ChangeLog();
+        changeLog.setDatabaseChangeLog(List.of(changeSet));
         // Execute update
-        migrationService.update(List.of(changeSet));
+        migrationService.update(changeLog, "test", List.of("test"));
 
         // Verify the change was NOT applied (node should not exist)
         assertThat(client.checkExists().forPath("/test/1")).isNull();
@@ -70,7 +73,10 @@ class MigrationServiceTest {
         ChangeSet changeSet = createChangeSet("2");
         changeSet.setChanges(List.of(create("/test/2", "data")));
 
-        migrationService.update(List.of(changeSet));
+        ChangeLog changeLog = new ChangeLog();
+        changeLog.setDatabaseChangeLog(List.of(changeSet));
+
+        migrationService.update(changeLog, "test", List.of("test"));
 
         assertThat(client.checkExists().forPath("/test/2")).isNotNull();
         assertThat(stateService.getExecutedChangeSetIds()).contains("2");
@@ -86,11 +92,14 @@ class MigrationServiceTest {
         delete.setPath("/test/3");
         changeSet.setRollback(List.of(delete));
 
-        migrationService.update(List.of(changeSet));
+        ChangeLog changeLog = new ChangeLog();
+        changeLog.setDatabaseChangeLog(List.of(changeSet));
+
+        migrationService.update(changeLog, "test", List.of("test"));
         assertThat(client.checkExists().forPath("/test/3")).isNotNull();
 
         // Perform Rollback
-        migrationService.rollback(List.of(changeSet), 1);
+        migrationService.rollback(changeLog, 1);
 
         assertThat(client.checkExists().forPath("/test/3")).isNull();
         assertThat(stateService.getExecutedChangeSetIds()).doesNotContain("3");
@@ -101,9 +110,12 @@ class MigrationServiceTest {
         ChangeSet cs1 = createChangeSet("4");
         cs1.setChanges(List.of(create("/test/4", "data")));
         // cs1 is not executed
+        ChangeLog changeLog = new ChangeLog();
+        changeLog.setDatabaseChangeLog(List.of(cs1));
+
 
         // Calling rollback should do nothing for cs1
-        migrationService.rollback(List.of(cs1), 1);
+        migrationService.rollback(changeLog, 1);
 
         // Just verify no exception
     }
@@ -113,7 +125,10 @@ class MigrationServiceTest {
         ChangeSet changeSet = createChangeSet("lock-test");
         changeSet.setChanges(List.of(create("/test/lock", "data")));
 
-        migrationService.update(List.of(changeSet));
+        ChangeLog changeLog = new ChangeLog();
+        changeLog.setDatabaseChangeLog(List.of(changeSet));
+
+        migrationService.update(changeLog, "test", List.of("test"));
 
         // Lock should be released
         // verify we can acquire it

@@ -6,6 +6,8 @@ import com.zkmigration.parser.ChangeLogParser;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -50,6 +52,8 @@ abstract class BaseCommand implements Callable<Integer> {
 
 @Command(name = "update", description = "Apply pending migrations")
 class UpdateCommand extends BaseCommand {
+    private static final Logger logger = LoggerFactory.getLogger(UpdateCommand.class);
+
     @Option(names = {"--context"}, description = "Execution context", required = true)
     private String context;
 
@@ -58,7 +62,7 @@ class UpdateCommand extends BaseCommand {
 
     @Override
     public Integer call() throws Exception {
-        System.out.println("Starting update...");
+        logger.info("Starting update...");
         try (CuratorFramework client = createClient()) {
             ChangeLogParser parser = new ChangeLogParser();
             ChangeLog changeLog = parser.parse(changeLogFile);
@@ -67,7 +71,7 @@ class UpdateCommand extends BaseCommand {
 
             MigrationService service = new MigrationService(client, historyPath);
             service.update(changeLog, context, labelList);
-            System.out.println("Update complete.");
+            logger.info("Update complete.");
             return 0;
         } catch (Exception e) {
             e.printStackTrace();
@@ -78,19 +82,21 @@ class UpdateCommand extends BaseCommand {
 
 @Command(name = "rollback", description = "Rollback the last N executed migrations")
 class RollbackCommand extends BaseCommand {
+    private static final Logger logger = LoggerFactory.getLogger(UpdateCommand.class);
+
     @Option(names = {"-n", "--count"}, description = "Number of changesets to rollback", defaultValue = "1")
     private int count;
 
     @Override
     public Integer call() throws Exception {
-        System.out.println("Starting rollback...");
+        logger.info("Starting rollback...");
         try (CuratorFramework client = createClient()) {
             ChangeLogParser parser = new ChangeLogParser();
             ChangeLog changeLog = parser.parse(changeLogFile);
 
             MigrationService service = new MigrationService(client, historyPath);
             service.rollback(changeLog, count);
-            System.out.println("Rollback complete.");
+            logger.info("Rollback complete.");
             return 0;
         } catch (Exception e) {
             e.printStackTrace();

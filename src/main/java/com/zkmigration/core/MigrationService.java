@@ -83,24 +83,6 @@ public class MigrationService {
         }
     }
 
-    // Kept for backward compatibility or direct usage, but should likely be updated or deprecated.
-    // Simplifying to just delegate to new logic with null context/labels if needed,
-    // but the task requires mandatory context/labels.
-    // I will assume this method is only used in tests that might need updating,
-    // or I should just remove it if I update all callers.
-    // For now, I'll update it to use default dummy values or throw error if called?
-    // Let's overload it but with awareness that CLI now passes these.
-    public void update(List<ChangeSet> changeSets) throws Exception {
-         // This is mostly for existing tests.
-         ChangeLog log = new ChangeLog();
-         List<ChangeLogEntry> entries = new ArrayList<>(changeSets);
-         log.setDatabaseChangeLog(entries);
-         // Pass dummy context/labels to bypass checks? Or assume tests set "All"?
-         // If tests don't set context, shouldRun will fail unless we pass a context that matches.
-         // Let's pass "test" context.
-         update(log, "test", List.of("test"));
-    }
-
     public void rollback(ChangeLog changeLog, int count) throws Exception {
         // Rollback usually doesn't need context/label filtering because it undoes what IS executed.
         // However, if we want to mimic Liquibase, rollback is strictly sequential based on history.
@@ -154,14 +136,6 @@ public class MigrationService {
             lock.release();
         }
     }
-
-    // Legacy rollback support
-     public void rollback(List<ChangeSet> changeSets, int count) throws Exception {
-         ChangeLog log = new ChangeLog();
-         List<ChangeLogEntry> entries = new ArrayList<>(changeSets);
-         log.setDatabaseChangeLog(entries);
-         rollback(log, count);
-     }
 
     private void verifyChecksum(ChangeSet cs, String currentChecksum, String storedChecksum) {
         if (storedChecksum == null) {
