@@ -9,8 +9,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class MigrationService {
@@ -36,6 +38,7 @@ public class MigrationService {
         try {
             logger.info("Lock acquired. Checking for migrations...");
             Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
+            Set<String> executedInThisRun = new HashSet<>();
 
             // Extract changeSets from ChangeLog
             List<ChangeSet> changeSets = new ArrayList<>();
@@ -48,10 +51,15 @@ public class MigrationService {
             }
 
             for (ChangeSet cs : changeSets) {
+                // Check for duplicate ID in current run
+                if (executedInThisRun.contains(cs.getId())) {
+                    throw new DuplicateChangeSetIdException("Duplicate ChangeSet ID detected in this run: " + cs.getId());
+                }
+
                 // Calculate Checksum
                 String currentChecksum = ChecksumUtil.calculateChecksum(cs);
 
-                // Check if already executed
+                // Check if already executed (in history)
                 if (executedMap.containsKey(cs.getId())) {
                     MigrationStateService.ExecutedChangeSet executed = executedMap.get(cs.getId());
 
@@ -59,6 +67,8 @@ public class MigrationService {
                     verifyChecksum(cs, currentChecksum, executed.checksum);
 
                     logger.debug("ChangeSet {} already executed. Skipping.", cs.getId());
+                    // Even if skipped, we mark it as seen in this run to prevent duplicate ID re-use
+                    executedInThisRun.add(cs.getId());
                     continue;
                 }
 
@@ -73,7 +83,8 @@ public class MigrationService {
                     executor.execute(cs);
                     stateService.markChangeSetExecuted(cs.getId(), cs.getAuthor(), "Executed by ZkMigration", currentChecksum);
 
-                    // Update executedMap to prevent re-execution if duplicate ID exists in same run
+                    // Add to tracked sets
+                    executedInThisRun.add(cs.getId());
                     executedMap.put(cs.getId(), new MigrationStateService.ExecutedChangeSet(cs.getId(), cs.getAuthor(), System.currentTimeMillis(), currentChecksum));
 
                     logger.info("ChangeSet {} applied successfully.", cs.getId());

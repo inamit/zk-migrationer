@@ -167,8 +167,7 @@ class MigrationServiceFeaturesTest {
 
     @Test
     void testDuplicateIdsExecutesOnce() throws Exception {
-        // Create two changesets with same ID but different content (to prove one ran and other didn't)
-        // or same content.
+        // Create two changesets with same ID
         ChangeSet cs1 = createChangeSet("dup1", "test", "app");
         ((Create)cs1.getChanges().get(0)).setPath("/test/dup1-a");
 
@@ -178,12 +177,9 @@ class MigrationServiceFeaturesTest {
         ChangeLog log = new ChangeLog();
         log.setDatabaseChangeLog(List.of(cs1, cs2));
 
-        // Run
-        migrationService.update(log, "test", List.of("app"));
-
-        // Expectation: first one ran (/test/dup1-a exists).
-        // Second one skipped (/test/dup1-b does NOT exist).
-        assertThat(client.checkExists().forPath("/test/dup1-a")).isNotNull();
-        assertThat(client.checkExists().forPath("/test/dup1-b")).isNull();
+        // Run should throw DuplicateChangeSetIdException
+        assertThatThrownBy(() -> migrationService.update(log, "test", List.of("app")))
+                .isInstanceOf(DuplicateChangeSetIdException.class)
+                .hasMessageContaining("Duplicate ChangeSet ID detected");
     }
 }
