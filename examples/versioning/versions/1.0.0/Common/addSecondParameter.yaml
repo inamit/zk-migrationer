@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      id: "included-1"
+      author: "AMIT"
+      context: "All"
+      labels: "init"
+      changes:
+        - create:
+            path: "/parameters/second"
+            data: "second-parameter"
