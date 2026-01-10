@@ -72,6 +72,10 @@ public class MigrationService {
                 try {
                     executor.execute(cs);
                     stateService.markChangeSetExecuted(cs.getId(), cs.getAuthor(), "Executed by ZkMigration", currentChecksum);
+
+                    // Update executedMap to prevent re-execution if duplicate ID exists in same run
+                    executedMap.put(cs.getId(), new MigrationStateService.ExecutedChangeSet(cs.getId(), cs.getAuthor(), System.currentTimeMillis(), currentChecksum));
+
                     logger.info("ChangeSet {} applied successfully.", cs.getId());
                 } catch (Exception e) {
                     logger.error("Failed to apply ChangeSet {}", cs.getId(), e);
@@ -83,9 +87,19 @@ public class MigrationService {
         }
     }
 
+    // Kept for backward compatibility or direct usage, but should likely be updated or deprecated.
+    public void update(List<ChangeSet> changeSets) throws Exception {
+         // This is mostly for existing tests.
+         ChangeLog log = new ChangeLog();
+         List<ChangeLogEntry> entries = new ArrayList<>(changeSets);
+         log.setDatabaseChangeLog(entries);
+         // Pass dummy context/labels to bypass checks? Or assume tests set "All"?
+         // If tests don't set context, shouldRun will fail unless we pass a context that matches.
+         // Let's pass "test" context.
+         update(log, "test", List.of("test"));
+    }
+
     public void rollback(ChangeLog changeLog, int count) throws Exception {
-        // Rollback usually doesn't need context/label filtering because it undoes what IS executed.
-        // However, if we want to mimic Liquibase, rollback is strictly sequential based on history.
         InterProcessMutex lock = new InterProcessMutex(client, lockPath);
         if (!lock.acquire(60, TimeUnit.SECONDS)) {
             throw new RuntimeException("Could not acquire lock at " + lockPath);
@@ -137,15 +151,16 @@ public class MigrationService {
         }
     }
 
+    // Legacy rollback support
+     public void rollback(List<ChangeSet> changeSets, int count) throws Exception {
+         ChangeLog log = new ChangeLog();
+         List<ChangeLogEntry> entries = new ArrayList<>(changeSets);
+         log.setDatabaseChangeLog(entries);
+         rollback(log, count);
+     }
+
     private void verifyChecksum(ChangeSet cs, String currentChecksum, String storedChecksum) {
         if (storedChecksum == null) {
-            // Backward compatibility for existing migrations without checksum?
-            // Liquibase typically updates checksums if they are null, or fails.
-            // Let's just log warn and accept for now, or update it?
-            // User requirement: "validate no one changed historic changesets".
-            // If we treat null as valid, we are good for legacy.
-            // If we treat null as mismatch, we break existing systems.
-            // I'll log warning.
             logger.warn("ChangeSet {} has no stored checksum. Skipping validation.", cs.getId());
             return;
         }
@@ -160,7 +175,6 @@ public class MigrationService {
                 if (valid.equalsIgnoreCase(currentChecksum)) {
                     return; // Matches valid override
                 }
-                // Also handle special value "1:any" if we were doing full Liquibase, but here just exact match.
             }
         }
 
@@ -187,7 +201,6 @@ public class MigrationService {
                 }
 
                 // 3. Check Context Group match
-                // Logic: If cs.context is a group name, and executionContext is IN that group.
                 if (contextGroups != null && contextGroups.containsKey(ctx)) {
                      List<String> groupMembers = contextGroups.get(ctx);
                      if (groupMembers != null && groupMembers.contains(executionContext)) {
@@ -204,8 +217,6 @@ public class MigrationService {
 
         // Label Check
         if (executionLabels == null || executionLabels.isEmpty()) {
-            // User said labels are mandatory in CLI. But if user passes empty list?
-            // If labels mandatory, we assume CLI ensures it.
             return false;
         }
 

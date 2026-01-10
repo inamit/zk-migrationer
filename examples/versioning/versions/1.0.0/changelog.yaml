@@ -1,5 +1,0 @@
-databaseChangeLog:
-  - include:
-      file: "Dev/addFirstParameter.yaml"
-  - include:
-      file: "Common/addSecondParameter.yaml"

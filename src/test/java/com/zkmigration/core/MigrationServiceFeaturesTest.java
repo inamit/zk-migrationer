@@ -164,4 +164,26 @@ class MigrationServiceFeaturesTest {
         // Second run should pass
         migrationService.update(log, "test", List.of("app"));
     }
+
+    @Test
+    void testDuplicateIdsExecutesOnce() throws Exception {
+        // Create two changesets with same ID but different content (to prove one ran and other didn't)
+        // or same content.
+        ChangeSet cs1 = createChangeSet("dup1", "test", "app");
+        ((Create)cs1.getChanges().get(0)).setPath("/test/dup1-a");
+
+        ChangeSet cs2 = createChangeSet("dup1", "test", "app");
+        ((Create)cs2.getChanges().get(0)).setPath("/test/dup1-b");
+
+        ChangeLog log = new ChangeLog();
+        log.setDatabaseChangeLog(List.of(cs1, cs2));
+
+        // Run
+        migrationService.update(log, "test", List.of("app"));
+
+        // Expectation: first one ran (/test/dup1-a exists).
+        // Second one skipped (/test/dup1-b does NOT exist).
+        assertThat(client.checkExists().forPath("/test/dup1-a")).isNotNull();
+        assertThat(client.checkExists().forPath("/test/dup1-b")).isNull();
+    }
 }
