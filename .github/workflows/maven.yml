@@ -1,0 +1,44 @@
+name: Java CI with Maven
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+        cache: maven
+    - name: Build with Maven
+      run: mvn -B package --file pom.xml
+    - name: Run Tests
+      run: mvn -B verify --file pom.xml
+
+    - name: Generate JaCoCo Badge
+      uses: cicirello/jacoco-badge-generator@v2
+      with:
+        generate-branches-badge: true
+        jacoco-csv-file: target/site/jacoco/jacoco.csv
+
+    - name: Log Coverage
+      run: |
+        echo "Coverage percentage: $(cat .github/badges/jacoco.svg | grep -oE '[0-9]+%')"
+
+    - name: Commit Badge
+      if: github.event_name != 'pull_request'
+      run: |
+        git config --global user.name 'github-actions'
+        git config --global user.email 'github-actions@github.com'
+        git add .github/badges/jacoco.svg
+        git commit -m "Update coverage badge" || echo "No changes to commit"
+        git push
