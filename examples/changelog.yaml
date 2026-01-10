@@ -1,0 +1,42 @@
+contextGroups:
+  k8s:
+    - dev
+    - staging
+    - prod
+
+databaseChangeLog:
+  - changeSet:
+      id: "1"
+      author: "jules"
+      context: "dev"
+      labels: "init,v1"
+      changes:
+        - create:
+            path: "/app/config"
+            data: "initial-config"
+      rollback:
+        - delete:
+            path: "/app/config"
+
+  - changeSet:
+      id: "2"
+      author: "jules"
+      context: "prod"
+      labels: "v1"
+      changes:
+        - create:
+            path: "/app/production-secret"
+            data: "********"
+
+  - include:
+      file: "nested/included.yaml"
+
+  - changeSet:
+      id: "3"
+      author: "jules"
+      context: "All"
+      labels: "audit"
+      changes:
+        - create:
+            path: "/audit/log"
+            data: "enabled"

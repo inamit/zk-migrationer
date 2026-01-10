@@ -8,6 +8,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class MigrationStateService {
     private static final Logger logger = LoggerFactory.getLogger(MigrationStateService.class);
@@ -42,10 +44,35 @@ public class MigrationStateService {
         return decodedIds;
     }
 
+    // New method to retrieve full execution details, mapped by ID
+    public Map<String, ExecutedChangeSet> getExecutedChangeSets() throws Exception {
+        ensureHistoryPathExists();
+        List<String> children = client.getChildren().forPath(historyPath);
+        Map<String, ExecutedChangeSet> executedMap = new HashMap<>();
+
+        for (String child : children) {
+             try {
+                byte[] bytes = java.util.Base64.getUrlDecoder().decode(child);
+                String id = new String(bytes, java.nio.charset.StandardCharsets.UTF_8);
+
+                byte[] data = client.getData().forPath(historyPath + "/" + child);
+                ExecutedChangeSet executed = mapper.readValue(data, ExecutedChangeSet.class);
+                executedMap.put(id, executed);
+            } catch (Exception e) {
+                logger.warn("Failed to read history node: {}", child, e);
+            }
+        }
+        return executedMap;
+    }
+
     public void markChangeSetExecuted(String id, String author, String description) throws Exception {
+        markChangeSetExecuted(id, author, description, null);
+    }
+
+    public void markChangeSetExecuted(String id, String author, String description, String checksum) throws Exception {
         ensureHistoryPathExists();
         String nodePath = historyPath + "/" + encodeId(id);
-        ExecutedChangeSet executed = new ExecutedChangeSet(id, author, System.currentTimeMillis());
+        ExecutedChangeSet executed = new ExecutedChangeSet(id, author, System.currentTimeMillis(), checksum);
         byte[] data = mapper.writeValueAsBytes(executed);
 
         try {
@@ -72,12 +99,17 @@ public class MigrationStateService {
         public String id;
         public String author;
         public long executedAt;
+        public String checksum;
 
         public ExecutedChangeSet() {}
         public ExecutedChangeSet(String id, String author, long executedAt) {
+            this(id, author, executedAt, null);
+        }
+        public ExecutedChangeSet(String id, String author, long executedAt, String checksum) {
             this.id = id;
             this.author = author;
             this.executedAt = executedAt;
+            this.checksum = checksum;
         }
     }
 }

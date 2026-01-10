@@ -1,0 +1,23 @@
+{
+  "contextGroups": {
+    "k8s": ["dev", "staging", "prod"]
+  },
+  "databaseChangeLog": [
+    {
+      "changeSet": {
+        "id": "json-1",
+        "author": "jules",
+        "context": ["dev"],
+        "labels": ["json"],
+        "changes": [
+          {
+            "create": {
+              "path": "/json/node",
+              "data": "json-data"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

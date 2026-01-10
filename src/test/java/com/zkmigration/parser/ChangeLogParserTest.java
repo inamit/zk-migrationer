@@ -1,5 +1,7 @@
 package com.zkmigration.parser;
 
+import com.zkmigration.model.ChangeLog;
+import com.zkmigration.model.ChangeLogEntry;
 import com.zkmigration.model.ChangeSet;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -8,14 +10,29 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ChangeLogParserTest {
 
     @TempDir
     Path tempDir;
+
+    // Helper to extract changeSets from log
+    private List<ChangeSet> getChangeSets(ChangeLog log) {
+        List<ChangeSet> list = new ArrayList<>();
+        if (log.getDatabaseChangeLog() != null) {
+            for (ChangeLogEntry entry : log.getDatabaseChangeLog()) {
+                if (entry instanceof ChangeSet) {
+                    list.add((ChangeSet) entry);
+                }
+            }
+        }
+        return list;
+    }
 
     @Test
     void testParseYaml() throws IOException {
@@ -24,6 +41,8 @@ class ChangeLogParserTest {
                   - changeSet:
                       id: "1"
                       author: "test"
+                      context: "dev"
+                      labels: "label"
                       changes:
                         - create:
                             path: "/test"
@@ -33,7 +52,8 @@ class ChangeLogParserTest {
         Files.writeString(file, yaml);
 
         ChangeLogParser parser = new ChangeLogParser();
-        List<ChangeSet> changeSets = parser.parse(file.toFile());
+        ChangeLog log = parser.parse(file.toFile());
+        List<ChangeSet> changeSets = getChangeSets(log);
 
         assertThat(changeSets).hasSize(1);
         assertThat(changeSets.get(0).getId()).isEqualTo("1");
@@ -50,6 +70,8 @@ class ChangeLogParserTest {
                       "changeSet": {
                         "id": "2",
                         "author": "test-json",
+                        "context": ["dev"],
+                        "labels": ["l1"],
                         "changes": [
                           {
                             "create": {
@@ -67,7 +89,8 @@ class ChangeLogParserTest {
         Files.writeString(file, json);
 
         ChangeLogParser parser = new ChangeLogParser();
-        List<ChangeSet> changeSets = parser.parse(file.toFile());
+        ChangeLog log = parser.parse(file.toFile());
+        List<ChangeSet> changeSets = getChangeSets(log);
 
         assertThat(changeSets).hasSize(1);
         assertThat(changeSets.get(0).getId()).isEqualTo("2");
@@ -80,6 +103,8 @@ class ChangeLogParserTest {
                   - changeSet:
                       id: "included-1"
                       author: "included"
+                      context: "dev"
+                      labels: "l1"
                       changes:
                         - create:
                             path: "/included"
@@ -96,9 +121,54 @@ class ChangeLogParserTest {
         Files.writeString(mainFile, mainYaml);
 
         ChangeLogParser parser = new ChangeLogParser();
-        List<ChangeSet> changeSets = parser.parse(mainFile.toFile());
+        ChangeLog log = parser.parse(mainFile.toFile());
+        List<ChangeSet> changeSets = getChangeSets(log);
 
         assertThat(changeSets).hasSize(1);
         assertThat(changeSets.get(0).getId()).isEqualTo("included-1");
+    }
+
+    @Test
+    void testMissingContextThrowsException() throws IOException {
+        String yaml = """
+                databaseChangeLog:
+                  - changeSet:
+                      id: "invalid-1"
+                      author: "test"
+                      # missing context
+                      labels: "label"
+                      changes:
+                        - create:
+                            path: "/test"
+                """;
+        Path file = tempDir.resolve("invalid-context.yaml");
+        Files.writeString(file, yaml);
+
+        ChangeLogParser parser = new ChangeLogParser();
+        assertThatThrownBy(() -> parser.parse(file.toFile()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("missing mandatory context");
+    }
+
+    @Test
+    void testMissingLabelsThrowsException() throws IOException {
+        String yaml = """
+                databaseChangeLog:
+                  - changeSet:
+                      id: "invalid-2"
+                      author: "test"
+                      context: "dev"
+                      # missing labels
+                      changes:
+                        - create:
+                            path: "/test"
+                """;
+        Path file = tempDir.resolve("invalid-labels.yaml");
+        Files.writeString(file, yaml);
+
+        ChangeLogParser parser = new ChangeLogParser();
+        assertThatThrownBy(() -> parser.parse(file.toFile()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("missing mandatory labels");
     }
 }
