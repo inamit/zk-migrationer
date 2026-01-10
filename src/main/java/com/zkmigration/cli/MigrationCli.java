@@ -1,7 +1,7 @@
 package com.zkmigration.cli;
 
 import com.zkmigration.core.MigrationService;
-import com.zkmigration.model.ChangeSet;
+import com.zkmigration.model.ChangeLog;
 import com.zkmigration.parser.ChangeLogParser;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
@@ -11,6 +11,7 @@ import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Callable;
 
@@ -49,15 +50,23 @@ abstract class BaseCommand implements Callable<Integer> {
 
 @Command(name = "update", description = "Apply pending migrations")
 class UpdateCommand extends BaseCommand {
+    @Option(names = {"--context"}, description = "Execution context", required = true)
+    private String context;
+
+    @Option(names = {"--labels"}, description = "Execution labels (comma separated)", required = true)
+    private String labels;
+
     @Override
     public Integer call() throws Exception {
         System.out.println("Starting update...");
         try (CuratorFramework client = createClient()) {
             ChangeLogParser parser = new ChangeLogParser();
-            List<ChangeSet> changeSets = parser.parse(changeLogFile);
+            ChangeLog changeLog = parser.parse(changeLogFile);
+
+            List<String> labelList = Arrays.asList(labels.split(","));
 
             MigrationService service = new MigrationService(client, historyPath);
-            service.update(changeSets);
+            service.update(changeLog, context, labelList);
             System.out.println("Update complete.");
             return 0;
         } catch (Exception e) {
@@ -77,10 +86,10 @@ class RollbackCommand extends BaseCommand {
         System.out.println("Starting rollback...");
         try (CuratorFramework client = createClient()) {
             ChangeLogParser parser = new ChangeLogParser();
-            List<ChangeSet> changeSets = parser.parse(changeLogFile);
+            ChangeLog changeLog = parser.parse(changeLogFile);
 
             MigrationService service = new MigrationService(client, historyPath);
-            service.rollback(changeSets, count);
+            service.rollback(changeLog, count);
             System.out.println("Rollback complete.");
             return 0;
         } catch (Exception e) {
