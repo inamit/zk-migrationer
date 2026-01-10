@@ -1,5 +1,7 @@
 # Zookeeper Migration Tool
 
+![Coverage](.github/badges/jacoco.svg)
+
 A Liquibase-inspired tool for managing Zookeeper state migrations. It supports change management via YAML or JSON changelogs, tracks execution history in Zookeeper itself, and supports rollbacks.
 
 ## Features
