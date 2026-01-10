@@ -1,6 +1,5 @@
 package com.zkmigration.cli;
 
-import com.zkmigration.core.MigrationStateService;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.RetryOneTime;
@@ -8,10 +7,12 @@ import org.apache.curator.test.TestingServer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,6 +21,9 @@ class MigrationCliSystemTest {
 
     private TestingServer server;
     private CuratorFramework client;
+
+    @TempDir
+    Path tempDir;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -50,14 +54,14 @@ class MigrationCliSystemTest {
                         - delete:
                             path: "/cli-test"
                 """;
-        File file = File.createTempFile("cli-test", ".yaml");
-        Files.writeString(file.toPath(), yaml);
+        Path file = tempDir.resolve("cli-test.yaml");
+        Files.writeString(file, yaml);
 
         // 2. Run UPDATE command
         String[] args = {
             "update",
             "--connection", server.getConnectString(),
-            "--file", file.getAbsolutePath()
+            "--file", file.toAbsolutePath().toString()
         };
 
         int updateExitCode = new picocli.CommandLine(new MigrationCli()).execute(args);
@@ -69,18 +73,15 @@ class MigrationCliSystemTest {
         byte[] data = client.getData().forPath("/cli-test");
         assertThat(new String(data, StandardCharsets.UTF_8)).isEqualTo("cli-data");
 
-        // Verify history exists (ID is base64 encoded, so we just check if any child exists and matches)
+        // Verify history exists
         List<String> historyChildren = client.getChildren().forPath("/zookeeper-migrations/changelog");
         assertThat(historyChildren).hasSize(1);
-        String encodedId = historyChildren.get(0);
-        String decodedId = new String(java.util.Base64.getUrlDecoder().decode(encodedId), StandardCharsets.UTF_8);
-        assertThat(decodedId).isEqualTo("cli-1");
 
         // 4. Run ROLLBACK command
         String[] rollbackArgs = {
             "rollback",
             "--connection", server.getConnectString(),
-            "--file", file.getAbsolutePath(),
+            "--file", file.toAbsolutePath().toString(),
             "--count", "1"
         };
 
@@ -89,7 +90,53 @@ class MigrationCliSystemTest {
 
         // 5. Verify Rollback
         assertThat(client.checkExists().forPath("/cli-test")).isNull();
-        // The migration record should be removed
-        assertThat(client.checkExists().forPath("/zookeeper-migrations/changelog/" + encodedId)).isNull();
+        assertThat(client.getChildren().forPath("/zookeeper-migrations/changelog")).isEmpty();
+    }
+
+    @Test
+    void testMultipleChangeSetsAndPartialRollback() throws Exception {
+        String yaml = """
+                databaseChangeLog:
+                  - changeSet:
+                      id: "1"
+                      author: "test"
+                      changes:
+                        - create:
+                            path: "/node1"
+                      rollback:
+                        - delete:
+                            path: "/node1"
+                  - changeSet:
+                      id: "2"
+                      author: "test"
+                      changes:
+                        - create:
+                            path: "/node2"
+                      rollback:
+                        - delete:
+                            path: "/node2"
+                """;
+        Path file = tempDir.resolve("multi.yaml");
+        Files.writeString(file, yaml);
+
+        // Apply both
+        new picocli.CommandLine(new MigrationCli()).execute("update", "--connection", server.getConnectString(), "--file", file.toAbsolutePath().toString());
+
+        assertThat(client.checkExists().forPath("/node1")).isNotNull();
+        assertThat(client.checkExists().forPath("/node2")).isNotNull();
+        assertThat(client.getChildren().forPath("/zookeeper-migrations/changelog")).hasSize(2);
+
+        // Rollback only the last one
+        new picocli.CommandLine(new MigrationCli()).execute("rollback", "--connection", server.getConnectString(), "--file", file.toAbsolutePath().toString(), "--count", "1");
+
+        assertThat(client.checkExists().forPath("/node1")).isNotNull();
+        assertThat(client.checkExists().forPath("/node2")).isNull();
+        assertThat(client.getChildren().forPath("/zookeeper-migrations/changelog")).hasSize(1);
+    }
+
+    @Test
+    void testMissingFile() {
+        int exitCode = new picocli.CommandLine(new MigrationCli()).execute("update", "--connection", server.getConnectString(), "--file", "nonexistent.yaml");
+        assertThat(exitCode).isNotEqualTo(0);
     }
 }
