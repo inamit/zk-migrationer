@@ -72,6 +72,17 @@ class MigrationServiceFeaturesTest {
     }
 
     @Test
+    void testContextMismatch() throws Exception {
+        ChangeSet csDev = createChangeSet("dev2", "dev", "app");
+        ChangeLog log = new ChangeLog();
+        log.setDatabaseChangeLog(List.of(csDev));
+
+        // Run with context=prod, should skip
+        migrationService.update(log, "prod", List.of("app"));
+        assertThat(client.checkExists().forPath("/test/dev2")).isNull();
+    }
+
+    @Test
     void testContextGroup() throws Exception {
         ChangeSet csK8s = createChangeSet("k8s1", "k8s", "app");
 
@@ -100,6 +111,17 @@ class MigrationServiceFeaturesTest {
 
         assertThat(client.checkExists().forPath("/test/A")).isNotNull();
         assertThat(client.checkExists().forPath("/test/B")).isNull();
+    }
+
+    @Test
+    void testLabelMismatch() throws Exception {
+        ChangeSet csA = createChangeSet("C", "test", "micro-a");
+        ChangeLog log = new ChangeLog();
+        log.setDatabaseChangeLog(List.of(csA));
+
+        // Run with labels=micro-b
+        migrationService.update(log, "test", List.of("micro-b"));
+        assertThat(client.checkExists().forPath("/test/C")).isNull();
     }
 
     @Test

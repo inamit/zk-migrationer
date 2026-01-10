@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class ChangeLogParserTest {
 
@@ -125,5 +126,49 @@ class ChangeLogParserTest {
 
         assertThat(changeSets).hasSize(1);
         assertThat(changeSets.get(0).getId()).isEqualTo("included-1");
+    }
+
+    @Test
+    void testMissingContextThrowsException() throws IOException {
+        String yaml = """
+                databaseChangeLog:
+                  - changeSet:
+                      id: "invalid-1"
+                      author: "test"
+                      # missing context
+                      labels: "label"
+                      changes:
+                        - create:
+                            path: "/test"
+                """;
+        Path file = tempDir.resolve("invalid-context.yaml");
+        Files.writeString(file, yaml);
+
+        ChangeLogParser parser = new ChangeLogParser();
+        assertThatThrownBy(() -> parser.parse(file.toFile()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("missing mandatory context");
+    }
+
+    @Test
+    void testMissingLabelsThrowsException() throws IOException {
+        String yaml = """
+                databaseChangeLog:
+                  - changeSet:
+                      id: "invalid-2"
+                      author: "test"
+                      context: "dev"
+                      # missing labels
+                      changes:
+                        - create:
+                            path: "/test"
+                """;
+        Path file = tempDir.resolve("invalid-labels.yaml");
+        Files.writeString(file, yaml);
+
+        ChangeLogParser parser = new ChangeLogParser();
+        assertThatThrownBy(() -> parser.parse(file.toFile()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("missing mandatory labels");
     }
 }
