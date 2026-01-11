@@ -40,15 +40,7 @@ public class MigrationService {
             Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
             Set<String> executedInThisRun = new HashSet<>();
 
-            // Extract changeSets from ChangeLog
-            List<ChangeSet> changeSets = new ArrayList<>();
-            if (changeLog.getDatabaseChangeLog() != null) {
-                for (ChangeLogEntry entry : changeLog.getDatabaseChangeLog()) {
-                    if (entry instanceof ChangeSet) {
-                        changeSets.add((ChangeSet) entry);
-                    }
-                }
-            }
+            List<ChangeSet> changeSets = extractChangeSets(changeLog);
 
             for (ChangeSet cs : changeSets) {
                 // Check for duplicate ID in current run
@@ -119,14 +111,7 @@ public class MigrationService {
             logger.info("Lock acquired. Processing rollback...");
             Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
 
-            List<ChangeSet> changeSets = new ArrayList<>();
-             if (changeLog.getDatabaseChangeLog() != null) {
-                for (ChangeLogEntry entry : changeLog.getDatabaseChangeLog()) {
-                    if (entry instanceof ChangeSet) {
-                        changeSets.add((ChangeSet) entry);
-                    }
-                }
-            }
+            List<ChangeSet> changeSets = extractChangeSets(changeLog);
 
             List<ChangeSet> toRollback = new ArrayList<>();
             // Iterate reverse
@@ -173,14 +158,7 @@ public class MigrationService {
     public boolean previewUpdate(ChangeLog changeLog, String executionContext, List<String> executionLabels) throws Exception {
         Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
         Set<String> executedInThisRun = new HashSet<>();
-        List<ChangeSet> changeSets = new ArrayList<>();
-        if (changeLog.getDatabaseChangeLog() != null) {
-            for (ChangeLogEntry entry : changeLog.getDatabaseChangeLog()) {
-                if (entry instanceof ChangeSet) {
-                    changeSets.add((ChangeSet) entry);
-                }
-            }
-        }
+        List<ChangeSet> changeSets = extractChangeSets(changeLog);
 
         boolean hasChanges = false;
         MigrationInspector inspector = new MigrationInspector(client);
@@ -217,14 +195,7 @@ public class MigrationService {
 
     public boolean previewRollback(ChangeLog changeLog, int count) throws Exception {
         Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
-        List<ChangeSet> changeSets = new ArrayList<>();
-        if (changeLog.getDatabaseChangeLog() != null) {
-            for (ChangeLogEntry entry : changeLog.getDatabaseChangeLog()) {
-                if (entry instanceof ChangeSet) {
-                    changeSets.add((ChangeSet) entry);
-                }
-            }
-        }
+        List<ChangeSet> changeSets = extractChangeSets(changeLog);
 
         List<ChangeSet> toRollback = new ArrayList<>();
         for (int i = changeSets.size() - 1; i >= 0; i--) {
@@ -322,5 +293,17 @@ public class MigrationService {
         }
 
         return false;
+    }
+
+    private List<ChangeSet> extractChangeSets(ChangeLog changeLog) {
+        List<ChangeSet> changeSets = new ArrayList<>();
+        if (changeLog.getDatabaseChangeLog() != null) {
+            for (ChangeLogEntry entry : changeLog.getDatabaseChangeLog()) {
+                if (entry instanceof ChangeSet) {
+                    changeSets.add((ChangeSet) entry);
+                }
+            }
+        }
+        return changeSets;
     }
 }

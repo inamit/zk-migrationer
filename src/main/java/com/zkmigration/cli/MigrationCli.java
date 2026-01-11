@@ -63,6 +63,20 @@ abstract class BaseCommand implements Callable<Integer> {
         }
         return true;
     }
+
+    protected Integer executeAction(MigrationAction action) {
+        try (CuratorFramework client = createClient()) {
+            ChangeLogParser parser = new ChangeLogParser();
+            ChangeLog changeLog = parser.parse(changeLogFile);
+            MigrationService service = new MigrationService(client, historyPath);
+
+            action.execute(service, changeLog);
+            return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 1;
+        }
+    }
 }
 
 @Command(name = "update", description = "Apply pending migrations")
@@ -74,30 +88,21 @@ class UpdateCommand extends BaseCommand {
     private String labels;
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         System.out.println("Starting update...");
-        try (CuratorFramework client = createClient()) {
-            ChangeLogParser parser = new ChangeLogParser();
-            ChangeLog changeLog = parser.parse(changeLogFile);
-
+        return executeAction((service, changeLog) -> {
             List<String> labelList = Arrays.asList(labels.split(","));
-
-            MigrationService service = new MigrationService(client, historyPath);
 
             if (interactive) {
                 boolean hasChanges = service.previewUpdate(changeLog, context, labelList);
                 if (!confirmExecution(hasChanges)) {
-                    return 0;
+                    return;
                 }
             }
 
             service.update(changeLog, context, labelList);
             System.out.println("Update complete.");
-            return 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 1;
-        }
+        });
     }
 }
 
@@ -107,27 +112,18 @@ class RollbackCommand extends BaseCommand {
     private int count;
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         System.out.println("Starting rollback...");
-        try (CuratorFramework client = createClient()) {
-            ChangeLogParser parser = new ChangeLogParser();
-            ChangeLog changeLog = parser.parse(changeLogFile);
-
-            MigrationService service = new MigrationService(client, historyPath);
-
+        return executeAction((service, changeLog) -> {
             if (interactive) {
                 boolean hasChanges = service.previewRollback(changeLog, count);
                 if (!confirmExecution(hasChanges)) {
-                    return 0;
+                    return;
                 }
             }
 
             service.rollback(changeLog, count);
             System.out.println("Rollback complete.");
-            return 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 1;
-        }
+        });
     }
 }
