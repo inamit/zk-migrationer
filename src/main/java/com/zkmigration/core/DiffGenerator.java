@@ -50,23 +50,34 @@ public class DiffGenerator {
         int i = 0, j = 0;
         while (i < oldLines.size() || j < newLines.size()) {
             if (i < oldLines.size() && j < newLines.size() && oldLines.get(i).equals(newLines.get(j))) {
-                // Identical lines, context?
-                // For brevity, maybe skip or show as context if strictly required.
-                // User asked for "specific row/words change".
-                // Let's just output changed lines for now.
                 i++;
                 j++;
             } else {
-                if (i < oldLines.size()) {
+                // Modified line?
+                if (i < oldLines.size() && j < newLines.size()) {
+                    diff.append("* ").append(generateWordDiff(oldLines.get(i), newLines.get(j))).append("\n");
+                    i++;
+                    j++;
+                } else if (i < oldLines.size()) {
                     diff.append("- ").append(oldLines.get(i)).append("\n");
                     i++;
-                }
-                if (j < newLines.size()) {
+                } else if (j < newLines.size()) {
                     diff.append("+ ").append(newLines.get(j)).append("\n");
                     j++;
                 }
             }
         }
         return diff.toString().trim();
+    }
+
+    private static String generateWordDiff(String oldLine, String newLine) {
+        StringBuilder result = new StringBuilder();
+        String[] oldWords = oldLine.split("(?<=\\s)|(?=\\s)");
+        String[] newWords = newLine.split("(?<=\\s)|(?=\\s)");
+
+        // Very basic LCS-like or just positional word diff
+        // For simplicity: just show [-old-] {+new+}
+        result.append("[-").append(oldLine).append("-] {+").append(newLine).append("+}");
+        return result.toString();
     }
 }

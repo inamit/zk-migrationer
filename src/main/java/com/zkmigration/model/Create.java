@@ -19,4 +19,9 @@ public class Create extends Change {
     public void setFile(String file) {
         this.file = file;
     }
+
+    @Override
+    public <T> T accept(ChangeVisitor<T> visitor) {
+        return visitor.visit(this);
+    }
 }

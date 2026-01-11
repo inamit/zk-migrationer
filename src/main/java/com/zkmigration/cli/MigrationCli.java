@@ -49,6 +49,20 @@ abstract class BaseCommand implements Callable<Integer> {
         client.start();
         return client;
     }
+
+    protected boolean confirmExecution(boolean hasChanges) throws java.io.IOException {
+        if (!hasChanges) {
+            return false;
+        }
+        System.out.print("Do you want to proceed? [y/N]: ");
+        int read = System.in.read();
+        // Check for 'y' or 'Y'
+        if (read != 'y' && read != 'Y') {
+            System.out.println("Aborted.");
+            return false;
+        }
+        return true;
+    }
 }
 
 @Command(name = "update", description = "Apply pending migrations")
@@ -72,17 +86,9 @@ class UpdateCommand extends BaseCommand {
 
             if (interactive) {
                 boolean hasChanges = service.previewUpdate(changeLog, context, labelList);
-                if (!hasChanges) {
+                if (!confirmExecution(hasChanges)) {
                     return 0;
                 }
-                System.out.print("Do you want to proceed? [y/N]: ");
-                int read = System.in.read();
-                // Check for 'y' or 'Y'
-                if (read != 'y' && read != 'Y') {
-                    System.out.println("Aborted.");
-                    return 0;
-                }
-                // If there's pending input (like newline), we might want to consume it, but System.exit follows usually.
             }
 
             service.update(changeLog, context, labelList);
@@ -111,13 +117,7 @@ class RollbackCommand extends BaseCommand {
 
             if (interactive) {
                 boolean hasChanges = service.previewRollback(changeLog, count);
-                if (!hasChanges) {
-                    return 0;
-                }
-                System.out.print("Do you want to proceed? [y/N]: ");
-                int read = System.in.read();
-                if (read != 'y' && read != 'Y') {
-                    System.out.println("Aborted.");
+                if (!confirmExecution(hasChanges)) {
                     return 0;
                 }
             }

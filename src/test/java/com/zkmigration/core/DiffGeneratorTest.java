@@ -18,7 +18,8 @@ public class DiffGeneratorTest {
         byte[] oldData = "hello".getBytes(StandardCharsets.UTF_8);
         byte[] newData = "world".getBytes(StandardCharsets.UTF_8);
         String diff = DiffGenerator.generateDiff(oldData, newData);
-        assertThat(diff).contains("- hello").contains("+ world");
+        // "hello" -> "world" is a modified line (one word change in this naive impl)
+        assertThat(diff).contains("* [-hello-] {+world+}");
     }
 
     @Test
@@ -28,8 +29,16 @@ public class DiffGeneratorTest {
         String diff = DiffGenerator.generateDiff(oldStr.getBytes(StandardCharsets.UTF_8), newStr.getBytes(StandardCharsets.UTF_8));
 
         assertThat(diff).doesNotContain("- line1"); // context ignored in my naive impl
-        assertThat(diff).contains("- line2");
-        assertThat(diff).contains("+ line2-modified");
+        // With word diff update, it should show as modified line with word diffs
+        assertThat(diff).contains("* [-line2-] {+line2-modified+}");
+    }
+
+    @Test
+    public void testWordDiff() {
+        String oldStr = "this is a test";
+        String newStr = "this is a new test";
+        String diff = DiffGenerator.generateDiff(oldStr.getBytes(StandardCharsets.UTF_8), newStr.getBytes(StandardCharsets.UTF_8));
+        assertThat(diff).contains("* [-this is a test-] {+this is a new test+}");
     }
 
     @Test

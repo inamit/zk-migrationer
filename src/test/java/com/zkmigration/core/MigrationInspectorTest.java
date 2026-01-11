@@ -78,8 +78,8 @@ public class MigrationInspectorTest {
         client.create().creatingParentsIfNeeded().forPath("/existing/path", "olddata".getBytes());
         report = inspector.inspect(cs, false);
         assertThat(report).doesNotContain("WARNING");
-        assertThat(report).contains("- olddata");
-        assertThat(report).contains("+ newdata");
+        // Updated to use word diff format for modifications
+        assertThat(report).contains("* [-olddata-] {+newdata+}");
     }
 
     @Test
@@ -145,8 +145,8 @@ public class MigrationInspectorTest {
         // Update case (exists)
         client.create().creatingParentsIfNeeded().forPath("/upsert/path", "old".getBytes());
         report = inspector.inspect(cs, false);
-        assertThat(report).contains("- old");
-        assertThat(report).contains("+ val");
+        // Updated to use word diff format for modifications
+        assertThat(report).contains("* [-old-] {+val+}");
     }
 
     @Test
