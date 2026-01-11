@@ -41,6 +41,9 @@ abstract class BaseCommand implements Callable<Integer> {
     @Option(names = {"-p", "--path"}, description = "Root path for migration history", defaultValue = "/zookeeper-migrations")
     protected String historyPath;
 
+    @Option(names = {"-i", "--interactive"}, description = "Interactive mode: preview changes and prompt for confirmation")
+    protected boolean interactive;
+
     protected CuratorFramework createClient() {
         CuratorFramework client = CuratorFrameworkFactory.newClient(connectionString, new ExponentialBackoffRetry(1000, 3));
         client.start();
@@ -66,6 +69,22 @@ class UpdateCommand extends BaseCommand {
             List<String> labelList = Arrays.asList(labels.split(","));
 
             MigrationService service = new MigrationService(client, historyPath);
+
+            if (interactive) {
+                boolean hasChanges = service.previewUpdate(changeLog, context, labelList);
+                if (!hasChanges) {
+                    return 0;
+                }
+                System.out.print("Do you want to proceed? [y/N]: ");
+                int read = System.in.read();
+                // Check for 'y' or 'Y'
+                if (read != 'y' && read != 'Y') {
+                    System.out.println("Aborted.");
+                    return 0;
+                }
+                // If there's pending input (like newline), we might want to consume it, but System.exit follows usually.
+            }
+
             service.update(changeLog, context, labelList);
             System.out.println("Update complete.");
             return 0;
@@ -89,6 +108,20 @@ class RollbackCommand extends BaseCommand {
             ChangeLog changeLog = parser.parse(changeLogFile);
 
             MigrationService service = new MigrationService(client, historyPath);
+
+            if (interactive) {
+                boolean hasChanges = service.previewRollback(changeLog, count);
+                if (!hasChanges) {
+                    return 0;
+                }
+                System.out.print("Do you want to proceed? [y/N]: ");
+                int read = System.in.read();
+                if (read != 'y' && read != 'Y') {
+                    System.out.println("Aborted.");
+                    return 0;
+                }
+            }
+
             service.rollback(changeLog, count);
             System.out.println("Rollback complete.");
             return 0;

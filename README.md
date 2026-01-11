@@ -15,6 +15,7 @@ A Liquibase-inspired tool for managing Zookeeper state migrations. It supports c
 *   **Checksum Validation**: Ensures historical changesets have not been modified.
 *   **Contexts & Labels**: Control execution scope with environments (e.g., `dev`, `prod`) and labels.
 *   **External Files**: Load node data from external files.
+*   **Interactive Mode**: Preview changes (diff) before executing.
 
 ## Installation
 
@@ -36,12 +37,14 @@ The executable JAR will be located at `target/zookeeper-migration-tool-1.0-SNAPS
 ## Usage
 
 The CLI supports two main commands: `update` and `rollback`.
+See [CLI_USAGE.md](CLI_USAGE.md) for detailed interactive mode instructions.
 
 ### Common Arguments
 
 *   `-c, --connection <string>`: Zookeeper connection string (e.g., `localhost:2181`).
 *   `-f, --file <file>`: Path to the changelog file (YAML or JSON).
 *   `-p, --path <path>`: Root path for migration history (default: `/zookeeper-migrations`).
+*   `-i, --interactive`: Enable interactive mode (preview changes and confirm).
 
 ### Update
 

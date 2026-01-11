@@ -170,6 +170,88 @@ public class MigrationService {
          rollback(log, count);
      }
 
+    public boolean previewUpdate(ChangeLog changeLog, String executionContext, List<String> executionLabels) throws Exception {
+        Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
+        Set<String> executedInThisRun = new HashSet<>();
+        List<ChangeSet> changeSets = new ArrayList<>();
+        if (changeLog.getDatabaseChangeLog() != null) {
+            for (ChangeLogEntry entry : changeLog.getDatabaseChangeLog()) {
+                if (entry instanceof ChangeSet) {
+                    changeSets.add((ChangeSet) entry);
+                }
+            }
+        }
+
+        boolean hasChanges = false;
+        MigrationInspector inspector = new MigrationInspector(client);
+        System.out.println("PREVIEW: UPCOMING MIGRATIONS");
+        System.out.println("============================");
+
+        for (ChangeSet cs : changeSets) {
+             if (executedInThisRun.contains(cs.getId())) {
+                System.out.println("DUPLICATE ID (preview): " + cs.getId());
+                continue;
+            }
+
+            if (executedMap.containsKey(cs.getId())) {
+                // Already executed
+                executedInThisRun.add(cs.getId());
+                continue;
+            }
+
+            if (!shouldRun(cs, executionContext, executionLabels, changeLog.getContextGroups())) {
+                continue;
+            }
+
+            // Pending ChangeSet
+            System.out.println(inspector.inspect(cs, false));
+            hasChanges = true;
+            executedInThisRun.add(cs.getId());
+        }
+
+        if (!hasChanges) {
+            System.out.println("No pending changes found.");
+        }
+        return hasChanges;
+    }
+
+    public boolean previewRollback(ChangeLog changeLog, int count) throws Exception {
+        Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
+        List<ChangeSet> changeSets = new ArrayList<>();
+        if (changeLog.getDatabaseChangeLog() != null) {
+            for (ChangeLogEntry entry : changeLog.getDatabaseChangeLog()) {
+                if (entry instanceof ChangeSet) {
+                    changeSets.add((ChangeSet) entry);
+                }
+            }
+        }
+
+        List<ChangeSet> toRollback = new ArrayList<>();
+        for (int i = changeSets.size() - 1; i >= 0; i--) {
+            ChangeSet cs = changeSets.get(i);
+            if (executedMap.containsKey(cs.getId())) {
+                toRollback.add(cs);
+                if (toRollback.size() >= count) {
+                    break;
+                }
+            }
+        }
+
+        if (toRollback.isEmpty()) {
+            System.out.println("No executed changesets found to rollback.");
+            return false;
+        }
+
+        MigrationInspector inspector = new MigrationInspector(client);
+        System.out.println("PREVIEW: ROLLBACK MIGRATIONS");
+        System.out.println("============================");
+
+        for (ChangeSet cs : toRollback) {
+            System.out.println(inspector.inspect(cs, true));
+        }
+        return true;
+    }
+
     private void verifyChecksum(ChangeSet cs, String currentChecksum, String storedChecksum) {
         if (storedChecksum == null) {
             logger.warn("ChangeSet {} has no stored checksum. Skipping validation.", cs.getId());
