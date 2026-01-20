@@ -1,16 +1,8 @@
 package com.zkmigration.core;
 
-import com.zkmigration.model.Change;
-import com.zkmigration.model.ChangeSet;
-import com.zkmigration.model.ChangeVisitor;
-import com.zkmigration.model.Create;
-import com.zkmigration.model.Delete;
-import com.zkmigration.model.Rename;
-import com.zkmigration.model.Update;
-import com.zkmigration.model.Upsert;
+import com.zkmigration.model.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -42,13 +34,8 @@ public class MigrationInspector {
         return report.toString();
     }
 
-    private static class InspectionVisitor implements ChangeVisitor<String> {
-        private static final Logger logger = LoggerFactory.getLogger(InspectionVisitor.class);
-        private final CuratorFramework client;
-
-        public InspectionVisitor(CuratorFramework client) {
-            this.client = client;
-        }
+    @Slf4j
+    private record InspectionVisitor(CuratorFramework client) implements ChangeVisitor<String> {
 
         @Override
         public String visit(Create create) {
@@ -61,7 +48,7 @@ public class MigrationInspector {
                 byte[] newData = MigrationUtils.resolveData(create.getData(), create.getFile());
                 out.append(DiffGenerator.generateDiff(null, newData));
             } catch (Exception e) {
-                logger.error("Error inspecting Create", e);
+                log.error("Error inspecting Create", e);
                 out.append("Error inspecting Create: ").append(e.getMessage());
             }
             return out.toString();
@@ -82,7 +69,7 @@ public class MigrationInspector {
                     out.append(DiffGenerator.generateDiff(oldData, newData));
                 }
             } catch (Exception e) {
-                logger.error("Error inspecting Update", e);
+                log.error("Error inspecting Update", e);
                 out.append("Error inspecting Update: ").append(e.getMessage());
             }
             return out.toString();
@@ -100,7 +87,7 @@ public class MigrationInspector {
                     out.append(DiffGenerator.generateDiff(oldData, null));
                 }
             } catch (Exception e) {
-                logger.error("Error inspecting Delete", e);
+                log.error("Error inspecting Delete", e);
                 out.append("Error inspecting Delete: ").append(e.getMessage());
             }
             return out.toString();
@@ -118,7 +105,7 @@ public class MigrationInspector {
                     out.append("WARNING: Destination node already exists!\n");
                 }
             } catch (Exception e) {
-                logger.error("Error inspecting Rename", e);
+                log.error("Error inspecting Rename", e);
                 out.append("Error inspecting Rename: ").append(e.getMessage());
             }
             return out.toString();
@@ -137,7 +124,7 @@ public class MigrationInspector {
                     out.append(DiffGenerator.generateDiff(null, newData));
                 }
             } catch (Exception e) {
-                logger.error("Error inspecting Upsert", e);
+                log.error("Error inspecting Upsert", e);
                 out.append("Error inspecting Upsert: ").append(e.getMessage());
             }
             return out.toString();

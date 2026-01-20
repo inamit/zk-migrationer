@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,13 +40,13 @@ public class MigrationServiceTest {
         ChangeSet cs = new ChangeSet();
         cs.setId("1");
         cs.setAuthor("test");
-        cs.setContext(Collections.singletonList("test"));
+        cs.setEnvironments(Collections.singletonList("test"));
         cs.setLabels(Collections.singletonList("label"));
         Create create = new Create();
         create.setPath("/test");
         create.setData("data");
         cs.setChanges(Collections.singletonList(create));
-        changeLog.setDatabaseChangeLog(Collections.singletonList(cs));
+        changeLog.setZookeeperChangeLog(Collections.singletonList(cs));
 
         // Preview should show changes
         boolean hasChanges = service.previewUpdate(changeLog, "test", Collections.singletonList("label"));
@@ -67,16 +66,16 @@ public class MigrationServiceTest {
         ChangeSet cs = new ChangeSet();
         cs.setId("1");
         cs.setAuthor("test");
-        cs.setContext(Collections.singletonList("test"));
+        cs.setEnvironments(Collections.singletonList("test"));
         cs.setLabels(Collections.singletonList("label"));
         Create create = new Create();
         create.setPath("/test");
         create.setData("data");
         cs.setChanges(Collections.singletonList(create));
         cs.setRollback(Collections.singletonList(new com.zkmigration.model.Delete()));
-        ((com.zkmigration.model.Delete)cs.getRollback().get(0)).setPath("/test");
+        cs.getRollback().get(0).setPath("/test");
 
-        changeLog.setDatabaseChangeLog(Collections.singletonList(cs));
+        changeLog.setZookeeperChangeLog(Collections.singletonList(cs));
 
         // Nothing to rollback yet
         boolean hasChanges = service.previewRollback(changeLog, 1);

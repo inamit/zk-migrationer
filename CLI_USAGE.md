@@ -15,7 +15,7 @@ In this mode, the tool will:
 java -jar zookeeper-migration-tool.jar update \
   -c localhost:2181 \
   -f changelog.json \
-  --context production \
+  --env production \
   --labels db \
   --interactive
 

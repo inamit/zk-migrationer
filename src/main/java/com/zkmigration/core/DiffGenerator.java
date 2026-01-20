@@ -32,7 +32,6 @@ public class DiffGenerator {
         if (data == null || data.length == 0) return false;
         // Simple heuristic: look for null bytes or high ratio of non-printable chars
         // We'll just check for null bytes for now as ZK often stores config data
-        int nullCount = 0;
         int checkLen = Math.min(data.length, 1024);
         for (int i = 0; i < checkLen; i++) {
             if (data[i] == 0) return true;
@@ -61,7 +60,7 @@ public class DiffGenerator {
                 } else if (i < oldLines.size()) {
                     diff.append("- ").append(oldLines.get(i)).append("\n");
                     i++;
-                } else if (j < newLines.size()) {
+                } else {
                     diff.append("+ ").append(newLines.get(j)).append("\n");
                     j++;
                 }
@@ -72,8 +71,6 @@ public class DiffGenerator {
 
     private static String generateWordDiff(String oldLine, String newLine) {
         StringBuilder result = new StringBuilder();
-        String[] oldWords = oldLine.split("(?<=\\s)|(?=\\s)");
-        String[] newWords = newLine.split("(?<=\\s)|(?=\\s)");
 
         // Very basic LCS-like or just positional word diff
         // For simplicity: just show [-old-] {+new+}

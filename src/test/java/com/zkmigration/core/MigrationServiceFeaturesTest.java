@@ -11,7 +11,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +23,6 @@ class MigrationServiceFeaturesTest {
     private TestingServer server;
     private CuratorFramework client;
     private MigrationService migrationService;
-    private MigrationStateService stateService;
 
     @BeforeEach
     void setUp() throws Exception {
@@ -32,7 +30,6 @@ class MigrationServiceFeaturesTest {
         client = CuratorFrameworkFactory.newClient(server.getConnectString(), new RetryOneTime(1));
         client.start();
         migrationService = new MigrationService(client, "/zookeeper-migrations");
-        stateService = new MigrationStateService(client, "/zookeeper-migrations/changelog");
     }
 
     @AfterEach
@@ -41,11 +38,11 @@ class MigrationServiceFeaturesTest {
         server.close();
     }
 
-    private ChangeSet createChangeSet(String id, String context, String label) {
+    private ChangeSet createChangeSet(String id, String environment, String label) {
         ChangeSet cs = new ChangeSet();
         cs.setId(id);
         cs.setAuthor("test");
-        cs.setContext(context != null ? List.of(context) : List.of());
+        cs.setEnvironments(environment != null ? List.of(environment) : List.of());
         cs.setLabels(label != null ? List.of(label) : List.of());
         Create create = new Create();
         create.setPath("/test/" + id);
@@ -55,15 +52,15 @@ class MigrationServiceFeaturesTest {
     }
 
     @Test
-    void testContextFiltering() throws Exception {
+    void testEnvironmentFiltering() throws Exception {
         ChangeSet csDev = createChangeSet("dev1", "dev", "app");
         ChangeSet csProd = createChangeSet("prod1", "prod", "app");
         ChangeSet csAll = createChangeSet("all1", "All", "app");
 
         ChangeLog log = new ChangeLog();
-        log.setDatabaseChangeLog(List.of(csDev, csProd, csAll));
+        log.setZookeeperChangeLog(List.of(csDev, csProd, csAll));
 
-        // Run with context=dev
+        // Run with environment=dev
         migrationService.update(log, "dev", List.of("app"));
 
         assertThat(client.checkExists().forPath("/test/dev1")).isNotNull();
@@ -72,27 +69,27 @@ class MigrationServiceFeaturesTest {
     }
 
     @Test
-    void testContextMismatch() throws Exception {
+    void testEnvironmentMismatch() throws Exception {
         ChangeSet csDev = createChangeSet("dev2", "dev", "app");
         ChangeLog log = new ChangeLog();
-        log.setDatabaseChangeLog(List.of(csDev));
+        log.setZookeeperChangeLog(List.of(csDev));
 
-        // Run with context=prod, should skip
+        // Run with environment=prod, should skip
         migrationService.update(log, "prod", List.of("app"));
         assertThat(client.checkExists().forPath("/test/dev2")).isNull();
     }
 
     @Test
-    void testContextGroup() throws Exception {
+    void testEnvironmentsGroup() throws Exception {
         ChangeSet csK8s = createChangeSet("k8s1", "k8s", "app");
 
         ChangeLog log = new ChangeLog();
         Map<String, List<String>> groups = new HashMap<>();
         groups.put("k8s", List.of("dev", "staging"));
-        log.setContextGroups(groups);
-        log.setDatabaseChangeLog(List.of(csK8s));
+        log.setEnvironmentsGroups(groups);
+        log.setZookeeperChangeLog(List.of(csK8s));
 
-        // Run with context=dev (which is in k8s group)
+        // Run with environment=dev (which is in k8s group)
         // Logic: cs has 'k8s'. 'dev' is in 'k8s'. So should run.
         migrationService.update(log, "dev", List.of("app"));
 
@@ -105,7 +102,7 @@ class MigrationServiceFeaturesTest {
         ChangeSet csB = createChangeSet("B", "test", "micro-b");
 
         ChangeLog log = new ChangeLog();
-        log.setDatabaseChangeLog(List.of(csA, csB));
+        log.setZookeeperChangeLog(List.of(csA, csB));
 
         migrationService.update(log, "test", List.of("micro-a"));
 
@@ -117,7 +114,7 @@ class MigrationServiceFeaturesTest {
     void testLabelMismatch() throws Exception {
         ChangeSet csA = createChangeSet("C", "test", "micro-a");
         ChangeLog log = new ChangeLog();
-        log.setDatabaseChangeLog(List.of(csA));
+        log.setZookeeperChangeLog(List.of(csA));
 
         // Run with labels=micro-b
         migrationService.update(log, "test", List.of("micro-b"));
@@ -128,7 +125,7 @@ class MigrationServiceFeaturesTest {
     void testChecksumValidationFail() throws Exception {
         ChangeSet cs = createChangeSet("chk1", "test", "app");
         ChangeLog log = new ChangeLog();
-        log.setDatabaseChangeLog(List.of(cs));
+        log.setZookeeperChangeLog(List.of(cs));
 
         // First run
         migrationService.update(log, "test", List.of("app"));
@@ -145,11 +142,8 @@ class MigrationServiceFeaturesTest {
     @Test
     void testValidCheckSumBypass() throws Exception {
         ChangeSet cs = createChangeSet("chk2", "test", "app");
-        // Calculate expected failure checksum
-        String originalSum = ChecksumUtil.calculateChecksum(cs);
-
         ChangeLog log = new ChangeLog();
-        log.setDatabaseChangeLog(List.of(cs));
+        log.setZookeeperChangeLog(List.of(cs));
 
         // First run
         migrationService.update(log, "test", List.of("app"));
@@ -169,13 +163,13 @@ class MigrationServiceFeaturesTest {
     void testDuplicateIdsExecutesOnce() throws Exception {
         // Create two changesets with same ID
         ChangeSet cs1 = createChangeSet("dup1", "test", "app");
-        ((Create)cs1.getChanges().get(0)).setPath("/test/dup1-a");
+        cs1.getChanges().get(0).setPath("/test/dup1-a");
 
         ChangeSet cs2 = createChangeSet("dup1", "test", "app");
-        ((Create)cs2.getChanges().get(0)).setPath("/test/dup1-b");
+        cs2.getChanges().get(0).setPath("/test/dup1-b");
 
         ChangeLog log = new ChangeLog();
-        log.setDatabaseChangeLog(List.of(cs1, cs2));
+        log.setZookeeperChangeLog(List.of(cs1, cs2));
 
         // Run should throw DuplicateChangeSetIdException
         assertThatThrownBy(() -> migrationService.update(log, "test", List.of("app")))

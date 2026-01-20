@@ -3,10 +3,9 @@ package com.zkmigration.core;
 import com.zkmigration.model.ChangeLog;
 import com.zkmigration.model.ChangeLogEntry;
 import com.zkmigration.model.ChangeSet;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,8 +14,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class MigrationService {
-    private static final Logger logger = LoggerFactory.getLogger(MigrationService.class);
     private final CuratorFramework client;
     private final MigrationStateService stateService;
     private final MigrationExecutor executor;
@@ -30,13 +29,15 @@ public class MigrationService {
         this.executor = new MigrationExecutor(client);
     }
 
-    public void update(ChangeLog changeLog, String executionContext, List<String> executionLabels) throws Exception {
+    public void update(ChangeLog changeLog, String executionEnvironment, List<String> executionLabels) throws Exception {
         InterProcessMutex lock = new InterProcessMutex(client, lockPath);
+
         if (!lock.acquire(60, TimeUnit.SECONDS)) {
             throw new RuntimeException("Could not acquire lock at " + lockPath);
         }
+
         try {
-            logger.info("Lock acquired. Checking for migrations...");
+            log.info("Lock acquired. Checking for migrations...");
             Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
             Set<String> executedInThisRun = new HashSet<>();
 
@@ -58,19 +59,19 @@ public class MigrationService {
                     // Verify Checksum
                     verifyChecksum(cs, currentChecksum, executed.checksum);
 
-                    logger.debug("ChangeSet {} already executed. Skipping.", cs.getId());
+                    log.debug("ChangeSet {} already executed. Skipping.", cs.getId());
                     // Even if skipped, we mark it as seen in this run to prevent duplicate ID re-use
                     executedInThisRun.add(cs.getId());
                     continue;
                 }
 
-                // Check Context and Labels
-                if (!shouldRun(cs, executionContext, executionLabels, changeLog.getContextGroups())) {
-                    logger.debug("ChangeSet {} ignored due to context/label mismatch.", cs.getId());
+                // Check Environment and Labels
+                if (!shouldRun(cs, executionEnvironment, executionLabels, changeLog.getEnvironmentsGroups())) {
+                    log.debug("ChangeSet {} ignored due to environment/label mismatch.", cs.getId());
                     continue;
                 }
 
-                logger.info("Applying ChangeSet: {}", cs.getId());
+                log.info("Applying ChangeSet: {}", cs.getId());
                 try {
                     executor.execute(cs);
                     stateService.markChangeSetExecuted(cs.getId(), cs.getAuthor(), "Executed by ZkMigration", currentChecksum);
@@ -79,65 +80,41 @@ public class MigrationService {
                     executedInThisRun.add(cs.getId());
                     executedMap.put(cs.getId(), new MigrationStateService.ExecutedChangeSet(cs.getId(), cs.getAuthor(), System.currentTimeMillis(), currentChecksum));
 
-                    logger.info("ChangeSet {} applied successfully.", cs.getId());
+                    log.info("ChangeSet {} applied successfully.", cs.getId());
                 } catch (Exception e) {
-                    logger.error("Failed to apply ChangeSet {}", cs.getId(), e);
+                    log.error("Failed to apply ChangeSet {}", cs.getId(), e);
                     throw e;
                 }
             }
         } finally {
             lock.release();
         }
-    }
-
-    // Kept for backward compatibility or direct usage, but should likely be updated or deprecated.
-    public void update(List<ChangeSet> changeSets) throws Exception {
-         // This is mostly for existing tests.
-         ChangeLog log = new ChangeLog();
-         List<ChangeLogEntry> entries = new ArrayList<>(changeSets);
-         log.setDatabaseChangeLog(entries);
-         // Pass dummy context/labels to bypass checks? Or assume tests set "All"?
-         // If tests don't set context, shouldRun will fail unless we pass a context that matches.
-         // Let's pass "test" context.
-         update(log, "test", List.of("test"));
     }
 
     public void rollback(ChangeLog changeLog, int count) throws Exception {
         InterProcessMutex lock = new InterProcessMutex(client, lockPath);
+
         if (!lock.acquire(60, TimeUnit.SECONDS)) {
             throw new RuntimeException("Could not acquire lock at " + lockPath);
         }
+
         try {
-            logger.info("Lock acquired. Processing rollback...");
-            Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
-
-            List<ChangeSet> changeSets = extractChangeSets(changeLog);
-
-            List<ChangeSet> toRollback = new ArrayList<>();
-            // Iterate reverse
-            for (int i = changeSets.size() - 1; i >= 0; i--) {
-                ChangeSet cs = changeSets.get(i);
-                if (executedMap.containsKey(cs.getId())) {
-                    toRollback.add(cs);
-                    if (toRollback.size() >= count) {
-                        break;
-                    }
-                }
-            }
+            log.info("Lock acquired. Processing rollback...");
+            List<ChangeSet> toRollback = getChangesetsToRollback(changeLog, count);
 
             if (toRollback.isEmpty()) {
-                logger.info("No executed changesets found to rollback.");
+                log.info("No executed changesets found to rollback.");
                 return;
             }
 
             for (ChangeSet cs : toRollback) {
-                logger.info("Rolling back ChangeSet: {}", cs.getId());
+                log.info("Rolling back ChangeSet: {}", cs.getId());
                 try {
                     executor.rollback(cs);
                     stateService.removeChangeSetExecution(cs.getId());
-                    logger.info("ChangeSet {} rolled back successfully.", cs.getId());
+                    log.info("ChangeSet {} rolled back successfully.", cs.getId());
                 } catch (Exception e) {
-                    logger.error("Failed to rollback ChangeSet {}", cs.getId(), e);
+                    log.error("Failed to rollback ChangeSet {}", cs.getId(), e);
                     throw e;
                 }
             }
@@ -147,15 +124,7 @@ public class MigrationService {
         }
     }
 
-    // Legacy rollback support
-     public void rollback(List<ChangeSet> changeSets, int count) throws Exception {
-         ChangeLog log = new ChangeLog();
-         List<ChangeLogEntry> entries = new ArrayList<>(changeSets);
-         log.setDatabaseChangeLog(entries);
-         rollback(log, count);
-     }
-
-    public boolean previewUpdate(ChangeLog changeLog, String executionContext, List<String> executionLabels) throws Exception {
+    public boolean previewUpdate(ChangeLog changeLog, String executionEnvironment, List<String> executionLabels) throws Exception {
         Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
         Set<String> executedInThisRun = new HashSet<>();
         List<ChangeSet> changeSets = extractChangeSets(changeLog);
@@ -166,7 +135,7 @@ public class MigrationService {
         System.out.println("============================");
 
         for (ChangeSet cs : changeSets) {
-             if (executedInThisRun.contains(cs.getId())) {
+            if (executedInThisRun.contains(cs.getId())) {
                 System.out.println("DUPLICATE ID (preview): " + cs.getId());
                 continue;
             }
@@ -184,7 +153,7 @@ public class MigrationService {
                 continue;
             }
 
-            if (!shouldRun(cs, executionContext, executionLabels, changeLog.getContextGroups())) {
+            if (!shouldRun(cs, executionEnvironment, executionLabels, changeLog.getEnvironmentsGroups())) {
                 continue;
             }
 
@@ -201,19 +170,7 @@ public class MigrationService {
     }
 
     public boolean previewRollback(ChangeLog changeLog, int count) throws Exception {
-        Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
-        List<ChangeSet> changeSets = extractChangeSets(changeLog);
-
-        List<ChangeSet> toRollback = new ArrayList<>();
-        for (int i = changeSets.size() - 1; i >= 0; i--) {
-            ChangeSet cs = changeSets.get(i);
-            if (executedMap.containsKey(cs.getId())) {
-                toRollback.add(cs);
-                if (toRollback.size() >= count) {
-                    break;
-                }
-            }
-        }
+        List<ChangeSet> toRollback = getChangesetsToRollback(changeLog, count);
 
         if (toRollback.isEmpty()) {
             System.out.println("No executed changesets found to rollback.");
@@ -230,9 +187,27 @@ public class MigrationService {
         return true;
     }
 
+    private List<ChangeSet> getChangesetsToRollback(ChangeLog changeLog, int numberOfChangesetsToRollback) throws Exception {
+        Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
+        List<ChangeSet> changeSets = extractChangeSets(changeLog);
+
+        List<ChangeSet> toRollback = new ArrayList<>();
+        for (int i = changeSets.size() - 1; i >= 0; i--) {
+            ChangeSet cs = changeSets.get(i);
+            if (executedMap.containsKey(cs.getId())) {
+                toRollback.add(cs);
+                if (toRollback.size() >= numberOfChangesetsToRollback) {
+                    break;
+                }
+            }
+        }
+
+        return toRollback;
+    }
+
     private void verifyChecksum(ChangeSet cs, String currentChecksum, String storedChecksum) {
         if (storedChecksum == null) {
-            logger.warn("ChangeSet {} has no stored checksum. Skipping validation.", cs.getId());
+            log.warn("ChangeSet {} has no stored checksum. Skipping validation.", cs.getId());
             return;
         }
 
@@ -253,36 +228,36 @@ public class MigrationService {
                 cs.getId(), storedChecksum, currentChecksum));
     }
 
-    private boolean shouldRun(ChangeSet cs, String executionContext, List<String> executionLabels, Map<String, List<String>> contextGroups) {
-        // Context Check
-        boolean contextMatch = false;
+    private boolean shouldRun(ChangeSet cs, String executionEnvironment, List<String> executionLabels, Map<String, List<String>> environmentsGroups) {
+        // Environment Check
+        boolean environmentMatch = false;
 
-        // 1. Check "All"
-        if (cs.getContext() != null) {
-            for (String ctx : cs.getContext()) {
-                if ("All".equalsIgnoreCase(ctx)) {
-                    contextMatch = true;
+        if (cs.getEnvironments() != null) {
+            for (String env : cs.getEnvironments()) {
+                // 1. Check "All"
+                if ("All".equalsIgnoreCase(env)) {
+                    environmentMatch = true;
                     break;
                 }
 
                 // 2. Check direct match
-                if (ctx.equalsIgnoreCase(executionContext)) {
-                    contextMatch = true;
+                if (env.equalsIgnoreCase(executionEnvironment)) {
+                    environmentMatch = true;
                     break;
                 }
 
-                // 3. Check Context Group match
-                if (contextGroups != null && contextGroups.containsKey(ctx)) {
-                     List<String> groupMembers = contextGroups.get(ctx);
-                     if (groupMembers != null && groupMembers.contains(executionContext)) {
-                         contextMatch = true;
-                         break;
-                     }
+                // 3. Check Environments Group match
+                if (environmentsGroups != null && environmentsGroups.containsKey(env)) {
+                    List<String> groupMembers = environmentsGroups.get(env);
+                    if (groupMembers != null && groupMembers.contains(executionEnvironment)) {
+                        environmentMatch = true;
+                        break;
+                    }
                 }
             }
         }
 
-        if (!contextMatch) {
+        if (!environmentMatch) {
             return false;
         }
 
@@ -304,8 +279,8 @@ public class MigrationService {
 
     private List<ChangeSet> extractChangeSets(ChangeLog changeLog) {
         List<ChangeSet> changeSets = new ArrayList<>();
-        if (changeLog.getDatabaseChangeLog() != null) {
-            for (ChangeLogEntry entry : changeLog.getDatabaseChangeLog()) {
+        if (changeLog.getZookeeperChangeLog() != null) {
+            for (ChangeLogEntry entry : changeLog.getZookeeperChangeLog()) {
                 if (entry instanceof ChangeSet) {
                     changeSets.add((ChangeSet) entry);
                 }

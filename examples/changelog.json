@@ -1,13 +1,13 @@
 {
-  "contextGroups": {
+  "environmentsGroups": {
     "k8s": ["dev", "staging", "prod"]
   },
-  "databaseChangeLog": [
+  "zookeeperChangeLog": [
     {
       "changeSet": {
         "id": "json-1",
         "author": "jules",
-        "context": ["dev"],
+        "environments": ["dev"],
         "labels": ["json"],
         "changes": [
           {

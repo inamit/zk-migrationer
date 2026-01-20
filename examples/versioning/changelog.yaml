@@ -1,10 +1,10 @@
-contextGroups:
+environmentsGroups:
   k8s:
     - dev
     - staging
     - prod
 
-databaseChangeLog:
+zookeeperChangeLog:
   - include:
       file: "1.0.0/changelog.yaml"
   - include:

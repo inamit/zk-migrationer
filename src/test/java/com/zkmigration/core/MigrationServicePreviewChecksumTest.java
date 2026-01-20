@@ -47,13 +47,13 @@ public class MigrationServicePreviewChecksumTest {
         ChangeSet cs = new ChangeSet();
         cs.setId("1");
         cs.setAuthor("test");
-        cs.setContext(Collections.singletonList("test"));
+        cs.setEnvironments(Collections.singletonList("test"));
         cs.setLabels(Collections.singletonList("label"));
         Create create = new Create();
         create.setPath("/test");
         create.setData("data");
         cs.setChanges(Collections.singletonList(create));
-        changeLog.setDatabaseChangeLog(Collections.singletonList(cs));
+        changeLog.setZookeeperChangeLog(Collections.singletonList(cs));
 
         // 2. Execute it first
         service.update(changeLog, "test", Collections.singletonList("label"));

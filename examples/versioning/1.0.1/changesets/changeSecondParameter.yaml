@@ -1,8 +1,8 @@
-databaseChangeLog:
+zookeeperChangeLog:
   - changeSet:
       id: "2-change"
       author: "jules"
-      context: "dev"
+      environments: "dev"
       labels: "service2"
       changes:
         - update:

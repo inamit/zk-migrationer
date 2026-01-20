@@ -9,7 +9,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,13 +39,13 @@ class MigrationCliSystemTest {
 
     @Test
     void testCliUpdateAndRollback() throws Exception {
-        // 1. Create a changelog file with context and labels
+        // 1. Create a changelog file with environments and labels
         String yaml = """
-                databaseChangeLog:
+                zookeeperChangeLog:
                   - changeSet:
                       id: "cli-1"
                       author: "system-test"
-                      context: "test"
+                      environments: "test"
                       labels: "test"
                       changes:
                         - create:
@@ -59,12 +58,12 @@ class MigrationCliSystemTest {
         Path file = tempDir.resolve("cli-test.yaml");
         Files.writeString(file, yaml);
 
-        // 2. Run UPDATE command with context and labels
+        // 2. Run UPDATE command with environments and labels
         String[] args = {
             "update",
             "--connection", server.getConnectString(),
             "--file", file.toAbsolutePath().toString(),
-            "--context", "test",
+            "--env", "test",
             "--labels", "test"
         };
 
@@ -81,9 +80,9 @@ class MigrationCliSystemTest {
         List<String> historyChildren = client.getChildren().forPath("/zookeeper-migrations/changelog");
         assertThat(historyChildren).hasSize(1);
 
-        // 4. Run ROLLBACK command (Rollback doesn't strictly require context/labels in logic, but CLI parsing might if shared?
+        // 4. Run ROLLBACK command (Rollback doesn't strictly require environment/labels in logic, but CLI parsing might if shared?
         // No, RollbackCommand struct doesn't have them in my implementation.
-        // But let's check RollbackCommand in MigrationCli.java... it extends BaseCommand but doesn't add context/labels. So it should be fine.
+        // But let's check RollbackCommand in MigrationCli.java... it extends BaseCommand but doesn't add environment/labels. So it should be fine.
         String[] rollbackArgs = {
             "rollback",
             "--connection", server.getConnectString(),
@@ -102,11 +101,11 @@ class MigrationCliSystemTest {
     @Test
     void testMultipleChangeSetsAndPartialRollback() throws Exception {
         String yaml = """
-                databaseChangeLog:
+                zookeeperChangeLog:
                   - changeSet:
                       id: "1"
                       author: "test"
-                      context: "test"
+                      environments: "test"
                       labels: "test"
                       changes:
                         - create:
@@ -117,7 +116,7 @@ class MigrationCliSystemTest {
                   - changeSet:
                       id: "2"
                       author: "test"
-                      context: "test"
+                      environments: "test"
                       labels: "test"
                       changes:
                         - create:
@@ -133,7 +132,7 @@ class MigrationCliSystemTest {
         new picocli.CommandLine(new MigrationCli()).execute("update",
             "--connection", server.getConnectString(),
             "--file", file.toAbsolutePath().toString(),
-            "--context", "test",
+            "--env", "test",
             "--labels", "test");
 
         assertThat(client.checkExists().forPath("/node1")).isNotNull();
@@ -156,13 +155,13 @@ class MigrationCliSystemTest {
         int exitCode = new picocli.CommandLine(new MigrationCli()).execute("update",
             "--connection", server.getConnectString(),
             "--file", "nonexistent.yaml",
-            "--context", "test",
+            "--env", "test",
             "--labels", "test");
         assertThat(exitCode).isNotEqualTo(0);
     }
 
     @Test
-    public void testHelp() throws Exception {
+    public void testHelp() {
         MigrationCli cli = new MigrationCli();
         assertThat(cli.call()).isEqualTo(0);
     }

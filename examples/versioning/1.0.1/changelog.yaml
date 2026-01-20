@@ -1,4 +1,4 @@
-databaseChangeLog:
+zookeeperChangeLog:
   - include:
       file: "changesets/changeFirstParameter.yaml"
   - include:
