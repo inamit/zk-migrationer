@@ -21,4 +21,6 @@ public abstract class Change {
     public void setPath(String path) {
         this.path = path;
     }
+
+    public abstract <T> T accept(ChangeVisitor<T> visitor);
 }

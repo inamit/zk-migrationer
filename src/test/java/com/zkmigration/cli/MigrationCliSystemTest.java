@@ -160,4 +160,10 @@ class MigrationCliSystemTest {
             "--labels", "test");
         assertThat(exitCode).isNotEqualTo(0);
     }
+
+    @Test
+    public void testHelp() throws Exception {
+        MigrationCli cli = new MigrationCli();
+        assertThat(cli.call()).isEqualTo(0);
+    }
 }

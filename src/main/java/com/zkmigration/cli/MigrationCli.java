@@ -41,10 +41,41 @@ abstract class BaseCommand implements Callable<Integer> {
     @Option(names = {"-p", "--path"}, description = "Root path for migration history", defaultValue = "/zookeeper-migrations")
     protected String historyPath;
 
+    @Option(names = {"-i", "--interactive"}, description = "Interactive mode: preview changes and prompt for confirmation")
+    protected boolean interactive;
+
     protected CuratorFramework createClient() {
         CuratorFramework client = CuratorFrameworkFactory.newClient(connectionString, new ExponentialBackoffRetry(1000, 3));
         client.start();
         return client;
+    }
+
+    protected boolean confirmExecution(boolean hasChanges) throws java.io.IOException {
+        if (!hasChanges) {
+            return false;
+        }
+        System.out.print("Do you want to proceed? [y/N]: ");
+        int read = System.in.read();
+        // Check for 'y' or 'Y'
+        if (read != 'y' && read != 'Y') {
+            System.out.println("Aborted.");
+            return false;
+        }
+        return true;
+    }
+
+    protected Integer executeAction(MigrationAction action) {
+        try (CuratorFramework client = createClient()) {
+            ChangeLogParser parser = new ChangeLogParser();
+            ChangeLog changeLog = parser.parse(changeLogFile);
+            MigrationService service = new MigrationService(client, historyPath);
+
+            action.execute(service, changeLog);
+            return 0;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 1;
+        }
     }
 }
 
@@ -57,22 +88,21 @@ class UpdateCommand extends BaseCommand {
     private String labels;
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         System.out.println("Starting update...");
-        try (CuratorFramework client = createClient()) {
-            ChangeLogParser parser = new ChangeLogParser();
-            ChangeLog changeLog = parser.parse(changeLogFile);
-
+        return executeAction((service, changeLog) -> {
             List<String> labelList = Arrays.asList(labels.split(","));
 
-            MigrationService service = new MigrationService(client, historyPath);
+            if (interactive) {
+                boolean hasChanges = service.previewUpdate(changeLog, context, labelList);
+                if (!confirmExecution(hasChanges)) {
+                    return;
+                }
+            }
+
             service.update(changeLog, context, labelList);
             System.out.println("Update complete.");
-            return 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 1;
-        }
+        });
     }
 }
 
@@ -82,19 +112,18 @@ class RollbackCommand extends BaseCommand {
     private int count;
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         System.out.println("Starting rollback...");
-        try (CuratorFramework client = createClient()) {
-            ChangeLogParser parser = new ChangeLogParser();
-            ChangeLog changeLog = parser.parse(changeLogFile);
+        return executeAction((service, changeLog) -> {
+            if (interactive) {
+                boolean hasChanges = service.previewRollback(changeLog, count);
+                if (!confirmExecution(hasChanges)) {
+                    return;
+                }
+            }
 
-            MigrationService service = new MigrationService(client, historyPath);
             service.rollback(changeLog, count);
             System.out.println("Rollback complete.");
-            return 0;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return 1;
-        }
+        });
     }
 }

@@ -10,4 +10,9 @@ public class Rename extends Change {
     public void setDestination(String destination) {
         this.destination = destination;
     }
+
+    @Override
+    public <T> T accept(ChangeVisitor<T> visitor) {
+        return visitor.visit(this);
+    }
 }

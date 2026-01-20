@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: "2-change"
+      author: "jules"
+      context: "dev"
+      labels: "service2"
+      changes:
+        - update:
+            path: "/app/config/secondParameter"
+            file: "examples/versioning/resources/testJson.json"
+      rollback:
+        - delete:
+            path: "/app/config/secondParameter"

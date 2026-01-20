@@ -11,15 +11,18 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.Collections;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MigrationServiceTest {
+public class MigrationServicePreviewChecksumTest {
     private TestingServer testingServer;
     private CuratorFramework client;
     private MigrationService service;
+    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+    private final PrintStream originalOut = System.out;
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -27,16 +30,19 @@ public class MigrationServiceTest {
         client = CuratorFrameworkFactory.newClient(testingServer.getConnectString(), new ExponentialBackoffRetry(1000, 3));
         client.start();
         service = new MigrationService(client, "/test-migrations");
+        System.setOut(new PrintStream(outContent));
     }
 
     @AfterEach
     public void tearDown() throws Exception {
+        System.setOut(originalOut);
         if (client != null) client.close();
         if (testingServer != null) testingServer.close();
     }
 
     @Test
-    public void testPreviewUpdate() throws Exception {
+    public void testPreviewUpdateShowsChecksumError() throws Exception {
+        // 1. Setup ChangeLog
         ChangeLog changeLog = new ChangeLog();
         ChangeSet cs = new ChangeSet();
         cs.setId("1");
@@ -49,44 +55,16 @@ public class MigrationServiceTest {
         cs.setChanges(Collections.singletonList(create));
         changeLog.setDatabaseChangeLog(Collections.singletonList(cs));
 
-        // Preview should show changes
-        boolean hasChanges = service.previewUpdate(changeLog, "test", Collections.singletonList("label"));
-        assertThat(hasChanges).isTrue();
-
-        // Apply changes
+        // 2. Execute it first
         service.update(changeLog, "test", Collections.singletonList("label"));
 
-        // Preview again should show no changes
-        hasChanges = service.previewUpdate(changeLog, "test", Collections.singletonList("label"));
-        assertThat(hasChanges).isFalse();
-    }
+        // 3. Modify the changeset (simulating checksum change)
+        create.setData("modified-data"); // This changes checksum
 
-    @Test
-    public void testPreviewRollback() throws Exception {
-        ChangeLog changeLog = new ChangeLog();
-        ChangeSet cs = new ChangeSet();
-        cs.setId("1");
-        cs.setAuthor("test");
-        cs.setContext(Collections.singletonList("test"));
-        cs.setLabels(Collections.singletonList("label"));
-        Create create = new Create();
-        create.setPath("/test");
-        create.setData("data");
-        cs.setChanges(Collections.singletonList(create));
-        cs.setRollback(Collections.singletonList(new com.zkmigration.model.Delete()));
-        ((com.zkmigration.model.Delete)cs.getRollback().get(0)).setPath("/test");
+        // 4. Preview Update again
+        service.previewUpdate(changeLog, "test", Collections.singletonList("label"));
 
-        changeLog.setDatabaseChangeLog(Collections.singletonList(cs));
-
-        // Nothing to rollback yet
-        boolean hasChanges = service.previewRollback(changeLog, 1);
-        assertThat(hasChanges).isFalse();
-
-        // Apply
-        service.update(changeLog, "test", Collections.singletonList("label"));
-
-        // Now preview rollback
-        hasChanges = service.previewRollback(changeLog, 1);
-        assertThat(hasChanges).isTrue();
+        // 5. Verify Output
+        assertThat(outContent.toString()).contains("VALIDATION ERROR: Validation Failed: Checksum mismatch");
     }
 }

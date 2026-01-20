@@ -50,12 +50,12 @@ public class MigrationExecutor {
         if (change instanceof Create) {
             Create create = (Create) change;
             logger.info("Creating node: {}", create.getPath());
-            byte[] data = resolveData(create.getData(), create.getFile());
+            byte[] data = MigrationUtils.resolveData(create.getData(), create.getFile());
             client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(create.getPath(), data);
         } else if (change instanceof Update) {
             Update update = (Update) change;
             logger.info("Updating node: {}", update.getPath());
-            byte[] data = resolveData(update.getData(), update.getFile());
+            byte[] data = MigrationUtils.resolveData(update.getData(), update.getFile());
             client.setData().forPath(update.getPath(), data);
         } else if (change instanceof Delete) {
             Delete delete = (Delete) change;
@@ -68,7 +68,7 @@ public class MigrationExecutor {
         } else if (change instanceof Upsert) {
             Upsert upsert = (Upsert) change;
             logger.info("Upserting node: {}", upsert.getPath());
-            byte[] data = resolveData(upsert.getData(), upsert.getFile());
+            byte[] data = MigrationUtils.resolveData(upsert.getData(), upsert.getFile());
             if (client.checkExists().forPath(upsert.getPath()) != null) {
                 client.setData().forPath(upsert.getPath(), data);
             } else {
@@ -77,16 +77,6 @@ public class MigrationExecutor {
         } else {
             throw new UnsupportedOperationException("Unknown change type: " + change.getClass().getName());
         }
-    }
-
-    private byte[] resolveData(String data, String file) throws IOException {
-        if (data != null && file != null) {
-            throw new IllegalArgumentException("Cannot provide both 'data' and 'file'");
-        }
-        if (file != null) {
-            return Files.readAllBytes(Path.of(file));
-        }
-        return data != null ? data.getBytes(StandardCharsets.UTF_8) : new byte[0];
     }
 
     private void renameNode(String sourcePath, String destinationPath) throws Exception {
