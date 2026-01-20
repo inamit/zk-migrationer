@@ -24,8 +24,8 @@ class ChangeLogParserTest {
     // Helper to extract changeSets from log
     private List<ChangeSet> getChangeSets(ChangeLog log) {
         List<ChangeSet> list = new ArrayList<>();
-        if (log.getDatabaseChangeLog() != null) {
-            for (ChangeLogEntry entry : log.getDatabaseChangeLog()) {
+        if (log.getZookeeperChangeLog() != null) {
+            for (ChangeLogEntry entry : log.getZookeeperChangeLog()) {
                 if (entry instanceof ChangeSet) {
                     list.add((ChangeSet) entry);
                 }
@@ -37,7 +37,7 @@ class ChangeLogParserTest {
     @Test
     void testParseYaml() throws IOException {
         String yaml = """
-                databaseChangeLog:
+                zookeeperChangeLog:
                   - changeSet:
                       id: "1"
                       author: "test"
@@ -65,7 +65,7 @@ class ChangeLogParserTest {
     void testParseJson() throws IOException {
         String json = """
                 {
-                  "databaseChangeLog": [
+                  "zookeeperChangeLog": [
                     {
                       "changeSet": {
                         "id": "2",
@@ -99,7 +99,7 @@ class ChangeLogParserTest {
     @Test
     void testParseInclude() throws IOException {
         String includedYaml = """
-                databaseChangeLog:
+                zookeeperChangeLog:
                   - changeSet:
                       id: "included-1"
                       author: "included"
@@ -113,7 +113,7 @@ class ChangeLogParserTest {
         Files.writeString(includedFile, includedYaml);
 
         String mainYaml = """
-                databaseChangeLog:
+                zookeeperChangeLog:
                   - include:
                       file: "included.yaml"
                 """;
@@ -131,7 +131,7 @@ class ChangeLogParserTest {
     @Test
     void testMissingContextThrowsException() throws IOException {
         String yaml = """
-                databaseChangeLog:
+                zookeeperChangeLog:
                   - changeSet:
                       id: "invalid-1"
                       author: "test"
@@ -153,7 +153,7 @@ class ChangeLogParserTest {
     @Test
     void testMissingLabelsThrowsException() throws IOException {
         String yaml = """
-                databaseChangeLog:
+                zookeeperChangeLog:
                   - changeSet:
                       id: "invalid-2"
                       author: "test"

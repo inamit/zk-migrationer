@@ -13,7 +13,7 @@ public class ChangeLog {
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
     private List<String> labels;
 
-    private List<ChangeLogEntry> databaseChangeLog;
+    private List<ChangeLogEntry> zookeeperChangeLog;
 
     public Map<String, List<String>> getContextGroups() {
         return contextGroups;
@@ -39,11 +39,11 @@ public class ChangeLog {
         this.labels = labels;
     }
 
-    public List<ChangeLogEntry> getDatabaseChangeLog() {
-        return databaseChangeLog;
+    public List<ChangeLogEntry> getZookeeperChangeLog() {
+        return zookeeperChangeLog;
     }
 
-    public void setDatabaseChangeLog(List<ChangeLogEntry> databaseChangeLog) {
-        this.databaseChangeLog = databaseChangeLog;
+    public void setZookeeperChangeLog(List<ChangeLogEntry> zookeeperChangeLog) {
+        this.zookeeperChangeLog = zookeeperChangeLog;
     }
 }

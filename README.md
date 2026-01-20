@@ -94,7 +94,7 @@ If you run with `--context=dev`, changesets marked with `k8s` will also execute 
 ### YAML Example
 
 ```yaml
-databaseChangeLog:
+zookeeperChangeLog:
   - changeSet:
       id: "1"
       author: "jules"
@@ -159,7 +159,7 @@ To bypass this (e.g., valid refactoring), add the new checksum to `validCheckSum
 
 ```json
 {
-  "databaseChangeLog": [
+  "zookeeperChangeLog": [
     {
       "changeSet": {
         "id": "1",
@@ -185,7 +185,7 @@ To bypass this (e.g., valid refactoring), add the new checksum to `validCheckSum
 You can split your changelogs into multiple files. Included files inherit context and labels from the parent.
 
 ```yaml
-databaseChangeLog:
+zookeeperChangeLog:
   - include:
       file: "migrations/v1/changelog.yaml"
   - include:

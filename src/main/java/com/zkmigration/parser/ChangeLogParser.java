@@ -64,8 +64,8 @@ public class ChangeLogParser {
         if (changeLog.getLabels() != null) effectiveLabels.addAll(changeLog.getLabels());
 
         List<ChangeLogEntry> flatEntries = new ArrayList<>();
-        if (changeLog.getDatabaseChangeLog() != null) {
-            for (ChangeLogEntry entry : changeLog.getDatabaseChangeLog()) {
+        if (changeLog.getZookeeperChangeLog() != null) {
+            for (ChangeLogEntry entry : changeLog.getZookeeperChangeLog()) {
                 if (entry instanceof ChangeSet) {
                     ChangeSet cs = (ChangeSet) entry;
 
@@ -97,8 +97,8 @@ public class ChangeLogParser {
                     ChangeLog includedLog = parse(includedFile, changeLog.getContextGroups(), effectiveContext, effectiveLabels);
 
                     // Merge results
-                    if (includedLog.getDatabaseChangeLog() != null) {
-                        for (ChangeLogEntry includedEntry : includedLog.getDatabaseChangeLog()) {
+                    if (includedLog.getZookeeperChangeLog() != null) {
+                        for (ChangeLogEntry includedEntry : includedLog.getZookeeperChangeLog()) {
                              if (includedEntry instanceof ChangeSet) {
                                  flatEntries.add(includedEntry);
                              }
@@ -113,7 +113,7 @@ public class ChangeLogParser {
             }
         }
 
-        changeLog.setDatabaseChangeLog(flatEntries);
+        changeLog.setZookeeperChangeLog(flatEntries);
         return changeLog;
     }
 }

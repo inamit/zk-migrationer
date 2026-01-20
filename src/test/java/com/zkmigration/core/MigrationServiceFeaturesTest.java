@@ -61,7 +61,7 @@ class MigrationServiceFeaturesTest {
         ChangeSet csAll = createChangeSet("all1", "All", "app");
 
         ChangeLog log = new ChangeLog();
-        log.setDatabaseChangeLog(List.of(csDev, csProd, csAll));
+        log.setZookeeperChangeLog(List.of(csDev, csProd, csAll));
 
         // Run with context=dev
         migrationService.update(log, "dev", List.of("app"));
@@ -75,7 +75,7 @@ class MigrationServiceFeaturesTest {
     void testContextMismatch() throws Exception {
         ChangeSet csDev = createChangeSet("dev2", "dev", "app");
         ChangeLog log = new ChangeLog();
-        log.setDatabaseChangeLog(List.of(csDev));
+        log.setZookeeperChangeLog(List.of(csDev));
 
         // Run with context=prod, should skip
         migrationService.update(log, "prod", List.of("app"));
@@ -90,7 +90,7 @@ class MigrationServiceFeaturesTest {
         Map<String, List<String>> groups = new HashMap<>();
         groups.put("k8s", List.of("dev", "staging"));
         log.setContextGroups(groups);
-        log.setDatabaseChangeLog(List.of(csK8s));
+        log.setZookeeperChangeLog(List.of(csK8s));
 
         // Run with context=dev (which is in k8s group)
         // Logic: cs has 'k8s'. 'dev' is in 'k8s'. So should run.
@@ -105,7 +105,7 @@ class MigrationServiceFeaturesTest {
         ChangeSet csB = createChangeSet("B", "test", "micro-b");
 
         ChangeLog log = new ChangeLog();
-        log.setDatabaseChangeLog(List.of(csA, csB));
+        log.setZookeeperChangeLog(List.of(csA, csB));
 
         migrationService.update(log, "test", List.of("micro-a"));
 
@@ -117,7 +117,7 @@ class MigrationServiceFeaturesTest {
     void testLabelMismatch() throws Exception {
         ChangeSet csA = createChangeSet("C", "test", "micro-a");
         ChangeLog log = new ChangeLog();
-        log.setDatabaseChangeLog(List.of(csA));
+        log.setZookeeperChangeLog(List.of(csA));
 
         // Run with labels=micro-b
         migrationService.update(log, "test", List.of("micro-b"));
@@ -128,7 +128,7 @@ class MigrationServiceFeaturesTest {
     void testChecksumValidationFail() throws Exception {
         ChangeSet cs = createChangeSet("chk1", "test", "app");
         ChangeLog log = new ChangeLog();
-        log.setDatabaseChangeLog(List.of(cs));
+        log.setZookeeperChangeLog(List.of(cs));
 
         // First run
         migrationService.update(log, "test", List.of("app"));
@@ -149,7 +149,7 @@ class MigrationServiceFeaturesTest {
         String originalSum = ChecksumUtil.calculateChecksum(cs);
 
         ChangeLog log = new ChangeLog();
-        log.setDatabaseChangeLog(List.of(cs));
+        log.setZookeeperChangeLog(List.of(cs));
 
         // First run
         migrationService.update(log, "test", List.of("app"));
@@ -175,7 +175,7 @@ class MigrationServiceFeaturesTest {
         ((Create)cs2.getChanges().get(0)).setPath("/test/dup1-b");
 
         ChangeLog log = new ChangeLog();
-        log.setDatabaseChangeLog(List.of(cs1, cs2));
+        log.setZookeeperChangeLog(List.of(cs1, cs2));
 
         // Run should throw DuplicateChangeSetIdException
         assertThatThrownBy(() -> migrationService.update(log, "test", List.of("app")))

@@ -1,4 +1,4 @@
-databaseChangeLog:
+zookeeperChangeLog:
   - changeSet:
       id: "included-1"
       author: "jules"

@@ -47,7 +47,7 @@ public class MigrationServiceTest {
         create.setPath("/test");
         create.setData("data");
         cs.setChanges(Collections.singletonList(create));
-        changeLog.setDatabaseChangeLog(Collections.singletonList(cs));
+        changeLog.setZookeeperChangeLog(Collections.singletonList(cs));
 
         // Preview should show changes
         boolean hasChanges = service.previewUpdate(changeLog, "test", Collections.singletonList("label"));
@@ -76,7 +76,7 @@ public class MigrationServiceTest {
         cs.setRollback(Collections.singletonList(new com.zkmigration.model.Delete()));
         ((com.zkmigration.model.Delete)cs.getRollback().get(0)).setPath("/test");
 
-        changeLog.setDatabaseChangeLog(Collections.singletonList(cs));
+        changeLog.setZookeeperChangeLog(Collections.singletonList(cs));
 
         // Nothing to rollback yet
         boolean hasChanges = service.previewRollback(changeLog, 1);

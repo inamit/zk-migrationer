@@ -28,7 +28,7 @@ public class MigrationCliInteractiveSystemTest {
         testingServer = new TestingServer();
         changelogFile = File.createTempFile("changelog", ".json");
         try (FileWriter writer = new FileWriter(changelogFile)) {
-            writer.write("{\"databaseChangeLog\": [{\"changeSet\": {\"id\": \"1\", \"author\": \"test\", \"context\": [\"test\"], \"labels\": [\"l1\"], \"changes\": [{\"create\": {\"path\": \"/interactive\", \"data\": \"val\"}}]}}]}");
+            writer.write("{\"zookeeperChangeLog\": [{\"changeSet\": {\"id\": \"1\", \"author\": \"test\", \"context\": [\"test\"], \"labels\": [\"l1\"], \"changes\": [{\"create\": {\"path\": \"/interactive\", \"data\": \"val\"}}]}}]}");
         }
     }
 

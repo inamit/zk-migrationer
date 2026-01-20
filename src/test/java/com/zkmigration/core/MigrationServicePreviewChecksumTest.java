@@ -53,7 +53,7 @@ public class MigrationServicePreviewChecksumTest {
         create.setPath("/test");
         create.setData("data");
         cs.setChanges(Collections.singletonList(create));
-        changeLog.setDatabaseChangeLog(Collections.singletonList(cs));
+        changeLog.setZookeeperChangeLog(Collections.singletonList(cs));
 
         // 2. Execute it first
         service.update(changeLog, "test", Collections.singletonList("label"));

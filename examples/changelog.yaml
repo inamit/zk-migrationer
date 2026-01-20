@@ -4,7 +4,7 @@ contextGroups:
     - staging
     - prod
 
-databaseChangeLog:
+zookeeperChangeLog:
   - changeSet:
       id: "1"
       author: "jules"

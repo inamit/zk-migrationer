@@ -2,7 +2,7 @@
   "contextGroups": {
     "k8s": ["dev", "staging", "prod"]
   },
-  "databaseChangeLog": [
+  "zookeeperChangeLog": [
     {
       "changeSet": {
         "id": "json-1",

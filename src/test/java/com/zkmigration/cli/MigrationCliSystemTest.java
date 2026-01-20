@@ -42,7 +42,7 @@ class MigrationCliSystemTest {
     void testCliUpdateAndRollback() throws Exception {
         // 1. Create a changelog file with context and labels
         String yaml = """
-                databaseChangeLog:
+                zookeeperChangeLog:
                   - changeSet:
                       id: "cli-1"
                       author: "system-test"
@@ -102,7 +102,7 @@ class MigrationCliSystemTest {
     @Test
     void testMultipleChangeSetsAndPartialRollback() throws Exception {
         String yaml = """
-                databaseChangeLog:
+                zookeeperChangeLog:
                   - changeSet:
                       id: "1"
                       author: "test"

@@ -95,7 +95,7 @@ public class MigrationService {
          // This is mostly for existing tests.
          ChangeLog log = new ChangeLog();
          List<ChangeLogEntry> entries = new ArrayList<>(changeSets);
-         log.setDatabaseChangeLog(entries);
+         log.setZookeeperChangeLog(entries);
          // Pass dummy context/labels to bypass checks? Or assume tests set "All"?
          // If tests don't set context, shouldRun will fail unless we pass a context that matches.
          // Let's pass "test" context.
@@ -151,7 +151,7 @@ public class MigrationService {
      public void rollback(List<ChangeSet> changeSets, int count) throws Exception {
          ChangeLog log = new ChangeLog();
          List<ChangeLogEntry> entries = new ArrayList<>(changeSets);
-         log.setDatabaseChangeLog(entries);
+         log.setZookeeperChangeLog(entries);
          rollback(log, count);
      }
 
@@ -304,8 +304,8 @@ public class MigrationService {
 
     private List<ChangeSet> extractChangeSets(ChangeLog changeLog) {
         List<ChangeSet> changeSets = new ArrayList<>();
-        if (changeLog.getDatabaseChangeLog() != null) {
-            for (ChangeLogEntry entry : changeLog.getDatabaseChangeLog()) {
+        if (changeLog.getZookeeperChangeLog() != null) {
+            for (ChangeLogEntry entry : changeLog.getZookeeperChangeLog()) {
                 if (entry instanceof ChangeSet) {
                     changeSets.add((ChangeSet) entry);
                 }
