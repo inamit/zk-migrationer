@@ -1,15 +1,12 @@
 package com.zkmigration.model;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
 public class Rename extends Change {
     private String destination;
-
-    public String getDestination() {
-        return destination;
-    }
-
-    public void setDestination(String destination) {
-        this.destination = destination;
-    }
 
     @Override
     public <T> T accept(ChangeVisitor<T> visitor) {

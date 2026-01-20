@@ -3,10 +3,9 @@ package com.zkmigration.core;
 import com.zkmigration.model.ChangeLog;
 import com.zkmigration.model.ChangeLogEntry;
 import com.zkmigration.model.ChangeSet;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -15,8 +14,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public class MigrationService {
-    private static final Logger logger = LoggerFactory.getLogger(MigrationService.class);
     private final CuratorFramework client;
     private final MigrationStateService stateService;
     private final MigrationExecutor executor;
@@ -36,7 +35,7 @@ public class MigrationService {
             throw new RuntimeException("Could not acquire lock at " + lockPath);
         }
         try {
-            logger.info("Lock acquired. Checking for migrations...");
+            log.info("Lock acquired. Checking for migrations...");
             Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
             Set<String> executedInThisRun = new HashSet<>();
 
@@ -58,7 +57,7 @@ public class MigrationService {
                     // Verify Checksum
                     verifyChecksum(cs, currentChecksum, executed.checksum);
 
-                    logger.debug("ChangeSet {} already executed. Skipping.", cs.getId());
+                    log.debug("ChangeSet {} already executed. Skipping.", cs.getId());
                     // Even if skipped, we mark it as seen in this run to prevent duplicate ID re-use
                     executedInThisRun.add(cs.getId());
                     continue;
@@ -66,11 +65,11 @@ public class MigrationService {
 
                 // Check Context and Labels
                 if (!shouldRun(cs, executionContext, executionLabels, changeLog.getContextGroups())) {
-                    logger.debug("ChangeSet {} ignored due to context/label mismatch.", cs.getId());
+                    log.debug("ChangeSet {} ignored due to context/label mismatch.", cs.getId());
                     continue;
                 }
 
-                logger.info("Applying ChangeSet: {}", cs.getId());
+                log.info("Applying ChangeSet: {}", cs.getId());
                 try {
                     executor.execute(cs);
                     stateService.markChangeSetExecuted(cs.getId(), cs.getAuthor(), "Executed by ZkMigration", currentChecksum);
@@ -79,9 +78,9 @@ public class MigrationService {
                     executedInThisRun.add(cs.getId());
                     executedMap.put(cs.getId(), new MigrationStateService.ExecutedChangeSet(cs.getId(), cs.getAuthor(), System.currentTimeMillis(), currentChecksum));
 
-                    logger.info("ChangeSet {} applied successfully.", cs.getId());
+                    log.info("ChangeSet {} applied successfully.", cs.getId());
                 } catch (Exception e) {
-                    logger.error("Failed to apply ChangeSet {}", cs.getId(), e);
+                    log.error("Failed to apply ChangeSet {}", cs.getId(), e);
                     throw e;
                 }
             }
@@ -108,7 +107,7 @@ public class MigrationService {
             throw new RuntimeException("Could not acquire lock at " + lockPath);
         }
         try {
-            logger.info("Lock acquired. Processing rollback...");
+            log.info("Lock acquired. Processing rollback...");
             Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
 
             List<ChangeSet> changeSets = extractChangeSets(changeLog);
@@ -126,18 +125,18 @@ public class MigrationService {
             }
 
             if (toRollback.isEmpty()) {
-                logger.info("No executed changesets found to rollback.");
+                log.info("No executed changesets found to rollback.");
                 return;
             }
 
             for (ChangeSet cs : toRollback) {
-                logger.info("Rolling back ChangeSet: {}", cs.getId());
+                log.info("Rolling back ChangeSet: {}", cs.getId());
                 try {
                     executor.rollback(cs);
                     stateService.removeChangeSetExecution(cs.getId());
-                    logger.info("ChangeSet {} rolled back successfully.", cs.getId());
+                    log.info("ChangeSet {} rolled back successfully.", cs.getId());
                 } catch (Exception e) {
-                    logger.error("Failed to rollback ChangeSet {}", cs.getId(), e);
+                    log.error("Failed to rollback ChangeSet {}", cs.getId(), e);
                     throw e;
                 }
             }
@@ -232,7 +231,7 @@ public class MigrationService {
 
     private void verifyChecksum(ChangeSet cs, String currentChecksum, String storedChecksum) {
         if (storedChecksum == null) {
-            logger.warn("ChangeSet {} has no stored checksum. Skipping validation.", cs.getId());
+            log.warn("ChangeSet {} has no stored checksum. Skipping validation.", cs.getId());
             return;
         }
 

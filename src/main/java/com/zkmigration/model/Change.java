@@ -2,7 +2,11 @@ package com.zkmigration.model;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
 @JsonSubTypes({
     @JsonSubTypes.Type(value = Create.class, name = "create"),
@@ -13,14 +17,6 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 public abstract class Change {
     private String path;
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
 
     public abstract <T> T accept(ChangeVisitor<T> visitor);
 }

@@ -1,18 +1,17 @@
 package com.zkmigration.core;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.KeeperException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 
+@Slf4j
 public class MigrationStateService {
-    private static final Logger logger = LoggerFactory.getLogger(MigrationStateService.class);
     private final CuratorFramework client;
     private final String historyPath;
     private final ObjectMapper mapper;
@@ -38,7 +37,7 @@ public class MigrationStateService {
                 byte[] bytes = java.util.Base64.getUrlDecoder().decode(child);
                 decodedIds.add(new String(bytes, java.nio.charset.StandardCharsets.UTF_8));
             } catch (IllegalArgumentException e) {
-                logger.warn("Found invalid node in history path: {}", child);
+                log.warn("Found invalid node in history path: {}", child);
             }
         }
         return decodedIds;
@@ -59,7 +58,7 @@ public class MigrationStateService {
                 ExecutedChangeSet executed = mapper.readValue(data, ExecutedChangeSet.class);
                 executedMap.put(id, executed);
             } catch (Exception e) {
-                logger.warn("Failed to read history node: {}", child, e);
+                log.warn("Failed to read history node: {}", child, e);
             }
         }
         return executedMap;

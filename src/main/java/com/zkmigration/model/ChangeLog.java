@@ -1,9 +1,14 @@
 package com.zkmigration.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.util.List;
 import java.util.Map;
 
+@Setter
+@Getter
 public class ChangeLog {
     private Map<String, List<String>> contextGroups;
 
@@ -15,35 +20,4 @@ public class ChangeLog {
 
     private List<ChangeLogEntry> zookeeperChangeLog;
 
-    public Map<String, List<String>> getContextGroups() {
-        return contextGroups;
-    }
-
-    public void setContextGroups(Map<String, List<String>> contextGroups) {
-        this.contextGroups = contextGroups;
-    }
-
-    public List<String> getContext() {
-        return context;
-    }
-
-    public void setContext(List<String> context) {
-        this.context = context;
-    }
-
-    public List<String> getLabels() {
-        return labels;
-    }
-
-    public void setLabels(List<String> labels) {
-        this.labels = labels;
-    }
-
-    public List<ChangeLogEntry> getZookeeperChangeLog() {
-        return zookeeperChangeLog;
-    }
-
-    public void setZookeeperChangeLog(List<ChangeLogEntry> zookeeperChangeLog) {
-        this.zookeeperChangeLog = zookeeperChangeLog;
-    }
 }
