@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: "1-change"
+      author: "jules"
+      context: "dev"
+      labels: "service1"
+      changes:
+        - update:
+            path: "/app/config/firstParameter"
+            data: "firstParameter-Updated"
+      rollback:
+        - update:
+            path: "/app/config/firstParameter"
+            data: "firstParameter"

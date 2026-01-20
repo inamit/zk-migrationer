@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: "changesets/changeFirstParameter.yaml"
+  - include:
+      file: "changesets/changeSecondParameter.yaml"

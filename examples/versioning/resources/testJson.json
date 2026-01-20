@@ -1,0 +1,41 @@
+{
+  "userId": "usr_88294_ae",
+  "isActive": true,
+  "accountCreated": "2023-11-15T08:30:00Z",
+  "personalInfo": {
+    "firstName": "Elena",
+    "lastName": "Rodriguez",
+    "age": 34,
+    "designation": "Senior Systems Architect"
+  },
+  "contactDetails": {
+    "phoneVerified": false,
+    "email": "elena.rodriguez@example.tech",
+    "address": {
+      "street": "402 Innovation Boulevard",
+      "suite": "Apt 4B",
+      "city": "Austin",
+      "state": "TX",
+      "zipCode": "78701"
+    }
+  },
+  "systemPreferences": {
+    "theme": "dark_mode",
+    "language": "en-US",
+    "notifications": {
+      "email": false,
+      "sms": true,
+      "push": true
+    }
+  },
+  "accessLevels": [
+    "read_database",
+    "write_database",
+    "manage_users",
+    "deploy_production"
+  ],
+  "meta": {
+    "version": 2.1,
+    "lastLoginIp": "192.168.1.45"
+  }
+}
