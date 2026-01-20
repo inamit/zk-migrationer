@@ -4,7 +4,12 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.curator.framework.CuratorFramework;
 
+import java.io.IOException;
+
+@Slf4j
 @Setter
 @Getter
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
@@ -19,4 +24,6 @@ public abstract class Change {
     private String path;
 
     public abstract <T> T accept(ChangeVisitor<T> visitor);
+
+    public abstract void applyChange(CuratorFramework client) throws Exception;
 }

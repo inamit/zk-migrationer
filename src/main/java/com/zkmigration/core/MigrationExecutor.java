@@ -24,7 +24,7 @@ public class MigrationExecutor {
     public void execute(ChangeSet changeSet) throws Exception {
         log.info("Executing ChangeSet: {}", changeSet.getId());
         for (Change change : changeSet.getChanges()) {
-            applyChange(change);
+            change.applyChange(client);
         }
     }
 
@@ -37,46 +37,7 @@ public class MigrationExecutor {
         }
 
         for (Change change : rollbackChanges) {
-            applyChange(change);
+            change.applyChange(client);
         }
-    }
-
-    private void applyChange(Change change) throws Exception {
-        if (change instanceof Create create) {
-            log.info("Creating node: {}", create.getPath());
-            byte[] data = MigrationUtils.resolveData(create.getData(), create.getFile());
-            client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(create.getPath(), data);
-        } else if (change instanceof Update update) {
-            log.info("Updating node: {}", update.getPath());
-            byte[] data = MigrationUtils.resolveData(update.getData(), update.getFile());
-            client.setData().forPath(update.getPath(), data);
-        } else if (change instanceof Delete delete) {
-            log.info("Deleting node: {}", delete.getPath());
-            client.delete().forPath(delete.getPath());
-        } else if (change instanceof Rename rename) {
-            log.info("Renaming node from {} to {}", rename.getPath(), rename.getDestination());
-            renameNode(rename.getPath(), rename.getDestination());
-        } else if (change instanceof Upsert upsert) {
-            log.info("Upserting node: {}", upsert.getPath());
-            byte[] data = MigrationUtils.resolveData(upsert.getData(), upsert.getFile());
-            if (client.checkExists().forPath(upsert.getPath()) != null) {
-                client.setData().forPath(upsert.getPath(), data);
-            } else {
-                client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(upsert.getPath(), data);
-            }
-        } else {
-            throw new UnsupportedOperationException("Unknown change type: " + change.getClass().getName());
-        }
-    }
-
-    private void renameNode(String sourcePath, String destinationPath) throws Exception {
-        byte[] data = client.getData().forPath(sourcePath);
-        client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(destinationPath, data);
-
-        List<String> children = client.getChildren().forPath(sourcePath);
-        for (String child : children) {
-            renameNode(sourcePath + "/" + child, destinationPath + "/" + child);
-        }
-        client.delete().forPath(sourcePath);
     }
 }
