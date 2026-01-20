@@ -69,7 +69,7 @@ class MigrationServiceFeaturesTest {
     }
 
     @Test
-    void testEnvironentMismatch() throws Exception {
+    void testEnvironmentMismatch() throws Exception {
         ChangeSet csDev = createChangeSet("dev2", "dev", "app");
         ChangeLog log = new ChangeLog();
         log.setZookeeperChangeLog(List.of(csDev));

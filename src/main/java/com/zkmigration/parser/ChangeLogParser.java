@@ -39,7 +39,7 @@ public class ChangeLogParser {
         // Merge/Override environments groups?
         // User said: "Environments groups should be defined at the top level changelog file".
         // It's ambiguous if included files can define groups. I'll assume they can and we merge them,
-        // or just keep the ones from the parsing environments if we wanted.
+        // or just keep the ones from the parsing context if we wanted.
         // But the requirement says "at the top level changelog file".
         // However, I need to propagate environments/labels.
 

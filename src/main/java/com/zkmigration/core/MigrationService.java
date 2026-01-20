@@ -63,7 +63,7 @@ public class MigrationService {
 
                 // Check Environment and Labels
                 if (!shouldRun(cs, executionEnvironment, executionLabels, changeLog.getEnvironmentsGroups())) {
-                    log.debug("ChangeSet {} ignored due to environmeent/label mismatch.", cs.getId());
+                    log.debug("ChangeSet {} ignored due to environment/label mismatch.", cs.getId());
                     continue;
                 }
 
