@@ -26,3 +26,28 @@ java -jar zookeeper-migration-tool.jar rollback \
   --count 1 \
   --interactive
 ```
+
+## Variable Substitution
+
+You can use variables in your migration files (paths, data, and file paths) using the `${variableName}` syntax.
+The `env` variable is automatically available from the `--env` argument.
+You can inject additional variables using the `--vars` argument (key=value pairs).
+
+**Usage:**
+
+```bash
+# Inject 'site' variable
+java -jar zookeeper-migration-tool.jar update \
+  -c localhost:2181 \
+  -f changelog.json \
+  --env production \
+  --labels db \
+  --vars site=eu
+```
+
+**Example Changelog:**
+```yaml
+- create:
+    path: /config/${env}/${site}/db
+    data: "connection-${env}"
+```

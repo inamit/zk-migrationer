@@ -11,7 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.CreateMode;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class MigrationExecutor {
@@ -21,14 +23,18 @@ public class MigrationExecutor {
         this.client = client;
     }
 
-    public void execute(ChangeSet changeSet) throws Exception {
+    public void execute(ChangeSet changeSet, Map<String, String> variables) throws Exception {
         log.info("Executing ChangeSet: {}", changeSet.getId());
         for (Change change : changeSet.getChanges()) {
-            change.applyChange(client);
+            change.applyChange(client, variables);
         }
     }
 
-    public void rollback(ChangeSet changeSet) throws Exception {
+    public void execute(ChangeSet changeSet) throws Exception {
+        execute(changeSet, Collections.emptyMap());
+    }
+
+    public void rollback(ChangeSet changeSet, Map<String, String> variables) throws Exception {
         log.info("Rolling back ChangeSet: {}", changeSet.getId());
         List<Change> rollbackChanges = changeSet.getRollback();
         if (rollbackChanges == null || rollbackChanges.isEmpty()) {
@@ -37,7 +43,11 @@ public class MigrationExecutor {
         }
 
         for (Change change : rollbackChanges) {
-            change.applyChange(client);
+            change.applyChange(client, variables);
         }
+    }
+
+    public void rollback(ChangeSet changeSet) throws Exception {
+        rollback(changeSet, Collections.emptyMap());
     }
 }
