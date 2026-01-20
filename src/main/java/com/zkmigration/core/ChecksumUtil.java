@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.zkmigration.model.ChangeSet;
 import lombok.extern.slf4j.Slf4j;
 
@@ -13,14 +14,10 @@ import java.security.NoSuchAlgorithmException;
 
 @Slf4j
 public class ChecksumUtil {
-//    private static final ObjectMapper mapper =  JsonMapper.builder()
-//            .configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
-//            .configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true)
-//            .build();
-
-    private static final ObjectMapper mapper = new ObjectMapper()
+    private static final ObjectMapper mapper = JsonMapper.builder()
             .configure(SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS, true)
-            .configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true);
+            .configure(MapperFeature.SORT_PROPERTIES_ALPHABETICALLY, true)
+            .build();
 
     public static String calculateChecksum(ChangeSet changeSet) {
         try {
