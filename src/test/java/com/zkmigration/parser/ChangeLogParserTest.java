@@ -6,7 +6,6 @@ import com.zkmigration.model.ChangeSet;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -41,7 +40,7 @@ class ChangeLogParserTest {
                   - changeSet:
                       id: "1"
                       author: "test"
-                      context: "dev"
+                      environments: "dev"
                       labels: "label"
                       changes:
                         - create:
@@ -70,7 +69,7 @@ class ChangeLogParserTest {
                       "changeSet": {
                         "id": "2",
                         "author": "test-json",
-                        "context": ["dev"],
+                        "environments": ["dev"],
                         "labels": ["l1"],
                         "changes": [
                           {
@@ -103,7 +102,7 @@ class ChangeLogParserTest {
                   - changeSet:
                       id: "included-1"
                       author: "included"
-                      context: "dev"
+                      environments: "dev"
                       labels: "l1"
                       changes:
                         - create:
@@ -129,25 +128,25 @@ class ChangeLogParserTest {
     }
 
     @Test
-    void testMissingContextThrowsException() throws IOException {
+    void testMissingEnvironmentsThrowsException() throws IOException {
         String yaml = """
                 zookeeperChangeLog:
                   - changeSet:
                       id: "invalid-1"
                       author: "test"
-                      # missing context
+                      # missing environments
                       labels: "label"
                       changes:
                         - create:
                             path: "/test"
                 """;
-        Path file = tempDir.resolve("invalid-context.yaml");
+        Path file = tempDir.resolve("invalid-environments.yaml");
         Files.writeString(file, yaml);
 
         ChangeLogParser parser = new ChangeLogParser();
         assertThatThrownBy(() -> parser.parse(file.toFile()))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("missing mandatory context");
+                .hasMessageContaining("missing mandatory environments");
     }
 
     @Test
@@ -157,7 +156,7 @@ class ChangeLogParserTest {
                   - changeSet:
                       id: "invalid-2"
                       author: "test"
-                      context: "dev"
+                      environments: "dev"
                       # missing labels
                       changes:
                         - create:

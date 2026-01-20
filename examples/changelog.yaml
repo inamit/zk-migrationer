@@ -1,4 +1,4 @@
-contextGroups:
+environmentsGroups:
   k8s:
     - dev
     - staging
@@ -8,7 +8,7 @@ zookeeperChangeLog:
   - changeSet:
       id: "1"
       author: "jules"
-      context: "dev"
+      environments: "dev"
       labels: "init,v1"
       changes:
         - create:
@@ -21,7 +21,7 @@ zookeeperChangeLog:
   - changeSet:
       id: "2"
       author: "jules"
-      context: "prod"
+      environments: "prod"
       labels: "v1"
       changes:
         - create:
@@ -34,7 +34,7 @@ zookeeperChangeLog:
   - changeSet:
       id: "3"
       author: "jules"
-      context: "All"
+      environments: "All"
       labels: "audit"
       changes:
         - create:

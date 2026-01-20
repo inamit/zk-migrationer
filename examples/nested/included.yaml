@@ -2,7 +2,7 @@ zookeeperChangeLog:
   - changeSet:
       id: "included-1"
       author: "jules"
-      context: "dev"
+      environments: "dev"
       labels: "init"
       changes:
         - create:

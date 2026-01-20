@@ -1,7 +1,5 @@
 package com.zkmigration.cli;
 
-import com.zkmigration.core.MigrationService;
-import com.zkmigration.model.ChangeLog;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.CuratorFrameworkFactory;
 import org.apache.curator.retry.ExponentialBackoffRetry;
@@ -28,7 +26,7 @@ public class MigrationCliInteractiveSystemTest {
         testingServer = new TestingServer();
         changelogFile = File.createTempFile("changelog", ".json");
         try (FileWriter writer = new FileWriter(changelogFile)) {
-            writer.write("{\"zookeeperChangeLog\": [{\"changeSet\": {\"id\": \"1\", \"author\": \"test\", \"context\": [\"test\"], \"labels\": [\"l1\"], \"changes\": [{\"create\": {\"path\": \"/interactive\", \"data\": \"val\"}}]}}]}");
+            writer.write("{\"zookeeperChangeLog\": [{\"changeSet\": {\"id\": \"1\", \"author\": \"test\", \"environments\": [\"test\"], \"labels\": [\"l1\"], \"changes\": [{\"create\": {\"path\": \"/interactive\", \"data\": \"val\"}}]}}]}");
         }
     }
 
@@ -48,7 +46,7 @@ public class MigrationCliInteractiveSystemTest {
                     "update",
                     "-c", testingServer.getConnectString(),
                     "-f", changelogFile.getAbsolutePath(),
-                    "--context", "test",
+                    "-e", "test",
                     "--labels", "l1",
                     "-i"
             );
@@ -74,7 +72,7 @@ public class MigrationCliInteractiveSystemTest {
                     "update",
                     "-c", testingServer.getConnectString(),
                     "-f", changelogFile.getAbsolutePath(),
-                    "--context", "test",
+                    "-e", "test",
                     "--labels", "l1",
                     "-i"
             );

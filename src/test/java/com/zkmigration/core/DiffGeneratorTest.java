@@ -1,7 +1,9 @@
 package com.zkmigration.core;
 
 import org.junit.jupiter.api.Test;
+
 import java.nio.charset.StandardCharsets;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class DiffGeneratorTest {
@@ -28,7 +30,7 @@ public class DiffGeneratorTest {
         String newStr = "line1\nline2-modified\nline3";
         String diff = DiffGenerator.generateDiff(oldStr.getBytes(StandardCharsets.UTF_8), newStr.getBytes(StandardCharsets.UTF_8));
 
-        assertThat(diff).doesNotContain("- line1"); // context ignored in my naive impl
+        assertThat(diff).doesNotContain("- line1"); // environment ignored in my naive impl
         // With word diff update, it should show as modified line with word diffs
         assertThat(diff).contains("* [-line2-] {+line2-modified+}");
     }

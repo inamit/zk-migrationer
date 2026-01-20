@@ -13,7 +13,7 @@ public class ChangeSet implements ChangeLogEntry {
     private String author;
 
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
-    private List<String> context;
+    private List<String> environments;
 
     @JsonFormat(with = JsonFormat.Feature.ACCEPT_SINGLE_VALUE_AS_ARRAY)
     private List<String> labels;

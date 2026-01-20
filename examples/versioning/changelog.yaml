@@ -1,4 +1,4 @@
-contextGroups:
+environmentsGroups:
   k8s:
     - dev
     - staging

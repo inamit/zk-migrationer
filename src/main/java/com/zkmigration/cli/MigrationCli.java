@@ -81,8 +81,8 @@ abstract class BaseCommand implements Callable<Integer> {
 
 @Command(name = "update", description = "Apply pending migrations")
 class UpdateCommand extends BaseCommand {
-    @Option(names = {"--context"}, description = "Execution context", required = true)
-    private String context;
+    @Option(names = {"-e", "--env"}, description = "Execution environment", required = true)
+    private String environment;
 
     @Option(names = {"--labels"}, description = "Execution labels (comma separated)", required = true)
     private String labels;
@@ -94,13 +94,13 @@ class UpdateCommand extends BaseCommand {
             List<String> labelList = Arrays.asList(labels.split(","));
 
             if (interactive) {
-                boolean hasChanges = service.previewUpdate(changeLog, context, labelList);
+                boolean hasChanges = service.previewUpdate(changeLog, environment, labelList);
                 if (!confirmExecution(hasChanges)) {
                     return;
                 }
             }
 
-            service.update(changeLog, context, labelList);
+            service.update(changeLog, environment, labelList);
             System.out.println("Update complete.");
         });
     }

@@ -25,7 +25,7 @@ public class MigrationService {
         this.executor = new MigrationExecutor(client);
     }
 
-    public void update(ChangeLog changeLog, String executionContext, List<String> executionLabels) throws Exception {
+    public void update(ChangeLog changeLog, String executionEnvironment, List<String> executionLabels) throws Exception {
         InterProcessMutex lock = new InterProcessMutex(client, lockPath);
 
         if (!lock.acquire(60, TimeUnit.SECONDS)) {
@@ -61,9 +61,9 @@ public class MigrationService {
                     continue;
                 }
 
-                // Check Context and Labels
-                if (!shouldRun(cs, executionContext, executionLabels, changeLog.getContextGroups())) {
-                    log.debug("ChangeSet {} ignored due to context/label mismatch.", cs.getId());
+                // Check Environment and Labels
+                if (!shouldRun(cs, executionEnvironment, executionLabels, changeLog.getEnvironmentsGroups())) {
+                    log.debug("ChangeSet {} ignored due to environmeent/label mismatch.", cs.getId());
                     continue;
                 }
 
@@ -120,7 +120,7 @@ public class MigrationService {
         }
     }
 
-    public boolean previewUpdate(ChangeLog changeLog, String executionContext, List<String> executionLabels) throws Exception {
+    public boolean previewUpdate(ChangeLog changeLog, String executionEnvironment, List<String> executionLabels) throws Exception {
         Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
         Set<String> executedInThisRun = new HashSet<>();
         List<ChangeSet> changeSets = extractChangeSets(changeLog);
@@ -149,7 +149,7 @@ public class MigrationService {
                 continue;
             }
 
-            if (!shouldRun(cs, executionContext, executionLabels, changeLog.getContextGroups())) {
+            if (!shouldRun(cs, executionEnvironment, executionLabels, changeLog.getEnvironmentsGroups())) {
                 continue;
             }
 
@@ -224,36 +224,36 @@ public class MigrationService {
                 cs.getId(), storedChecksum, currentChecksum));
     }
 
-    private boolean shouldRun(ChangeSet cs, String executionContext, List<String> executionLabels, Map<String, List<String>> contextGroups) {
-        // Context Check
-        boolean contextMatch = false;
+    private boolean shouldRun(ChangeSet cs, String executionEnvironment, List<String> executionLabels, Map<String, List<String>> environmentsGroups) {
+        // Environment Check
+        boolean environmentMatch = false;
 
-        // 1. Check "All"
-        if (cs.getContext() != null) {
-            for (String ctx : cs.getContext()) {
-                if ("All".equalsIgnoreCase(ctx)) {
-                    contextMatch = true;
+        if (cs.getEnvironments() != null) {
+            for (String env : cs.getEnvironments()) {
+                // 1. Check "All"
+                if ("All".equalsIgnoreCase(env)) {
+                    environmentMatch = true;
                     break;
                 }
 
                 // 2. Check direct match
-                if (ctx.equalsIgnoreCase(executionContext)) {
-                    contextMatch = true;
+                if (env.equalsIgnoreCase(executionEnvironment)) {
+                    environmentMatch = true;
                     break;
                 }
 
-                // 3. Check Context Group match
-                if (contextGroups != null && contextGroups.containsKey(ctx)) {
-                    List<String> groupMembers = contextGroups.get(ctx);
-                    if (groupMembers != null && groupMembers.contains(executionContext)) {
-                        contextMatch = true;
+                // 3. Check Environments Group match
+                if (environmentsGroups != null && environmentsGroups.containsKey(env)) {
+                    List<String> groupMembers = environmentsGroups.get(env);
+                    if (groupMembers != null && groupMembers.contains(executionEnvironment)) {
+                        environmentMatch = true;
                         break;
                     }
                 }
             }
         }
 
-        if (!contextMatch) {
+        if (!environmentMatch) {
             return false;
         }
 

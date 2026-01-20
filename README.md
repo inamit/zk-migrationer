@@ -13,7 +13,7 @@ A Liquibase-inspired tool for managing Zookeeper state migrations. It supports c
 *   **Rollback**: Supports rolling back changesets.
 *   **Operations**: Create, Update, Delete ZNodes.
 *   **Checksum Validation**: Ensures historical changesets have not been modified.
-*   **Contexts & Labels**: Control execution scope with environments (e.g., `dev`, `prod`) and labels.
+*   **Environments & Labels**: Control execution scope with environments (e.g., `dev`, `prod`) and labels.
 *   **External Files**: Load node data from external files.
 *   **Interactive Mode**: Preview changes (diff) before executing.
 
@@ -51,14 +51,14 @@ See [CLI_USAGE.md](CLI_USAGE.md) for detailed interactive mode instructions.
 Applies pending changesets to the Zookeeper cluster.
 
 **Arguments:**
-*   `--context <string>`: (Required) The execution context (e.g., `dev`, `prod`). Changesets matching this context (or "All") will run.
+*   `-e, --env <string>`: (Required) The execution environment (e.g., `dev`, `prod`). Changesets matching this environment (or "All") will run.
 *   `--labels <string>`: (Required) Comma-separated list of labels. Changesets matching at least one label will run.
 
 ```bash
 java -jar target/zookeeper-migration-tool-1.0-SNAPSHOT.jar update \
   --connection localhost:2181 \
   --file changelog.yaml \
-  --context dev \
+  --env dev \
   --labels app,db
 ```
 
@@ -76,20 +76,20 @@ java -jar target/zookeeper-migration-tool-1.0-SNAPSHOT.jar rollback \
 ## Changelog Format
 
 ### Mandatory Fields
-*   **context**: Defines the environment(s) for the changeset. Can be a single string or list. Use "All" to run in all contexts.
+*   **environments**: Defines the environment(s) for the changeset. Can be a single string or list. Use "All" to run in all environments.
 *   **labels**: logical tags for the changeset. Can be a single string or list.
 
-### Context Groups
-You can define Context Groups at the root of the changelog to group environments.
+### Environments Groups
+You can define Environments Groups at the root of the changelog to group environments.
 
 ```yaml
-contextGroups:
+environmentsGroups:
   k8s:
     - dev
     - staging
     - prod
 ```
-If you run with `--context=dev`, changesets marked with `k8s` will also execute because `dev` is part of the `k8s` group.
+If you run with `--env=dev`, changesets marked with `k8s` will also execute because `dev` is part of the `k8s` group.
 
 ### YAML Example
 
@@ -98,7 +98,7 @@ zookeeperChangeLog:
   - changeSet:
       id: "1"
       author: "jules"
-      context: "dev"
+      environments: "dev"
       labels: "init"
       changes:
         - create:
@@ -110,7 +110,7 @@ zookeeperChangeLog:
   - changeSet:
       id: "2"
       author: "jules"
-      context: "prod"
+      environments: "prod"
       labels: "init"
       changes:
         - update:
@@ -148,7 +148,7 @@ To bypass this (e.g., valid refactoring), add the new checksum to `validCheckSum
   - changeSet:
       id: "1"
       author: "jules"
-      context: "dev"
+      environments: "dev"
       labels: "init"
       validCheckSum:
         - "7:2dfb1..."
@@ -164,7 +164,7 @@ To bypass this (e.g., valid refactoring), add the new checksum to `validCheckSum
       "changeSet": {
         "id": "1",
         "author": "jules",
-        "context": ["dev", "staging"],
+        "environments": ["dev", "staging"],
         "labels": ["v1"],
         "changes": [
           {
@@ -182,7 +182,7 @@ To bypass this (e.g., valid refactoring), add the new checksum to `validCheckSum
 
 ### Include Nested Files
 
-You can split your changelogs into multiple files. Included files inherit context and labels from the parent.
+You can split your changelogs into multiple files. Included files inherit environments and labels from the parent.
 
 ```yaml
 zookeeperChangeLog:
