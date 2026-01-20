@@ -1,13 +1,6 @@
 package com.zkmigration.core;
 
-import com.zkmigration.model.Change;
-import com.zkmigration.model.ChangeSet;
-import com.zkmigration.model.ChangeVisitor;
-import com.zkmigration.model.Create;
-import com.zkmigration.model.Delete;
-import com.zkmigration.model.Rename;
-import com.zkmigration.model.Update;
-import com.zkmigration.model.Upsert;
+import com.zkmigration.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 
@@ -42,12 +35,7 @@ public class MigrationInspector {
     }
 
     @Slf4j
-    private static class InspectionVisitor implements ChangeVisitor<String> {
-        private final CuratorFramework client;
-
-        public InspectionVisitor(CuratorFramework client) {
-            this.client = client;
-        }
+    private record InspectionVisitor(CuratorFramework client) implements ChangeVisitor<String> {
 
         @Override
         public String visit(Create create) {

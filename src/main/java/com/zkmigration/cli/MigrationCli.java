@@ -20,7 +20,7 @@ import java.util.concurrent.Callable;
 public class MigrationCli implements Callable<Integer> {
 
     @Override
-    public Integer call() throws Exception {
+    public Integer call() {
         CommandLine.usage(this, System.out);
         return 0;
     }

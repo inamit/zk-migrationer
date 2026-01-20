@@ -66,9 +66,7 @@ public class ChangeLogParser {
         List<ChangeLogEntry> flatEntries = new ArrayList<>();
         if (changeLog.getZookeeperChangeLog() != null) {
             for (ChangeLogEntry entry : changeLog.getZookeeperChangeLog()) {
-                if (entry instanceof ChangeSet) {
-                    ChangeSet cs = (ChangeSet) entry;
-
+                if (entry instanceof ChangeSet cs) {
                     // Apply inheritance
                     if (cs.getContext() == null) {
                         cs.setContext(new ArrayList<>());
@@ -89,8 +87,7 @@ public class ChangeLogParser {
                     }
 
                     flatEntries.add(cs);
-                } else if (entry instanceof Include) {
-                    Include include = (Include) entry;
+                } else if (entry instanceof Include include) {
                     File includedFile = new File(file.getParent(), include.getFile());
 
                     // Recursive parse

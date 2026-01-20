@@ -7,11 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.curator.framework.recipes.locks.InterProcessMutex;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -31,9 +27,11 @@ public class MigrationService {
 
     public void update(ChangeLog changeLog, String executionContext, List<String> executionLabels) throws Exception {
         InterProcessMutex lock = new InterProcessMutex(client, lockPath);
+
         if (!lock.acquire(60, TimeUnit.SECONDS)) {
             throw new RuntimeException("Could not acquire lock at " + lockPath);
         }
+
         try {
             log.info("Lock acquired. Checking for migrations...");
             Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
@@ -89,40 +87,16 @@ public class MigrationService {
         }
     }
 
-    // Kept for backward compatibility or direct usage, but should likely be updated or deprecated.
-    public void update(List<ChangeSet> changeSets) throws Exception {
-         // This is mostly for existing tests.
-         ChangeLog log = new ChangeLog();
-         List<ChangeLogEntry> entries = new ArrayList<>(changeSets);
-         log.setZookeeperChangeLog(entries);
-         // Pass dummy context/labels to bypass checks? Or assume tests set "All"?
-         // If tests don't set context, shouldRun will fail unless we pass a context that matches.
-         // Let's pass "test" context.
-         update(log, "test", List.of("test"));
-    }
-
     public void rollback(ChangeLog changeLog, int count) throws Exception {
         InterProcessMutex lock = new InterProcessMutex(client, lockPath);
+
         if (!lock.acquire(60, TimeUnit.SECONDS)) {
             throw new RuntimeException("Could not acquire lock at " + lockPath);
         }
+
         try {
             log.info("Lock acquired. Processing rollback...");
-            Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
-
-            List<ChangeSet> changeSets = extractChangeSets(changeLog);
-
-            List<ChangeSet> toRollback = new ArrayList<>();
-            // Iterate reverse
-            for (int i = changeSets.size() - 1; i >= 0; i--) {
-                ChangeSet cs = changeSets.get(i);
-                if (executedMap.containsKey(cs.getId())) {
-                    toRollback.add(cs);
-                    if (toRollback.size() >= count) {
-                        break;
-                    }
-                }
-            }
+            List<ChangeSet> toRollback = getChangesetsToRollback(changeLog, count);
 
             if (toRollback.isEmpty()) {
                 log.info("No executed changesets found to rollback.");
@@ -146,14 +120,6 @@ public class MigrationService {
         }
     }
 
-    // Legacy rollback support
-     public void rollback(List<ChangeSet> changeSets, int count) throws Exception {
-         ChangeLog log = new ChangeLog();
-         List<ChangeLogEntry> entries = new ArrayList<>(changeSets);
-         log.setZookeeperChangeLog(entries);
-         rollback(log, count);
-     }
-
     public boolean previewUpdate(ChangeLog changeLog, String executionContext, List<String> executionLabels) throws Exception {
         Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
         Set<String> executedInThisRun = new HashSet<>();
@@ -165,7 +131,7 @@ public class MigrationService {
         System.out.println("============================");
 
         for (ChangeSet cs : changeSets) {
-             if (executedInThisRun.contains(cs.getId())) {
+            if (executedInThisRun.contains(cs.getId())) {
                 System.out.println("DUPLICATE ID (preview): " + cs.getId());
                 continue;
             }
@@ -200,19 +166,7 @@ public class MigrationService {
     }
 
     public boolean previewRollback(ChangeLog changeLog, int count) throws Exception {
-        Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
-        List<ChangeSet> changeSets = extractChangeSets(changeLog);
-
-        List<ChangeSet> toRollback = new ArrayList<>();
-        for (int i = changeSets.size() - 1; i >= 0; i--) {
-            ChangeSet cs = changeSets.get(i);
-            if (executedMap.containsKey(cs.getId())) {
-                toRollback.add(cs);
-                if (toRollback.size() >= count) {
-                    break;
-                }
-            }
-        }
+        List<ChangeSet> toRollback = getChangesetsToRollback(changeLog, count);
 
         if (toRollback.isEmpty()) {
             System.out.println("No executed changesets found to rollback.");
@@ -227,6 +181,24 @@ public class MigrationService {
             System.out.println(inspector.inspect(cs, true));
         }
         return true;
+    }
+
+    private List<ChangeSet> getChangesetsToRollback(ChangeLog changeLog, int numberOfChangestsToRollback) throws Exception {
+        Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
+        List<ChangeSet> changeSets = extractChangeSets(changeLog);
+
+        List<ChangeSet> toRollback = new ArrayList<>();
+        for (int i = changeSets.size() - 1; i >= 0; i--) {
+            ChangeSet cs = changeSets.get(i);
+            if (executedMap.containsKey(cs.getId())) {
+                toRollback.add(cs);
+                if (toRollback.size() >= numberOfChangestsToRollback) {
+                    break;
+                }
+            }
+        }
+
+        return toRollback;
     }
 
     private void verifyChecksum(ChangeSet cs, String currentChecksum, String storedChecksum) {
@@ -272,11 +244,11 @@ public class MigrationService {
 
                 // 3. Check Context Group match
                 if (contextGroups != null && contextGroups.containsKey(ctx)) {
-                     List<String> groupMembers = contextGroups.get(ctx);
-                     if (groupMembers != null && groupMembers.contains(executionContext)) {
-                         contextMatch = true;
-                         break;
-                     }
+                    List<String> groupMembers = contextGroups.get(ctx);
+                    if (groupMembers != null && groupMembers.contains(executionContext)) {
+                        contextMatch = true;
+                        break;
+                    }
                 }
             }
         }
