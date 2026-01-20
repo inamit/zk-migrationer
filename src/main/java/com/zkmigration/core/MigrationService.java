@@ -183,7 +183,7 @@ public class MigrationService {
         return true;
     }
 
-    private List<ChangeSet> getChangesetsToRollback(ChangeLog changeLog, int numberOfChangestsToRollback) throws Exception {
+    private List<ChangeSet> getChangesetsToRollback(ChangeLog changeLog, int numberOfChangesetsToRollback) throws Exception {
         Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
         List<ChangeSet> changeSets = extractChangeSets(changeLog);
 
@@ -192,7 +192,7 @@ public class MigrationService {
             ChangeSet cs = changeSets.get(i);
             if (executedMap.containsKey(cs.getId())) {
                 toRollback.add(cs);
-                if (toRollback.size() >= numberOfChangestsToRollback) {
+                if (toRollback.size() >= numberOfChangesetsToRollback) {
                     break;
                 }
             }
