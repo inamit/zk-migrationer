@@ -155,7 +155,7 @@ class MigrationCliSystemTest {
         int exitCode = new picocli.CommandLine(new MigrationCli()).execute("update",
             "--connection", server.getConnectString(),
             "--file", "nonexistent.yaml",
-            "--environment", "test",
+            "--env", "test",
             "--labels", "test");
         assertThat(exitCode).isNotEqualTo(0);
     }
