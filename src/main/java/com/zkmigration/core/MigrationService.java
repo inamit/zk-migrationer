@@ -172,7 +172,14 @@ public class MigrationService {
             }
 
             if (executedMap.containsKey(cs.getId())) {
-                // Already executed
+                // Already executed, verify checksum
+                MigrationStateService.ExecutedChangeSet executed = executedMap.get(cs.getId());
+                String currentChecksum = ChecksumUtil.calculateChecksum(cs);
+                try {
+                    verifyChecksum(cs, currentChecksum, executed.checksum);
+                } catch (RuntimeException e) {
+                    System.out.println("VALIDATION ERROR: " + e.getMessage());
+                }
                 executedInThisRun.add(cs.getId());
                 continue;
             }
