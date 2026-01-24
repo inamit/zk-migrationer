@@ -6,8 +6,8 @@ zookeeperChangeLog:
       labels: "service2"
       changes:
         - update:
-            path: "/app/config/secondParameter"
+            path: "/${env}/app/config/secondParameter"
             file: "examples/versioning/resources/testJson.json"
       rollback:
         - delete:
-            path: "/app/config/secondParameter"
+            path: "/${env}/app/config/secondParameter"

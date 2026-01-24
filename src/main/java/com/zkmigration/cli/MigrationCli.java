@@ -12,7 +12,9 @@ import picocli.CommandLine.Option;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 @Command(name = "zkmigration", mixinStandardHelpOptions = true, version = "1.0",
@@ -43,6 +45,9 @@ abstract class BaseCommand implements Callable<Integer> {
 
     @Option(names = {"-i", "--interactive"}, description = "Interactive mode: preview changes and prompt for confirmation")
     protected boolean interactive;
+
+    @Option(names = {"--vars"}, description = "Custom variables (key=value)")
+    protected Map<String, String> customVars;
 
     protected CuratorFramework createClient() {
         CuratorFramework client = CuratorFrameworkFactory.newClient(connectionString, new ExponentialBackoffRetry(1000, 3));
@@ -77,6 +82,17 @@ abstract class BaseCommand implements Callable<Integer> {
             return 1;
         }
     }
+
+    protected Map<String, String> resolveVariables(String environment) {
+        Map<String, String> variables = new HashMap<>();
+        if (environment != null) {
+            variables.put("env", environment);
+        }
+        if (customVars != null) {
+            variables.putAll(customVars);
+        }
+        return variables;
+    }
 }
 
 @Command(name = "update", description = "Apply pending migrations")
@@ -92,15 +108,16 @@ class UpdateCommand extends BaseCommand {
         System.out.println("Starting update...");
         return executeAction((service, changeLog) -> {
             List<String> labelList = Arrays.asList(labels.split(","));
+            Map<String, String> variables = resolveVariables(environment);
 
             if (interactive) {
-                boolean hasChanges = service.previewUpdate(changeLog, environment, labelList);
+                boolean hasChanges = service.previewUpdate(changeLog, environment, labelList, variables);
                 if (!confirmExecution(hasChanges)) {
                     return;
                 }
             }
 
-            service.update(changeLog, environment, labelList);
+            service.update(changeLog, environment, labelList, variables);
             System.out.println("Update complete.");
         });
     }
@@ -111,18 +128,23 @@ class RollbackCommand extends BaseCommand {
     @Option(names = {"-n", "--count"}, description = "Number of changesets to rollback", defaultValue = "1")
     private int count;
 
+    @Option(names = {"-e", "--env"}, description = "Execution environment (for variable substitution)")
+    private String environment;
+
     @Override
     public Integer call() {
         System.out.println("Starting rollback...");
         return executeAction((service, changeLog) -> {
+            Map<String, String> variables = resolveVariables(environment);
+
             if (interactive) {
-                boolean hasChanges = service.previewRollback(changeLog, count);
+                boolean hasChanges = service.previewRollback(changeLog, count, variables);
                 if (!confirmExecution(hasChanges)) {
                     return;
                 }
             }
 
-            service.rollback(changeLog, count);
+            service.rollback(changeLog, count, variables);
             System.out.println("Rollback complete.");
         });
     }

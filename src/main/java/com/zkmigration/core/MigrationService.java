@@ -30,6 +30,10 @@ public class MigrationService {
     }
 
     public void update(ChangeLog changeLog, String executionEnvironment, List<String> executionLabels) throws Exception {
+        update(changeLog, executionEnvironment, executionLabels, java.util.Collections.emptyMap());
+    }
+
+    public void update(ChangeLog changeLog, String executionEnvironment, List<String> executionLabels, Map<String, String> variables) throws Exception {
         InterProcessMutex lock = new InterProcessMutex(client, lockPath);
 
         if (!lock.acquire(60, TimeUnit.SECONDS)) {
@@ -73,7 +77,7 @@ public class MigrationService {
 
                 log.info("Applying ChangeSet: {}", cs.getId());
                 try {
-                    executor.execute(cs);
+                    executor.execute(cs, variables);
                     stateService.markChangeSetExecuted(cs.getId(), cs.getAuthor(), "Executed by ZkMigration", currentChecksum);
 
                     // Add to tracked sets
@@ -92,6 +96,10 @@ public class MigrationService {
     }
 
     public void rollback(ChangeLog changeLog, int count) throws Exception {
+        rollback(changeLog, count, java.util.Collections.emptyMap());
+    }
+
+    public void rollback(ChangeLog changeLog, int count, Map<String, String> variables) throws Exception {
         InterProcessMutex lock = new InterProcessMutex(client, lockPath);
 
         if (!lock.acquire(60, TimeUnit.SECONDS)) {
@@ -110,7 +118,7 @@ public class MigrationService {
             for (ChangeSet cs : toRollback) {
                 log.info("Rolling back ChangeSet: {}", cs.getId());
                 try {
-                    executor.rollback(cs);
+                    executor.rollback(cs, variables);
                     stateService.removeChangeSetExecution(cs.getId());
                     log.info("ChangeSet {} rolled back successfully.", cs.getId());
                 } catch (Exception e) {
@@ -125,6 +133,10 @@ public class MigrationService {
     }
 
     public boolean previewUpdate(ChangeLog changeLog, String executionEnvironment, List<String> executionLabels) throws Exception {
+        return previewUpdate(changeLog, executionEnvironment, executionLabels, java.util.Collections.emptyMap());
+    }
+
+    public boolean previewUpdate(ChangeLog changeLog, String executionEnvironment, List<String> executionLabels, Map<String, String> variables) throws Exception {
         Map<String, MigrationStateService.ExecutedChangeSet> executedMap = stateService.getExecutedChangeSets();
         Set<String> executedInThisRun = new HashSet<>();
         List<ChangeSet> changeSets = extractChangeSets(changeLog);
@@ -158,7 +170,7 @@ public class MigrationService {
             }
 
             // Pending ChangeSet
-            System.out.println(inspector.inspect(cs, false));
+            System.out.println(inspector.inspect(cs, false, variables));
             hasChanges = true;
             executedInThisRun.add(cs.getId());
         }
@@ -170,6 +182,10 @@ public class MigrationService {
     }
 
     public boolean previewRollback(ChangeLog changeLog, int count) throws Exception {
+        return previewRollback(changeLog, count, java.util.Collections.emptyMap());
+    }
+
+    public boolean previewRollback(ChangeLog changeLog, int count, Map<String, String> variables) throws Exception {
         List<ChangeSet> toRollback = getChangesetsToRollback(changeLog, count);
 
         if (toRollback.isEmpty()) {
@@ -182,7 +198,7 @@ public class MigrationService {
         System.out.println("============================");
 
         for (ChangeSet cs : toRollback) {
-            System.out.println(inspector.inspect(cs, true));
+            System.out.println(inspector.inspect(cs, true, variables));
         }
         return true;
     }

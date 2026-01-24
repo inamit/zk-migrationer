@@ -6,9 +6,9 @@ zookeeperChangeLog:
       labels: "service1"
       changes:
         - update:
-            path: "/app/config/firstParameter"
+            path: "/${env}/app/config/firstParameter"
             data: "firstParameter-Updated"
       rollback:
         - update:
-            path: "/app/config/firstParameter"
+            path: "/${env}/app/config/firstParameter"
             data: "firstParameter"

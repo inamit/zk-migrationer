@@ -4,7 +4,9 @@ import com.zkmigration.model.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class MigrationInspector {
     private final CuratorFramework client;
@@ -14,6 +16,10 @@ public class MigrationInspector {
     }
 
     public String inspect(ChangeSet changeSet, boolean isRollback) throws Exception {
+        return inspect(changeSet, isRollback, Collections.emptyMap());
+    }
+
+    public String inspect(ChangeSet changeSet, boolean isRollback, Map<String, String> variables) throws Exception {
         StringBuilder report = new StringBuilder();
         report.append("ChangeSet ID: ").append(changeSet.getId()).append("\n");
         report.append("Author: ").append(changeSet.getAuthor()).append("\n");
@@ -26,7 +32,7 @@ public class MigrationInspector {
             return report.toString();
         }
 
-        ChangeVisitor<String> visitor = new InspectionVisitor(client);
+        ChangeVisitor<String> visitor = new InspectionVisitor(client, variables);
         for (Change change : changes) {
             report.append(change.accept(visitor)).append("\n");
         }
@@ -35,17 +41,21 @@ public class MigrationInspector {
     }
 
     @Slf4j
-    private record InspectionVisitor(CuratorFramework client) implements ChangeVisitor<String> {
+    private record InspectionVisitor(CuratorFramework client, Map<String, String> variables) implements ChangeVisitor<String> {
 
         @Override
         public String visit(Create create) {
             StringBuilder out = new StringBuilder();
             try {
-                out.append("CREATE ").append(create.getPath()).append("\n");
-                if (client.checkExists().forPath(create.getPath()) != null) {
+                String resolvedPath = VariableSubstitutor.replace(create.getPath(), variables);
+                String resolvedData = VariableSubstitutor.replace(create.getData(), variables);
+                String resolvedFile = VariableSubstitutor.replace(create.getFile(), variables);
+
+                out.append("CREATE ").append(resolvedPath).append("\n");
+                if (client.checkExists().forPath(resolvedPath) != null) {
                     out.append("WARNING: Node already exists!\n");
                 }
-                byte[] newData = MigrationUtils.resolveData(create.getData(), create.getFile());
+                byte[] newData = MigrationUtils.resolveData(resolvedData, resolvedFile);
                 out.append(DiffGenerator.generateDiff(null, newData));
             } catch (Exception e) {
                 log.error("Error inspecting Create", e);
@@ -58,14 +68,18 @@ public class MigrationInspector {
         public String visit(Update update) {
             StringBuilder out = new StringBuilder();
             try {
-                out.append("UPDATE ").append(update.getPath()).append("\n");
-                if (client.checkExists().forPath(update.getPath()) == null) {
+                String resolvedPath = VariableSubstitutor.replace(update.getPath(), variables);
+                String resolvedData = VariableSubstitutor.replace(update.getData(), variables);
+                String resolvedFile = VariableSubstitutor.replace(update.getFile(), variables);
+
+                out.append("UPDATE ").append(resolvedPath).append("\n");
+                if (client.checkExists().forPath(resolvedPath) == null) {
                     out.append("WARNING: Node does not exist!\n");
-                    byte[] newData = MigrationUtils.resolveData(update.getData(), update.getFile());
+                    byte[] newData = MigrationUtils.resolveData(resolvedData, resolvedFile);
                     out.append(DiffGenerator.generateDiff(null, newData));
                 } else {
-                    byte[] oldData = client.getData().forPath(update.getPath());
-                    byte[] newData = MigrationUtils.resolveData(update.getData(), update.getFile());
+                    byte[] oldData = client.getData().forPath(resolvedPath);
+                    byte[] newData = MigrationUtils.resolveData(resolvedData, resolvedFile);
                     out.append(DiffGenerator.generateDiff(oldData, newData));
                 }
             } catch (Exception e) {
@@ -79,11 +93,12 @@ public class MigrationInspector {
         public String visit(Delete delete) {
             StringBuilder out = new StringBuilder();
             try {
-                out.append("DELETE ").append(delete.getPath()).append("\n");
-                if (client.checkExists().forPath(delete.getPath()) == null) {
+                String resolvedPath = VariableSubstitutor.replace(delete.getPath(), variables);
+                out.append("DELETE ").append(resolvedPath).append("\n");
+                if (client.checkExists().forPath(resolvedPath) == null) {
                     out.append("WARNING: Node does not exist!\n");
                 } else {
-                    byte[] oldData = client.getData().forPath(delete.getPath());
+                    byte[] oldData = client.getData().forPath(resolvedPath);
                     out.append(DiffGenerator.generateDiff(oldData, null));
                 }
             } catch (Exception e) {
@@ -97,11 +112,14 @@ public class MigrationInspector {
         public String visit(Rename rename) {
             StringBuilder out = new StringBuilder();
             try {
-                out.append("RENAME ").append(rename.getPath()).append(" -> ").append(rename.getDestination()).append("\n");
-                if (client.checkExists().forPath(rename.getPath()) == null) {
+                String resolvedPath = VariableSubstitutor.replace(rename.getPath(), variables);
+                String resolvedDestination = VariableSubstitutor.replace(rename.getDestination(), variables);
+
+                out.append("RENAME ").append(resolvedPath).append(" -> ").append(resolvedDestination).append("\n");
+                if (client.checkExists().forPath(resolvedPath) == null) {
                     out.append("WARNING: Source node does not exist!\n");
                 }
-                if (client.checkExists().forPath(rename.getDestination()) != null) {
+                if (client.checkExists().forPath(resolvedDestination) != null) {
                     out.append("WARNING: Destination node already exists!\n");
                 }
             } catch (Exception e) {
@@ -115,10 +133,14 @@ public class MigrationInspector {
         public String visit(Upsert upsert) {
             StringBuilder out = new StringBuilder();
             try {
-                out.append("UPSERT ").append(upsert.getPath()).append("\n");
-                byte[] newData = MigrationUtils.resolveData(upsert.getData(), upsert.getFile());
-                if (client.checkExists().forPath(upsert.getPath()) != null) {
-                    byte[] oldData = client.getData().forPath(upsert.getPath());
+                String resolvedPath = VariableSubstitutor.replace(upsert.getPath(), variables);
+                String resolvedData = VariableSubstitutor.replace(upsert.getData(), variables);
+                String resolvedFile = VariableSubstitutor.replace(upsert.getFile(), variables);
+
+                out.append("UPSERT ").append(resolvedPath).append("\n");
+                byte[] newData = MigrationUtils.resolveData(resolvedData, resolvedFile);
+                if (client.checkExists().forPath(resolvedPath) != null) {
+                    byte[] oldData = client.getData().forPath(resolvedPath);
                     out.append(DiffGenerator.generateDiff(oldData, newData));
                 } else {
                     out.append(DiffGenerator.generateDiff(null, newData));

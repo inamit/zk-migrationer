@@ -1,11 +1,14 @@
 package com.zkmigration.model;
 
 import com.zkmigration.core.MigrationUtils;
+import com.zkmigration.core.VariableSubstitutor;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.curator.framework.CuratorFramework;
 import org.apache.zookeeper.CreateMode;
+
+import java.util.Map;
 
 @Slf4j
 @Setter
@@ -20,9 +23,13 @@ public class Create extends Change {
     }
 
     @Override
-    public void applyChange(CuratorFramework client) throws Exception {
-        log.info("Creating node: {}", getPath());
-        byte[] data = MigrationUtils.resolveData(getData(), getFile());
-        client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(getPath(), data);
+    public void applyChange(CuratorFramework client, Map<String, String> variables) throws Exception {
+        String resolvedPath = VariableSubstitutor.replace(getPath(), variables);
+        String resolvedData = VariableSubstitutor.replace(getData(), variables);
+        String resolvedFile = VariableSubstitutor.replace(getFile(), variables);
+
+        log.info("Creating node: {}", resolvedPath);
+        byte[] data = MigrationUtils.resolveData(resolvedData, resolvedFile);
+        client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath(resolvedPath, data);
     }
 }

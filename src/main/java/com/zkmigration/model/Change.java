@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.curator.framework.CuratorFramework;
 
+import java.util.Map;
+
 @Setter
 @Getter
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.WRAPPER_OBJECT)
@@ -21,5 +23,10 @@ public abstract class Change {
 
     public abstract <T> T accept(ChangeVisitor<T> visitor);
 
-    public abstract void applyChange(CuratorFramework client) throws Exception;
+    public abstract void applyChange(CuratorFramework client, Map<String, String> variables) throws Exception;
+
+    // Maintain backward compatibility if needed, or update callers
+    public void applyChange(CuratorFramework client) throws Exception {
+        applyChange(client, java.util.Collections.emptyMap());
+    }
 }
